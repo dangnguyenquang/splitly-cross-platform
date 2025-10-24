@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
-
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../App';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 export default function GetStartedScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const handleNext = () => {
     console.log("Handle on clicked");
   };
@@ -41,7 +44,7 @@ export default function GetStartedScreen() {
             width={width * 0.85}
             height={50}
             borderRadius={30}
-            onPress={handleNext}
+            onPress={() => navigation.navigate("SignUp")}
           />
 
           <CustomButton
@@ -50,7 +53,7 @@ export default function GetStartedScreen() {
             width={width * 0.85}
             height={50}
             borderRadius={30}
-            onPress={handleNext}
+            onPress={() => navigation.navigate("SignIn")}
           />
         </View>
       </View>
