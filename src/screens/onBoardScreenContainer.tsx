@@ -1,5 +1,5 @@
 // src/screens/OnboardContainer.tsx
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   View,
   FlatList,
@@ -16,7 +16,8 @@ import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import { useThemeStyle } from '../hooks/useThemeSelector';
+import { ThemeContext } from '../context/theme';
 const { width } = Dimensions.get('window');
 const screens = [<OnboardScreen1 />, <OnboardScreen2 />, <OnboardScreen3 />];
 type OnboardNavigationProp = NativeStackNavigationProp<

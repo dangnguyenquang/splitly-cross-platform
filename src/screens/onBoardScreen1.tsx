@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { ThemeContext } from '../context/theme';
+import { useThemeStyle } from '../hooks/useThemeSelector';
 
 const { width, height } = Dimensions.get('window');
 
 export default function OnboardScreen1() {
+  const { toggleTheme } = useContext(ThemeContext);
+  const { colors, isDark, fontSizes, spacing, shadow } = useThemeStyle();
+
+  const [fontSize, setFontSize] = useState(fontSizes.sm);
   return (
     <View style={styles.container}>
       {/* Image Section */}
