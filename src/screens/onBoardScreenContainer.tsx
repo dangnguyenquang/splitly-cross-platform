@@ -104,7 +104,7 @@ export default function OnboardContainer() {
       </View>
 
         {currentIndex < screens.length - 1 ? (
-        <View style={[styles.buttonRow, { justifyContent: 'space-between' }]}>
+        <View style={[styles.buttonRow, { justifyContent: 'space-between', gap:10}]}>
             <CustomButton
             title="Skip"
             type="secondary"
@@ -157,10 +157,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginHorizontal: 5,
   },
-    buttonRow: {
+  buttonRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '85%',
     marginBottom: 50,
     },
 });

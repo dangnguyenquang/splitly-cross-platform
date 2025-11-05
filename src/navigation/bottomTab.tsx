@@ -2,12 +2,13 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../../Constant/theme';
-import HomeScreen from '../home';
-import GroupScreen from '../group';
-import ContactScreen from '../contact';
-import AccountScreen from '../account';
-import CameraScreen from '../camera';
+import { colors } from '../Constant/theme';
+import HomeScreen from '../screens/home';
+import GroupScreen from '../screens/group';
+import ContactScreen from '../screens/contact';
+import AccountScreen from '../screens/account';
+import CameraScreen from '../screens/camera';
+import HomeStackNavigator from './homeNavigator';
 
 type RootTabParamList = {
   Home: undefined;
@@ -46,8 +47,8 @@ function BottomNavigationTabs() {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 0,
-          height: Platform.OS === 'ios' ? 88 : 65,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 10,
+          height: Platform.OS === 'ios' ? 88 : 80,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 20,
           paddingTop: 10,
           elevation: 8,
           shadowColor: '#000',
@@ -69,7 +70,7 @@ function BottomNavigationTabs() {
     >
       <Tab.Screen 
         name="Home" 
-        component={HomeScreen}
+        component={HomeStackNavigator}
         options={{ tabBarLabel: TAB_CONFIG.Home.label }}
       />
       <Tab.Screen 

@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, justifyContent: 'space-between' },
   side: { width: 40, alignItems: 'center', justifyContent: 'center' },
   titleContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 10 },
-  title: { fontSize: 18, fontWeight: '600', letterSpacing: 0.3 },
+  title: { fontSize: 24, fontWeight: '500', letterSpacing: 0.3 },
   iconButton: { padding: 8, borderRadius: 20 },
-  borderBottom: { height: StyleSheet.hairlineWidth, backgroundColor: 'rgba(0, 0, 0, 0.08)' },
+  borderBottom: { height: StyleSheet.hairlineWidth, backgroundColor: 'rgba(0, 0, 0, 0.00)' },
 });
 
 export default CustomHeader;
