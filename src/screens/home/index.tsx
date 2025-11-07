@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header';
-import { colors, FontSizes } from '../../Constant/theme';
+import { colors} from '../../Constant/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,7 +29,7 @@ export default function HomeScreen() {
         </View>
         <View style={styles.functionSection}>
           <View style={{alignItems:'center'}}>
-            <TouchableOpacity style={styles.functionCircle} onPress={() => console.log('L pressed')}>
+            <TouchableOpacity style={styles.functionCircle} onPress={() => navigation.navigate("Request" as never)}>
               <MaterialIcons 
                 name='arrow-outward' 
                 size={30} 

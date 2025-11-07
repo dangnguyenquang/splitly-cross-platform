@@ -13,8 +13,8 @@ const SectionDivider = ({ title }: { title: string}) => {
 const styles = StyleSheet.create({
   SectionDivider:{
     flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center'
+    justifyContent:'space-between',
+    alignItems:'center',
   },
   line: {
     flex: 1,

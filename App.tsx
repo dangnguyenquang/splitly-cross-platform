@@ -14,6 +14,7 @@ import ThemeProvider from './src/context/theme';
 import BottomNavigationTabs from './src/navigation/bottomTab';
 import HistoryTopTabs from './src/navigation/historyTopTab';
 import TransactionHistoryScreen from './src/screens/history';
+import RequestScreen from './src/screens/request';
 
 
 export type RootStackParamList = {
@@ -23,6 +24,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   MainApp:undefined;
   History:undefined;
+  Request:undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -46,6 +48,7 @@ function App() {
           <Stack.Screen name="MainApp" component={BottomNavigationTabs} /> 
 
           <Stack.Screen name="History" component={TransactionHistoryScreen} /> 
+          <Stack.Screen name="Request" component={RequestScreen} /> 
         </Stack.Navigator>
       </NavigationContainer>
       </ThemeProvider>

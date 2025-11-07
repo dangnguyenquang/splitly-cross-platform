@@ -2,12 +2,15 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home';
 import TransactionHistoryScreen from '../screens/history';
+import RequestScreen from '../screens/request';
+
 
 
 
 export type HomeStackParamList = {
   Home: undefined;
   HistoryScreen:undefined;
+  RequestScreen:undefined;
   Detail: { id: string };
 };
 
