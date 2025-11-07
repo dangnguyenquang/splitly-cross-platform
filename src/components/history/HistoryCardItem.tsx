@@ -26,7 +26,7 @@ const CardItem: React.FC<CardItemProps> = ({
     </View>
 
     <View style={styles.moneySection}>
-        <Text style={{fontSize:24}}>{amount}</Text>
+        <Text style={{fontSize:20,fontWeight:'500'}}>{amount}</Text>
         <Text style={styles.underText}>{type}</Text>
     </View>
   </View>
