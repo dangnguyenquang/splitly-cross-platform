@@ -1,10 +1,13 @@
 import React from "react";
-import { View, StyleSheet, SectionList } from "react-native";
+import { View, StyleSheet, SectionList, Image, Text } from "react-native";
 import { colors } from "../../Constant/theme";
 import CardItem from "../../components/history/HistoryCardItem";
 import SectionDivider from "../../components/history/SectionDivider";
-import { HistoryDetailScreen } from "./historyDetailScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomHeader from "../../components/header";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
+import CustomButton from "../../components/CustomButton";
 
 const DATA = [
   {
@@ -80,28 +83,53 @@ const DATA = [
   },
 ];
 
-export function AllHistoryScreen() {
+export function HistoryDetailScreen() {
     const navigation = useNavigation()
     return (
-        <View>
-            <SectionList
-            sections={DATA}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index, section }) => (
-                <CardItem
-                username={item.username}
-                avatarUrl={item.avatarUrl}
-                time={item.time}
-                amount={item.amount}
-                type={item.type}
-                showDivider={index < section.data.length - 1}
-                onPress={()=>navigation.navigate("HistoryDetailScreen" as never)}
-                />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-                <SectionDivider title={title} />
-            )}
+        <SafeAreaView>
+            <CustomHeader
+                title="History Detail screen"
+                onLeftPress={() => navigation.goBack()}
+                onRightPress={() =>  {}}
+                backgroundColor= {colors.primary}
+                titleColor="#050404ff"
+                shadow={true}
+                leftIcon={{ component: MaterialIcons, name: 'arrow-back', size: 28, color: '#000000ff' }}
+                rightIcon={{ component: MaterialIcons, name: 'more-vert', size: 28, color: '#000000ff' }}
             />
-        </View>
+            <View style={{alignItems:'center',gap:20,height:300,backgroundColor:colors.primary}}>
+                <View style={styles.avatar}>
+                    <Image
+                    source={{ uri: "https://i.pravatar.cc/150?img=7" }}
+                    style={styles.avatar}
+                    />
+                </View>
+                <Text style={{fontSize:40}}>100,000 VND</Text>
+                <Text style={{fontSize:24,fontWeight:'bold'}}>Tien Loc vuive</Text>
+                <Text style={{fontSize:20}}>loc@gmail.com</Text>
+            </View>
+            <View>
+
+            </View>
+            <CustomButton
+            title="View Receipt"
+            type="secondary"
+            width={400}
+            height={50}
+            borderRadius={30}
+            onPress={() => {}}
+            />
+        </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 24,
+  },
+  avatar:{
+    width:106,
+    height:106,
+    borderRadius:50
+  }
+});

@@ -10,4 +10,6 @@ type CardItemProps = {
   amount?: string;
 
   type?: string;
+
+  onPress?: () => void; 
 };
