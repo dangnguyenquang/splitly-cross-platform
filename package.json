@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
+    "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-vector-icons/fontawesome6": "^12.2.0",
     "@react-native-vector-icons/material-design-icons": "^12.2.0",
     "@react-native-vector-icons/material-icons": "^12.3.0",
