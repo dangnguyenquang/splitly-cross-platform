@@ -9,6 +9,7 @@ interface MoneyRequestCardProps {
   action?:string;
   showDivider?:boolean;
   requestPersonName?:string;
+  handleOnPressRequestButton?: () => void
 }
 
 const MoneyRequestCard: React.FC<MoneyRequestCardProps> = ({
@@ -16,10 +17,9 @@ const MoneyRequestCard: React.FC<MoneyRequestCardProps> = ({
   requestPersonName="QuangDang",
   action='owns',//owns, borrow
   amount = "194,000 VND",
-  showDivider=true
+  showDivider=true,
+  handleOnPressRequestButton
 }) => {
-  const navigation = useNavigation();
-
   return (
      <View style={styles.container}>
         <View>
@@ -28,7 +28,7 @@ const MoneyRequestCard: React.FC<MoneyRequestCardProps> = ({
                 <Text>{action}</Text>
                 <View style={styles.moneyRequestButton}>
                     <Text style={{color:'red'}}>{amount}</Text>
-                    <TouchableOpacity style={styles.functionCircle} onPress={() => navigation.navigate("Request" as never)}>
+                    <TouchableOpacity style={styles.functionCircle} onPress={handleOnPressRequestButton}>
                         <Text>Request</Text>
                     </TouchableOpacity>
                 </View>
