@@ -15,6 +15,7 @@ import BottomNavigationTabs from './src/navigation/bottomTab';
 import HistoryTopTabs from './src/navigation/historyTopTab';
 import TransactionHistoryScreen from './src/screens/history';
 import RequestScreen from './src/screens/request';
+import NotificationScreen from './src/screens/notification';
 
 
 export type RootStackParamList = {
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   MainApp:undefined;
   History:undefined;
   Request:undefined;
+  Notifications:undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -49,6 +51,7 @@ function App() {
 
           <Stack.Screen name="History" component={TransactionHistoryScreen} /> 
           <Stack.Screen name="Request" component={RequestScreen} /> 
+          <Stack.Screen name="Notifications" component={NotificationScreen} /> 
         </Stack.Navigator>
       </NavigationContainer>
       </ThemeProvider>

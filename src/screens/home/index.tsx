@@ -14,7 +14,7 @@ export default function HomeScreen() {
       <CustomHeader
         title="Splitly"
         onLeftPress={() => console.log('Menu pressed')}
-        onRightPress={() => console.log('Notifications pressed')}
+        onRightPress={() =>  navigation.navigate("Notifications" as never)}
         backgroundColor= {colors.primary}
         titleColor="#050404ff"
         shadow={true}
