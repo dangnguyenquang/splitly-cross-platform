@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
-import { colors } from '../../Constant/theme';
+import { colors } from '../../constant/theme';
 interface IFooterContentProps {
   text: string;
   boldText: string;

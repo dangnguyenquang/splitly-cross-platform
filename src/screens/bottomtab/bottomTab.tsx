@@ -1,13 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../../Constant/theme';
 import HomeScreen from '../home';
-import GroupScreen from '../group';
 import ContactScreen from '../contact';
 import AccountScreen from '../account';
 import CameraScreen from '../camera';
+import { colors } from '../../constant/theme';
+import GroupsScreen from '../group/GroupsScreen';
+// import GroupsScreen from '../group/GroupsScreen';
 
 type RootTabParamList = {
   Home: undefined;
@@ -74,7 +75,7 @@ function BottomNavigationTabs() {
       />
       <Tab.Screen 
         name="Group" 
-        component={GroupScreen}
+        component={GroupsScreen}
         options={{ tabBarLabel: TAB_CONFIG.Group.label }}
       />
       <Tab.Screen 
