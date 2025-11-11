@@ -1,4 +1,11 @@
-import { Colors, Fonts, FontSizes, Radius, Shadow, Spacing } from "../constant/theme"
+import {
+  Colors,
+  Fonts,
+  FontSizes,
+  Radius,
+  Shadow,
+  Spacing,
+} from '../constant/theme';
 import { ThemeContext } from '../context/theme';
 import { useContext } from 'react';
 

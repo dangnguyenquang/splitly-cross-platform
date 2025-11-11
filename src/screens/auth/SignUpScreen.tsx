@@ -1,11 +1,11 @@
-import { View, Text, Pressable } from 'react-native';
-import { useState } from 'react';
+import { View, Text } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { colors } from '../../constant/theme';
-import InputAuth from '../../components/auth/custom-input-auth';
+import InputAuth from '../../components/auth/CustomInputAuth';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import FooterContent from '../../components/auth/custom-footer-content';
+import FooterContent from '../../components/auth/CustomFooterContent';
 import CustomButton from '../../components/CustomButton';
+
 export default function SignUpScreen() {
   return (
     <View className="w-screen h-full p-10">

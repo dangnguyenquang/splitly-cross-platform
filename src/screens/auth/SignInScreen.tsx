@@ -1,16 +1,13 @@
 import { View, Text, Pressable } from 'react-native';
-import { useState } from 'react';
 import * as React from 'react';
-import {
-  createStaticNavigation,
-  useNavigation,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { colors } from '../../constant/theme';
-import InputAuth from '../../components/auth/custom-input-auth';
+import InputAuth from '../../components/auth/CustomInputAuth';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import FooterContent from '../../components/auth/custom-footer-content';
+import FooterContent from '../../components/auth/CustomFooterContent';
 import CustomButton from '../../components/CustomButton';
+
 export default function SignInScreen() {
   const navigation = useNavigation();
   return (
@@ -62,8 +59,11 @@ export default function SignInScreen() {
           linkTo="SignUp"
         />
       </View>
-      <View className='w-screen flex-1 justify-end'>
-        <CustomButton title="Sign in" onPress={()=>navigation.navigate("MainApp" as never)}/>
+      <View className="w-screen flex-1 justify-end">
+        <CustomButton
+          title="Sign in"
+          onPress={() => navigation.navigate('MainApp' as never)}
+        />
       </View>
     </View>
   );

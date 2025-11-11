@@ -13,7 +13,6 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/types';
 
-
 type SelectParticipantsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
@@ -32,7 +31,7 @@ const SelectParticipantsScreen: React.FC = () => {
 
   const { groupData } = route.params;
 
-  const filteredContacts = mockContacts.filter((contact) => {
+  const filteredContacts = mockContacts.filter(contact => {
     const matchesSearch =
       contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -45,10 +44,10 @@ const SelectParticipantsScreen: React.FC = () => {
   });
 
   const toggleContact = (contact: Contact) => {
-    setSelectedContacts((prev) =>
-      prev.find((c) => c.id === contact.id)
-        ? prev.filter((c) => c.id !== contact.id)
-        : [...prev, contact]
+    setSelectedContacts(prev =>
+      prev.find(c => c.id === contact.id)
+        ? prev.filter(c => c.id !== contact.id)
+        : [...prev, contact],
     );
   };
 
@@ -57,14 +56,14 @@ const SelectParticipantsScreen: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log(groupData)
+    console.log(groupData);
     navigation.navigate('GroupsScreen');
   };
 
   const renderContact = ({ item }: { item: Contact }) => (
     <ContactItem
       contact={item}
-      isSelected={selectedContacts.some((c) => c.id === item.id)}
+      isSelected={selectedContacts.some(c => c.id === item.id)}
       onToggle={() => toggleContact(item)}
     />
   );
@@ -84,7 +83,7 @@ const SelectParticipantsScreen: React.FC = () => {
       {selectedContacts.length > 0 && (
         <AvatarList contacts={selectedContacts} />
       )}
-      
+
       <TabSwitch
         tabs={['All Contacts', 'Favorites']}
         activeTab={activeTab}
@@ -93,13 +92,10 @@ const SelectParticipantsScreen: React.FC = () => {
       <FlatList
         data={filteredContacts}
         renderItem={renderContact}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         style={styles.list}
       />
-      <ActionButtons
-        onCancel={handleBack}
-        onSave={handleSave}
-      />
+      <ActionButtons onCancel={handleBack} onSave={handleSave} />
     </View>
   );
 };

@@ -9,7 +9,11 @@ interface ContactItemProps {
   onToggle: () => void;
 }
 
-const ContactItem: React.FC<ContactItemProps> = ({ contact, isSelected, onToggle }) => {
+const ContactItem: React.FC<ContactItemProps> = ({
+  contact,
+  isSelected,
+  onToggle,
+}) => {
   return (
     <Pressable style={styles.container} onPress={onToggle}>
       <Image source={{ uri: contact.avatar }} style={styles.avatar} />
