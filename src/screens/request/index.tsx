@@ -9,7 +9,7 @@ import SectionDivider from '../../components/history/SectionDivider';
 import MoneyRequestCard from '../../components/request/requestCard';
 import CustomButton from '../../components/CustomButton';
 import Divider from '../../components/request/divider';
-import { Button, ButtonText } from "../../../components/ui/button"
+// import { Button, ButtonText } from "../../../components/ui/button"
 
 const DATA = [
   {
@@ -190,9 +190,7 @@ export default function RequestScreen() {
                   color={"#000000ff"} 
                 />
               </View>
-            <Button variant="solid" size="md" action="primary">
-              <ButtonText>Click me</ButtonText>
-            </Button>
+
               <Text style={{ textAlign: 'center', marginVertical: 10,fontSize:32,fontWeight:'bold' }}>
                 Your request has been sent successfully.
                 {/* <Paragraph>Paragraph</Paragraph> */}
