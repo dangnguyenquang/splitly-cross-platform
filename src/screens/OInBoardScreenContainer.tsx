@@ -1,5 +1,5 @@
 // src/screens/OnboardContainer.tsx
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   FlatList,
@@ -9,22 +9,19 @@ import {
   Dimensions,
   Animated,
 } from 'react-native';
-import OnboardScreen1 from './onBoardScreen1';
-import OnboardScreen2 from './onBoardScreen2';
-import OnboardScreen3 from './onBoardScreen3';
+import OnboardScreen1 from './OnBoardScreen1';
+import OnboardScreen2 from './OnBoardScreen2';
+import OnboardScreen3 from './OnBoardScreen3';
 import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useThemeStyle } from '../hooks/useThemeSelector';
-import { ThemeContext } from '../context/theme';
+import { RootStackParamList } from '@/navigation/types';
 const { width } = Dimensions.get('window');
 const screens = [<OnboardScreen1 />, <OnboardScreen2 />, <OnboardScreen3 />];
 type OnboardNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Onboard'
 >;
-
 
 export default function OnboardContainer() {
   const navigation = useNavigation<OnboardNavigationProp>();
@@ -34,7 +31,8 @@ export default function OnboardContainer() {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(
-      event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width
+      event.nativeEvent.contentOffset.x /
+        event.nativeEvent.layoutMeasurement.width,
     );
     setCurrentIndex(index);
   };
@@ -64,7 +62,7 @@ export default function OnboardContainer() {
         showsHorizontalScrollIndicator={false}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false, listener: handleScroll }
+          { useNativeDriver: false, listener: handleScroll },
         )}
         scrollEventThrottle={20}
       />
@@ -103,37 +101,40 @@ export default function OnboardContainer() {
         })}
       </View>
 
-        {currentIndex < screens.length - 1 ? (
-        <View style={[styles.buttonRow, { justifyContent: 'space-between', gap:10}]}>
-            <CustomButton
+      {currentIndex < screens.length - 1 ? (
+        <View
+          style={[
+            styles.buttonRow,
+            { justifyContent: 'space-between', gap: 10 },
+          ]}
+        >
+          <CustomButton
             title="Skip"
             type="secondary"
             width={190}
             height={60}
             borderRadius={25}
             onPress={handleSkip}
-            />
-            <CustomButton
+          />
+          <CustomButton
             title="Continue"
             width={190}
             height={60}
             borderRadius={25}
             onPress={handleNext}
-            />
+          />
         </View>
-        ) : (
+      ) : (
         <View style={[styles.buttonRow, { justifyContent: 'center' }]}>
-            <CustomButton
+          <CustomButton
             title="Get Started"
             width={400}
             height={50}
             borderRadius={30}
             onPress={() => navigation.navigate('GetStartedScreen')}
-            />
+          />
         </View>
-        )}
-
-
+      )}
     </View>
   );
 }
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontFamily:'NunitoSans-Variable'
+    fontFamily: 'NunitoSans-Variable',
   },
   dotContainer: {
     flexDirection: 'row',
@@ -161,5 +162,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 50,
-    },
+  },
 });

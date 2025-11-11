@@ -13,14 +13,18 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/types';
 
-type NewGroupScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type NewGroupScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const NewGroupScreen: React.FC = () => {
   const [coverImage, setCoverImage] = useState<string>('');
   const [title, setTitle] = useState('Trip to France');
-  const [description, setDescription] = useState('Holiday with old school friends');
+  const [description, setDescription] = useState(
+    'Holiday with old school friends',
+  );
   const [currency, setCurrency] = useState('USD');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('Trip');
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryType>('Trip');
 
   const navigation = useNavigation<NewGroupScreenNavigationProp>();
 
@@ -37,12 +41,13 @@ const NewGroupScreen: React.FC = () => {
       coverImage,
     };
 
-    navigation.navigate("SelectParticipants", { groupData: groupData })
-
+    navigation.navigate('SelectParticipants', { groupData: groupData });
   };
 
   const handleUploadCover = () => {
-    setCoverImage('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800');
+    setCoverImage(
+      'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800',
+    );
   };
 
   return (

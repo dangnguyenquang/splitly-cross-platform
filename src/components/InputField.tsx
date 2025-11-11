@@ -20,7 +20,9 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputContainer, multiline && styles.multilineContainer]}>
+      <View
+        style={[styles.inputContainer, multiline && styles.multilineContainer]}
+      >
         <TextInput
           style={[styles.input, multiline && styles.multilineInput]}
           value={value}

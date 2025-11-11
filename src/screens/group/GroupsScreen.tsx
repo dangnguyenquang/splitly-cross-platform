@@ -12,17 +12,16 @@ import { RootStackParamList } from '../../../navigation/types';
 
 type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-
 const GroupsScreen: React.FC = () => {
   const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
-    setGroups([])
-  }, [])
+    setGroups([]);
+  }, []);
 
-  const navigation = useNavigation<GroupsScreenNavigationProp>()
+  const navigation = useNavigation<GroupsScreenNavigationProp>();
   const handleSelectGroup = (group: Group) => {
-    console.log(group)
+    console.log(group);
     // navigation.navigate('GroupDetail', { groupId: group.id });
   };
 
@@ -48,7 +47,6 @@ const GroupsScreen: React.FC = () => {
           contentContainerStyle={styles.listContent}
         />
       )}
-
     </View>
   );
 };

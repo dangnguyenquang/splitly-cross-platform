@@ -8,7 +8,10 @@ interface AvatarListProps {
   maxDisplay?: number;
 }
 
-const AvatarList: React.FC<AvatarListProps> = ({ contacts, maxDisplay = 6 }) => {
+const AvatarList: React.FC<AvatarListProps> = ({
+  contacts,
+  maxDisplay = 6,
+}) => {
   const displayContacts = contacts.slice(0, maxDisplay);
 
   return (
@@ -18,7 +21,7 @@ const AvatarList: React.FC<AvatarListProps> = ({ contacts, maxDisplay = 6 }) => 
       contentContainerStyle={styles.contentContainer}
       style={styles.container}
     >
-      {displayContacts.map((contact) => (
+      {displayContacts.map(contact => (
         <Image
           key={contact.id}
           source={{ uri: contact.avatar }}
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'flex-start',
     flexGrow: 0,
-  }
+  },
 });
 
 export default AvatarList;

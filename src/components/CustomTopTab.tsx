@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { colors } from "../constant/theme";
+import { Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '../constant/theme';
 
 export default function CustomTabBar({ state, descriptors, navigation }: any) {
   return (
@@ -18,8 +18,8 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 
@@ -35,9 +35,9 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
               borderRadius: 40,
               paddingVertical: 6,
               alignItems: 'center',
-              borderColor:isFocused ? colors.primary : '#0c0606ff',
-              borderWidth: 1,        
-              marginHorizontal: 3,     
+              borderColor: isFocused ? colors.primary : '#0c0606ff',
+              borderWidth: 1,
+              marginHorizontal: 3,
             }}
           >
             <Text

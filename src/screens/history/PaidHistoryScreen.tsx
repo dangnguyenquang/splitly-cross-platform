@@ -1,6 +1,6 @@
-import { SectionList, Text, View } from "react-native";
-import CardItem from "../../components/history/HistoryCardItem";
-import SectionDivider from "../../components/history/SectionDivider";
+import { SectionList, View } from 'react-native';
+import CardItem from '../../components/history/HistoryCardItem';
+import SectionDivider from '../../components/history/SectionDivider';
 
 const DATA = [
   {
@@ -75,26 +75,26 @@ const DATA = [
     ],
   },
 ];
-export function RequestHistoryScreen() {
-    return (
-        <View>
-            <SectionList
-            sections={DATA}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index, section }) => (
-                <CardItem
-                username={item.username}
-                avatarUrl={item.avatarUrl}
-                time={item.time}
-                amount={item.amount}
-                type={item.type}
-                showDivider={index < section.data.length - 1}
-                />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-                <SectionDivider title={title} />
-            )}
-            />
-        </View>
-    )
+export function PaidHistoryScreen() {
+  return (
+    <View>
+      <SectionList
+        sections={DATA}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index, section }) => (
+          <CardItem
+            username={item.username}
+            avatarUrl={item.avatarUrl}
+            time={item.time}
+            amount={item.amount}
+            type={item.type}
+            showDivider={index < section.data.length - 1}
+          />
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <SectionDivider title={title} />
+        )}
+      />
+    </View>
+  );
 }

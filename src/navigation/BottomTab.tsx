@@ -6,7 +6,7 @@ import { colors } from '../constant/theme';
 import ContactScreen from '../screens/contact';
 import AccountScreen from '../screens/account';
 import CameraScreen from '../screens/camera';
-import HomeStackNavigator from './homeNavigator';
+import HomeStackNavigator from './HomeNavigator';
 import GroupsScreen from '../screens/group/GroupsScreen';
 
 type RootTabParamList = {
@@ -82,7 +82,7 @@ function BottomNavigationTabs() {
         component={CameraScreen}
         options={{
           tabBarLabel: TAB_CONFIG.Camera.label,
-          tabBarIconStyle: { marginTop: Platform.OS === 'ios' ? -4 : 0 }
+          tabBarIconStyle: { marginTop: Platform.OS === 'ios' ? -4 : 0 },
         }}
       />
       <Tab.Screen

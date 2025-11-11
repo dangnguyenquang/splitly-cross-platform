@@ -7,9 +7,9 @@ interface NotificationItemProps {
   title: string;
   description: string;
   time: string;
-  index?: number; 
-  leftIconName?: string; 
-  onPress?: () => void; 
+  index?: number;
+  leftIconName?: string;
+  onPress?: () => void;
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
@@ -31,7 +31,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
             {title}
           </Text>
-          <Text style={styles.description} numberOfLines={4} ellipsizeMode="tail">
+          <Text
+            style={styles.description}
+            numberOfLines={4}
+            ellipsizeMode="tail"
+          >
             {description}
           </Text>
           <Text style={styles.time}>{time}</Text>
@@ -43,7 +47,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
               width: 10,
               height: 10,
               borderRadius: 5,
-              backgroundColor: index % 2 === 0 ? colors.background : colors.primary,
+              backgroundColor:
+                index % 2 === 0 ? colors.background : colors.primary,
               marginRight: 4,
             }}
           />
