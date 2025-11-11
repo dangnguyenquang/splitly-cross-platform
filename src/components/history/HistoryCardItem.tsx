@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Image, SectionList } from "react-native";
+import { Text, View, StyleSheet, Image, SectionList, TouchableOpacity } from "react-native";
 import { colors } from "../../Constant/theme";
 const CardItem: React.FC<CardItemProps> = ({
   username,
@@ -8,8 +8,9 @@ const CardItem: React.FC<CardItemProps> = ({
   time = "09:41 PM",
   amount = "100000vnd",
   type = "Pay",
+  onPress = () => {},
 }) => (
-  <>
+  <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
   <View style={styles.item}>
     <View style={styles.userSection}>
         <View style={styles.avatar}>
@@ -31,7 +32,7 @@ const CardItem: React.FC<CardItemProps> = ({
     </View>
   </View>
     {showDivider && <View style={styles.lineCard}></View>}
-  </>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({

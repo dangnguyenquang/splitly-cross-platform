@@ -28,8 +28,3 @@ export default function TransactionHistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    fontSize: 24,
-  },
-});

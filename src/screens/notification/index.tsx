@@ -1,11 +1,13 @@
-import React from "react";
-import { View, StyleSheet, SectionList } from "react-native";
-import { colors } from "../../Constant/theme";
-import CardItem from "../../components/history/HistoryCardItem";
-import SectionDivider from "../../components/history/SectionDivider";
-import { HistoryDetailScreen } from "./historyDetailScreen";
-import { useNavigation } from "@react-navigation/native";
-
+import React, { useState } from 'react';
+import { SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomHeader from '../../components/header';
+import { colors} from '../../Constant/theme';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+import SectionDivider from '../../components/history/SectionDivider';
+import CardItem from '../../components/history/HistoryCardItem';
+import NotificationItem from '../../components/notifications/notificationCard';
 const DATA = [
   {
     title: 'Today',
@@ -79,29 +81,43 @@ const DATA = [
     ],
   },
 ];
+export default function NotificationScreen() {
+  const navigation = useNavigation()
 
-export function AllHistoryScreen() {
-    const navigation = useNavigation()
-    return (
-        <View>
+  return (
+    <SafeAreaView style={{flex:1}}>
+      <CustomHeader
+        title="Notification"
+        onLeftPress={() => navigation.goBack()}
+        onRightPress={() => console.log('Notifications pressed')}
+        backgroundColor= {colors.background}
+        titleColor="#050404ff"
+        shadow={true}
+        leftIcon={{ component: MaterialIcons, name: 'arrow-back', size: 28, color: '#000000ff' }}
+        rightIcon={{ component: MaterialIcons, name: 'settings', size: 26, color: '#000000ff' }}
+      />
             <SectionList
             sections={DATA}
             keyExtractor={(item) => item.id}
             renderItem={({ item, index, section }) => (
-                <CardItem
-                username={item.username}
-                avatarUrl={item.avatarUrl}
-                time={item.time}
-                amount={item.amount}
-                type={item.type}
-                showDivider={index < section.data.length - 1}
-                onPress={()=>navigation.navigate("HistoryDetailScreen" as never)}
+                <NotificationItem
+                title="New update available"
+                description="Update splitly and enjoy new features, please press to see new updates"
+                time="9:45 PM"
+                index={index} 
                 />
             )}
             renderSectionHeader={({ section: { title } }) => (
                 <SectionDivider title={title} />
             )}
             />
-        </View>
-    )
+    </SafeAreaView>
+  );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
