@@ -7,6 +7,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   MainApp: undefined;
   CreateGroup: undefined;
+  AddExpense: undefined;
   SelectParticipants: { groupData: GroupBasicInformation };
   GroupDetail: { groupId: string; group?: Group };
   GroupsScreen: undefined;

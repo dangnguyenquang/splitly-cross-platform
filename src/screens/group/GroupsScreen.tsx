@@ -62,6 +62,7 @@ const GroupsScreen: React.FC = () => {
             isHovered={false}
             isDisabled={false}
             isPressed={false}
+            onPress={() => navigation.navigate('CreateGroup')}
             style={styles.fabButton}
           >
             <FabIcon as={AddIcon} style={styles.fabIcon} />

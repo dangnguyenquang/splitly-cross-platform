@@ -18,6 +18,7 @@ import SelectParticipantsScreen from '@/src/screens/group/SelectParticipantsScre
 import GroupsScreen from '@/src/screens/group/GroupsScreen';
 import NewGroupScreen from '@/src/screens/group/NewGroupScreen';
 import GroupDetailScreen from '@/src/screens/group/GroupDetailScreen';
+import AddExpenseScreen from '@/src/screens/group/AddExpenseScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -39,6 +40,7 @@ function AppNavigator() {
         />
         <Stack.Screen name="CreateGroup" component={NewGroupScreen} />
         <Stack.Screen name="GroupsScreen" component={GroupsScreen} />
+        <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
         <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
 
         <Stack.Screen name="History" component={TransactionHistoryScreen} />

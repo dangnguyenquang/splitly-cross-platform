@@ -43,7 +43,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
                 styles.touchableButton,
                 {
                   backgroundColor: isFocused ? colors.primary : 'transparent',
-                  borderColor: isFocused ? colors.primary : '#0c0606ff',
+                  borderColor: isFocused ? colors.primary : '#a8a8a8ff',
                 },
               ]}
             >

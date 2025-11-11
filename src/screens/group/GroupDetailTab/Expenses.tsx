@@ -6,10 +6,13 @@ import { mockGroupDetail } from '@/data/mockDataGroupDetail';
 import { Fab, FabIcon, FabLabel } from '../../../../components/ui/fab';
 import { AddIcon } from '../../../../components/ui/icon';
 import { colors } from '@/src/constant/theme';
-
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/navigation/types';
+import { useNavigation } from '@react-navigation/native';
+type ExpenseNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const ExpenseScreen: React.FC = () => {
   const [groupDetail, setGroupDetail] = useState<GroupDetailInformation>();
-
+  const navigation = useNavigation<ExpenseNavigationProp>();
   useEffect(() => {
     // Simulate fetching group details
     const fetchGroupDetail = async () => {
@@ -51,6 +54,7 @@ const ExpenseScreen: React.FC = () => {
         isDisabled={false}
         isPressed={false}
         style={styles.fabButton}
+        onPress={() => navigation.navigate('AddExpense')}
       >
         <FabIcon as={AddIcon} style={styles.fabIcon} />
         <FabLabel style={styles.fabIcon}>Add expense</FabLabel>
