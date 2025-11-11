@@ -1,8 +1,12 @@
 interface Colors {
-    primary: "#FDBF14"
+    primary: "#FDBF14",
+    secondary:"#939393",
+    background: "FFFFFF",
 }
 export const colors : Colors = {
-    primary: "#FDBF14"
+    primary: "#FDBF14",
+    secondary:"#939393",
+    background: "FFFFFF",
 }
 
 import { Platform } from 'react-native';

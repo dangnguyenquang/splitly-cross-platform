@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header';
 import { colors } from '../../constant/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen() {
   const [transactions, setTransaction] = useState<any>([])
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CustomHeader
         title="Splitly"
         onLeftPress={() => console.log('Menu pressed')}
-        onRightPress={() => console.log('Notifications pressed')}
+        onRightPress={() => navigation.navigate("Notifications" as never)}
         backgroundColor={colors.primary}
         titleColor="#050404ff"
         shadow={true}
@@ -22,32 +24,32 @@ export default function HomeScreen() {
 
       <View style={styles.moneyFunctionSection}>
         <View style={{ alignItems: 'center' }}>
-          <Text style={{ color: '#000000ff', fontSize: 60 }}>10000000$</Text>
-          <Text style={{ color: '#000000ff', fontSize: 30 }}>Available</Text>
+          <Text style={{ color: '#000000ff', fontSize: 40 }}>10000000$</Text>
+          <Text style={{ color: '#000000ff', fontSize: 12 }}>Available</Text>
         </View>
         <View style={styles.functionSection}>
           <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={styles.functionCircle} onPress={() => console.log('L pressed')}>
+            <TouchableOpacity style={styles.functionCircle} onPress={() => navigation.navigate("Request" as never)}>
               <MaterialIcons
                 name='arrow-outward'
                 size={30}
                 color={"#000000ff"}
               />
             </TouchableOpacity>
-            <Text>
+            <Text style={{ fontSize: 12 }}>
               Request
             </Text>
           </View>
 
           <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={styles.functionCircle} onPress={() => console.log('L pressed')}>
+            <TouchableOpacity style={styles.functionCircle} onPress={() => navigation.navigate("History" as never)}>
               <MaterialIcons
                 name='history'
                 size={30}
                 color="#000000ff"
               />
             </TouchableOpacity>
-            <Text>
+            <Text style={{ fontSize: 12 }}>
               History
             </Text>
           </View>
@@ -55,9 +57,9 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.activitySection}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Activity</Text>
+        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Activity</Text>
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => { console.log("view all data") }}>
-          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#d3ceceff' }}>View all</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: colors.secondary }}>View all</Text>
           <MaterialIcons name="chevron-right" size={25} color="#c5b2b2ff" />
         </TouchableOpacity>
       </View>
@@ -82,20 +84,20 @@ const styles = StyleSheet.create({
   moneyFunctionSection: {
     backgroundColor: colors.primary,
     alignItems: 'center',
-    height: 300
+    height: 230
   },
   functionSection: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    gap: 30
+    gap: 30,
   },
   functionCircle: {
-    width: 60,
-    height: 60,
+    width: 56,
+    height: 56,
     borderRadius: 30,
-    backgroundColor: '#ffffffff',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,

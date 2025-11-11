@@ -22,7 +22,7 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, onPress }) => {
                 <Text style={styles.title}>{group.title}</Text>
 
                 <View style={styles.avatarContainer}>
-                    {group.participants.slice(0, 6).map((participant, index) => (
+                    {group && group.participants && group.participants.slice(0, 6).map((participant, index) => (
                         <Image
                             key={participant.id}
                             source={{ uri: participant.avatar }}
