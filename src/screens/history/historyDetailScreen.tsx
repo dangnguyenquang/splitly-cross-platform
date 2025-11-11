@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { colors } from "../../Constant/theme";
+import { colors } from "../../constant/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomHeader from "../../components/header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";

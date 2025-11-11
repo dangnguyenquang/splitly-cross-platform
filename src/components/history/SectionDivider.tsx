@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet} from "react-native";
-import { colors } from "../../Constant/theme";
+import { colors } from "../../constant/theme";
 
 const SectionDivider = ({ title }: { title: string}) => {
   return (

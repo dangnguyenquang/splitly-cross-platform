@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { colors } from "../../Constant/theme";
+import { colors } from "../../constant/theme";
 
 interface MoneyRequestCardProps {
   ownerName?: string;

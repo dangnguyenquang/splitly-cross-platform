@@ -1,6 +1,6 @@
 import React from "react";
-import { Text, View, StyleSheet, Image, SectionList, TouchableOpacity } from "react-native";
-import { colors } from "../../Constant/theme";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+
 const CardItem: React.FC<CardItemProps> = ({
   username,
   showDivider = true,

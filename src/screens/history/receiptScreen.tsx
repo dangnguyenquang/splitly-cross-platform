@@ -5,7 +5,7 @@ import CustomHeader from '../../components/header';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { colors } from '../../Constant/theme';
+import { colors } from '../../constant/theme';
 import Divider from '../../components/request/divider';
 
 

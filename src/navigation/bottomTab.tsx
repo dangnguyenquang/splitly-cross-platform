@@ -1,14 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../Constant/theme';
-import HomeScreen from '../screens/home';
-import GroupScreen from '../screens/group';
+import { colors } from '../constant/theme';
 import ContactScreen from '../screens/contact';
 import AccountScreen from '../screens/account';
 import CameraScreen from '../screens/camera';
 import HomeStackNavigator from './homeNavigator';
+import GroupsScreen from '../screens/group/GroupsScreen';
 
 type RootTabParamList = {
   Home: undefined;
@@ -35,10 +34,10 @@ function BottomNavigationTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           const iconName = TAB_CONFIG[route.name]?.icon || 'help-outline';
           return (
-            <MaterialIcons 
-              name={iconName} 
-              size={focused ? size + 2 : size} 
-              color={color} 
+            <MaterialIcons
+              name={iconName}
+              size={focused ? size + 2 : size}
+              color={color}
             />
           );
         },
@@ -68,31 +67,31 @@ function BottomNavigationTabs() {
         tabBarHideOnKeyboard: true,
       })}
     >
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={HomeStackNavigator}
         options={{ tabBarLabel: TAB_CONFIG.Home.label }}
       />
-      <Tab.Screen 
-        name="Group" 
-        component={GroupScreen}
+      <Tab.Screen
+        name="Group"
+        component={GroupsScreen}
         options={{ tabBarLabel: TAB_CONFIG.Group.label }}
       />
-      <Tab.Screen 
-        name="Camera" 
+      <Tab.Screen
+        name="Camera"
         component={CameraScreen}
-        options={{ 
+        options={{
           tabBarLabel: TAB_CONFIG.Camera.label,
           tabBarIconStyle: { marginTop: Platform.OS === 'ios' ? -4 : 0 }
         }}
       />
-      <Tab.Screen 
-        name="Contact" 
+      <Tab.Screen
+        name="Contact"
         component={ContactScreen}
         options={{ tabBarLabel: TAB_CONFIG.Contact.label }}
       />
-      <Tab.Screen 
-        name="Account" 
+      <Tab.Screen
+        name="Account"
         component={AccountScreen}
         options={{ tabBarLabel: TAB_CONFIG.Account.label }}
       />

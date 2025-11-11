@@ -6,7 +6,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { colors } from '../../Constant/theme';
+import { colors } from '../../constant/theme';
 import InputAuth from '../../components/auth/custom-input-auth';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import FooterContent from '../../components/auth/custom-footer-content';

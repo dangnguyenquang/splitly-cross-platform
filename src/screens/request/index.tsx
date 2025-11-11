@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../Constant/theme';
+import { colors } from '../../constant/theme';
 import SectionDivider from '../../components/history/SectionDivider';
 import MoneyRequestCard from '../../components/request/requestCard';
 import CustomButton from '../../components/CustomButton';

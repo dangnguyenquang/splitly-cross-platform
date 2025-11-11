@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { colors } from "../Constant/theme";
+import { colors } from "../constant/theme";
 
 export default function CustomTabBar({ state, descriptors, navigation }: any) {
   return (

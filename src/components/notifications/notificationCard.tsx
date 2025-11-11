@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../../Constant/theme';
+import { colors } from '../../constant/theme';
 
 interface NotificationItemProps {
   title: string;

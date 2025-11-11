@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet, SectionList } from "react-native";
-import { colors } from "../../Constant/theme";
 import CardItem from "../../components/history/HistoryCardItem";
 import SectionDivider from "../../components/history/SectionDivider";
 import { HistoryDetailScreen } from "./historyDetailScreen";
