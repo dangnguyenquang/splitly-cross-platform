@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Alert, Dimensions, Image, Modal, SectionList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Dimensions, Image, Modal, SectionList, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -9,6 +9,8 @@ import SectionDivider from '../../components/history/SectionDivider';
 import MoneyRequestCard from '../../components/request/requestCard';
 import CustomButton from '../../components/CustomButton';
 import Divider from '../../components/request/divider';
+import { Button, ButtonText } from "../../../components/ui/button"
+
 const DATA = [
   {
     title: 'Today',
@@ -86,7 +88,7 @@ const { width, height } = Dimensions.get("window");
 export default function RequestScreen() {
   const navigation = useNavigation()
   const [modalVisible,setModalVisible] = useState<boolean>(false)
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
 
   return (
     <SafeAreaView style={{flex:1}}>
@@ -131,6 +133,7 @@ export default function RequestScreen() {
             Alert.alert('Modal has been closed.');
             setModalVisible(!modalVisible);
           }}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={{fontSize:24,fontWeight:'600',alignSelf:'center',padding:20}}>Request</Text>
@@ -168,6 +171,7 @@ export default function RequestScreen() {
               </View>
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </Modal>
         <Modal
           animationType="fade"
@@ -175,8 +179,10 @@ export default function RequestScreen() {
           visible={successModalVisible}
           onRequestClose={() => setSuccessModalVisible(false)}
         >
+          <TouchableWithoutFeedback onPress={() => setSuccessModalVisible(false)}>
           <View style={styles.centeredView}>
             <View style={styles.successModalView}>
+
               <View style={{height:85,width:85,borderRadius:40,justifyContent:'center',alignItems:'center',backgroundColor:colors.primary,borderWidth:1,borderColor:'black'}}>
                 <MaterialIcons 
                   name='check' 
@@ -184,18 +190,22 @@ export default function RequestScreen() {
                   color={"#000000ff"} 
                 />
               </View>
-
+            <Button variant="solid" size="md" action="primary">
+              <ButtonText>Click me</ButtonText>
+            </Button>
               <Text style={{ textAlign: 'center', marginVertical: 10,fontSize:32,fontWeight:'bold' }}>
                 Your request has been sent successfully.
+                {/* <Paragraph>Paragraph</Paragraph> */}
               </Text>
-              <CustomButton
+              {/* <CustomButton
                 title="OK"
                 width={180}
                 height={54}
                 onPress={() => setSuccessModalVisible(false)}
-              />
+              /> */}
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </Modal>
     </SafeAreaView>
   );

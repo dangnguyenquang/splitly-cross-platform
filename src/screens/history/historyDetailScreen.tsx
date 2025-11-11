@@ -1,8 +1,6 @@
 import React from "react";
-import { View, StyleSheet, SectionList, Image, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { colors } from "../../Constant/theme";
-import CardItem from "../../components/history/HistoryCardItem";
-import SectionDivider from "../../components/history/SectionDivider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomHeader from "../../components/header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -167,7 +165,7 @@ export function HistoryDetailScreen() {
                 width={400}
                 height={50}
                 borderRadius={30}
-                onPress={() => {}}
+                onPress={() => navigation.navigate("ReceiptScreen" as never)}
                 />
             </View>
 
