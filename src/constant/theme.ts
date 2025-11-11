@@ -1,13 +1,13 @@
 interface Colors {
-    primary: "#FDBF14",
-    secondary:"#939393",
-    background: "FFFFFF",
+  primary: '#FDBF14';
+  secondary: '#939393';
+  background: 'FFFFFF';
 }
-export const colors : Colors = {
-    primary: "#FDBF14",
-    secondary:"#939393",
-    background: "FFFFFF",
-}
+export const colors: Colors = {
+  primary: '#FDBF14',
+  secondary: '#939393',
+  background: 'FFFFFF',
+};
 
 import { Platform } from 'react-native';
 
@@ -59,7 +59,8 @@ export const Fonts = Platform.select({
   web: {
     sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
+    rounded:
+      "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
     mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
 });

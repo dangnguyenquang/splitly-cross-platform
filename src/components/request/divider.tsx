@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 
 const Divider = () => {
   return <View style={styles.line} />;
@@ -7,10 +7,10 @@ const Divider = () => {
 
 const styles = StyleSheet.create({
   line: {
-    height: 1,                      
-    width: "90%",                  
-    backgroundColor: "#ccc", 
-    marginHorizontal:24
+    height: 1,
+    width: '90%',
+    backgroundColor: '#ccc',
+    marginHorizontal: 24,
   },
 });
 

@@ -62,8 +62,11 @@ export default function SignInScreen() {
           linkTo="SignUp"
         />
       </View>
-      <View className='w-screen flex-1 justify-end'>
-        <CustomButton title="Sign in" onPress={()=>navigation.navigate("MainApp" as never)}/>
+      <View className="w-screen flex-1 justify-end">
+        <CustomButton
+          title="Sign in"
+          onPress={() => navigation.navigate('MainApp' as never)}
+        />
       </View>
     </View>
   );

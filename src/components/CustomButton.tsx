@@ -14,7 +14,7 @@ import {
 interface CustomButtonProps {
   title: string;
   onPress?: () => void;
-  type?: 'primary' | 'secondary' | 'logo'; 
+  type?: 'primary' | 'secondary' | 'logo';
   width?: DimensionValue;
   height?: DimensionValue;
   borderRadius?: number;
@@ -51,22 +51,27 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         type === 'primary'
           ? styles.primary
           : type === 'secondary'
-          ? styles.secondary
-          : styles.logoButton, 
+            ? styles.secondary
+            : styles.logoButton,
         buttonStyle,
         style,
       ]}
     >
       <View style={styles.content}>
-        {logo && <Image source={logo} style={{ width: logoSize, height: logoSize, marginRight: 10 }} />}
+        {logo && (
+          <Image
+            source={logo}
+            style={{ width: logoSize, height: logoSize, marginRight: 10 }}
+          />
+        )}
         <Text
           style={[
             styles.text,
             type === 'primary'
               ? styles.primaryText
               : type === 'secondary'
-              ? styles.secondaryText
-              : styles.logoText,
+                ? styles.secondaryText
+                : styles.logoText,
             textStyle,
           ]}
         >

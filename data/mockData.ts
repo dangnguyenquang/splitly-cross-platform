@@ -53,7 +53,7 @@ export const mockGroups: Group[] = [
   },
   {
     id: '2',
-    title: 'Trip to France',
+    title: 'Trip to America',
     description: 'Holiday with old school friends',
     currency: 'USD',
     category: 'Trip',

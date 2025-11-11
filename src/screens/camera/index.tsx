@@ -1,19 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../components/header';
+import Header from '../../components/header';
 
 export default function CameraScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <CustomHeader
-        title="Camera"
-        onLeftPress={() => console.log('Menu pressed')}
-        onRightPress={() => console.log('Notifications pressed')}
-        backgroundColor= "#fff"
-        titleColor="#070707ff"
-        shadow={true}
-      />
+      <Header title="Groups" showLogo showMenu />
 
       <Text style={styles.previewText}>Preview text here...</Text>
     </SafeAreaView>

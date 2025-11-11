@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header';
-import { colors} from '../../constant/theme';
+import { colors } from '../../constant/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import SectionDivider from '../../components/history/SectionDivider';
@@ -82,35 +88,45 @@ const DATA = [
   },
 ];
 export default function NotificationScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <CustomHeader
         title="Notification"
         onLeftPress={() => navigation.goBack()}
         onRightPress={() => console.log('Notifications pressed')}
-        backgroundColor= {colors.background}
+        backgroundColor={colors.background}
         titleColor="#050404ff"
         shadow={true}
-        leftIcon={{ component: MaterialIcons, name: 'arrow-back', size: 28, color: '#000000ff' }}
-        rightIcon={{ component: MaterialIcons, name: 'settings', size: 26, color: '#000000ff' }}
+        leftIcon={{
+          component: MaterialIcons,
+          name: 'arrow-back',
+          size: 28,
+          color: '#000000ff',
+        }}
+        rightIcon={{
+          component: MaterialIcons,
+          name: 'settings',
+          size: 26,
+          color: '#000000ff',
+        }}
       />
-            <SectionList
-            sections={DATA}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index, section }) => (
-                <NotificationItem
-                title="New update available"
-                description="Update splitly and enjoy new features, please press to see new updates"
-                time="9:45 PM"
-                index={index} 
-                />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-                <SectionDivider title={title} />
-            )}
-            />
+      <SectionList
+        sections={DATA}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index, section }) => (
+          <NotificationItem
+            title="New update available"
+            description="Update splitly and enjoy new features, please press to see new updates"
+            time="9:45 PM"
+            index={index}
+          />
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <SectionDivider title={title} />
+        )}
+      />
     </SafeAreaView>
   );
 }

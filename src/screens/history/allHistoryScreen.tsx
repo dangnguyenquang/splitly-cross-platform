@@ -1,9 +1,9 @@
-import React from "react";
-import { View, StyleSheet, SectionList } from "react-native";
-import CardItem from "../../components/history/HistoryCardItem";
-import SectionDivider from "../../components/history/SectionDivider";
-import { HistoryDetailScreen } from "./historyDetailScreen";
-import { useNavigation } from "@react-navigation/native";
+import React from 'react';
+import { View, StyleSheet, SectionList } from 'react-native';
+import CardItem from '../../components/history/HistoryCardItem';
+import SectionDivider from '../../components/history/SectionDivider';
+import { HistoryDetailScreen } from './historyDetailScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const DATA = [
   {
@@ -80,27 +80,27 @@ const DATA = [
 ];
 
 export function AllHistoryScreen() {
-    const navigation = useNavigation()
-    return (
-        <View>
-            <SectionList
-            sections={DATA}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index, section }) => (
-                <CardItem
-                username={item.username}
-                avatarUrl={item.avatarUrl}
-                time={item.time}
-                amount={item.amount}
-                type={item.type}
-                showDivider={index < section.data.length - 1}
-                onPress={()=>navigation.navigate("HistoryDetailScreen" as never)}
-                />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-                <SectionDivider title={title} />
-            )}
-            />
-        </View>
-    )
+  const navigation = useNavigation();
+  return (
+    <View>
+      <SectionList
+        sections={DATA}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index, section }) => (
+          <CardItem
+            username={item.username}
+            avatarUrl={item.avatarUrl}
+            time={item.time}
+            amount={item.amount}
+            type={item.type}
+            showDivider={index < section.data.length - 1}
+            onPress={() => navigation.navigate('HistoryDetailScreen' as never)}
+          />
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <SectionDivider title={title} />
+        )}
+      />
+    </View>
+  );
 }

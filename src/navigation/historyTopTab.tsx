@@ -10,7 +10,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function HistoryTopTabs() {
   return (
-    <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
+    <Tab.Navigator tabBar={props => <CustomTabBar {...props} />}>
       <Tab.Screen name="All" component={AllHistoryScreen} />
       <Tab.Screen name="Paid" component={PaidHistoryScreen} />
       <Tab.Screen name="Requests" component={RequestHistoryScreen} />

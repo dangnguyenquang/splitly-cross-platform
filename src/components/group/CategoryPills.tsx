@@ -18,7 +18,7 @@ const CategoryPills: React.FC<CategoryPillsProps> = ({
     <View style={styles.container}>
       <Text style={styles.label}>Category</Text>
       <View style={styles.pillsContainer}>
-        {categories.map((category) => (
+        {categories.map(category => (
           <Pressable
             key={category.label}
             style={[

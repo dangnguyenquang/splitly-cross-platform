@@ -25,7 +25,6 @@ type OnboardNavigationProp = NativeStackNavigationProp<
   'Onboard'
 >;
 
-
 export default function OnboardContainer() {
   const navigation = useNavigation<OnboardNavigationProp>();
   const flatListRef = useRef<FlatList>(null);
@@ -34,7 +33,8 @@ export default function OnboardContainer() {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(
-      event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width
+      event.nativeEvent.contentOffset.x /
+        event.nativeEvent.layoutMeasurement.width,
     );
     setCurrentIndex(index);
   };
@@ -64,7 +64,7 @@ export default function OnboardContainer() {
         showsHorizontalScrollIndicator={false}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false, listener: handleScroll }
+          { useNativeDriver: false, listener: handleScroll },
         )}
         scrollEventThrottle={20}
       />
@@ -103,37 +103,40 @@ export default function OnboardContainer() {
         })}
       </View>
 
-        {currentIndex < screens.length - 1 ? (
-        <View style={[styles.buttonRow, { justifyContent: 'space-between', gap:10}]}>
-            <CustomButton
+      {currentIndex < screens.length - 1 ? (
+        <View
+          style={[
+            styles.buttonRow,
+            { justifyContent: 'space-between', gap: 10 },
+          ]}
+        >
+          <CustomButton
             title="Skip"
             type="secondary"
             width={190}
             height={60}
             borderRadius={25}
             onPress={handleSkip}
-            />
-            <CustomButton
+          />
+          <CustomButton
             title="Continue"
             width={190}
             height={60}
             borderRadius={25}
             onPress={handleNext}
-            />
+          />
         </View>
-        ) : (
+      ) : (
         <View style={[styles.buttonRow, { justifyContent: 'center' }]}>
-            <CustomButton
+          <CustomButton
             title="Get Started"
             width={400}
             height={50}
             borderRadius={30}
             onPress={() => navigation.navigate('GetStartedScreen')}
-            />
+          />
         </View>
-        )}
-
-
+      )}
     </View>
   );
 }
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontFamily:'NunitoSans-Variable'
+    fontFamily: 'NunitoSans-Variable',
   },
   dotContainer: {
     flexDirection: 'row',
@@ -161,5 +164,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 50,
-    },
+  },
 });

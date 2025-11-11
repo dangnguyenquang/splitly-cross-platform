@@ -15,13 +15,33 @@ export type GroupBasicInformation = {
   coverImage?: string;
   currency: string;
   category: string;
-}
+};
 
 export type Group = GroupBasicInformation & {
+  id: string;
   participants?: Contact[];
+};
+export interface Expense {
+  id: string;
+  expenseType: string;
+  title: string;
+  paidBy: string;
+  amount: string;
+  dateTime: Date;
 }
 
-export type CategoryType = 'Trip' | 'Family' | 'Couple' | 'Event' | 'Project' | 'Other';
+export interface GroupDetailInformation extends GroupBasicInformation {
+  id: string;
+  participants?: Contact[];
+  expenses?: Expense[];
+}
+export type CategoryType =
+  | 'Trip'
+  | 'Family'
+  | 'Couple'
+  | 'Event'
+  | 'Project'
+  | 'Other';
 
 export interface CategoryOption {
   label: CategoryType;

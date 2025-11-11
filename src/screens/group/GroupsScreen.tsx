@@ -9,21 +9,29 @@ import EmptyState from '../../components/group/EmptyState';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { mockGroups } from '@/data/mockData';
 
+import { Fab, FabIcon } from '../../../components/ui/fab';
+import { AddIcon } from '../../../components/ui/icon';
+import { colors } from '@/src/constant/theme';
 type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
 
 const GroupsScreen: React.FC = () => {
   const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
-    setGroups([])
-  }, [])
+    const fetchGroups = async () => {
+      setGroups(mockGroups);
+    };
 
-  const navigation = useNavigation<GroupsScreenNavigationProp>()
+    fetchGroups();
+  }, []);
+
+  const navigation = useNavigation<GroupsScreenNavigationProp>();
   const handleSelectGroup = (group: Group) => {
-    console.log(group)
-    // navigation.navigate('GroupDetail', { groupId: group.id });
+    console.log(group);
+    navigation.navigate('GroupDetail', { groupId: group.id, group: group });
   };
 
   const handleCreateGroup = () => {
@@ -35,21 +43,32 @@ const GroupsScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header title="Groups" showLogo showMenu />
 
       {groups.length === 0 ? (
         <EmptyState onCreateGroup={handleCreateGroup} />
       ) : (
-        <FlatList
-          data={groups}
-          renderItem={renderGroup}
-          // keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-        />
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={groups}
+            renderItem={renderGroup}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.listContent}
+          />
+          <Fab
+            size="lg"
+            placement="bottom right"
+            isHovered={false}
+            isDisabled={false}
+            isPressed={false}
+            style={styles.fabButton}
+          >
+            <FabIcon as={AddIcon} style={styles.fabIcon} />
+          </Fab>
+        </View>
       )}
-
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -60,6 +79,15 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingVertical: 16,
+  },
+  fabButton: {
+    backgroundColor: colors.primary,
+    color: colors.primary,
+    width: 60,
+    height: 60,
+  },
+  fabIcon: {
+    color: 'black',
   },
 });
 

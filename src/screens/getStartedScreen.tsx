@@ -7,16 +7,17 @@ import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 export default function GetStartedScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const handleNext = () => {
-    console.log("Handle on clicked");
+    console.log('Handle on clicked');
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Image
-          source={require('../../assets/logo.png')} 
+          source={require('../../assets/logo.png')}
           style={styles.topImage}
           resizeMode="cover"
         />
@@ -24,7 +25,8 @@ export default function GetStartedScreen() {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Let's get started</Text>
           <Text style={styles.subtitle}>
-            Easily manage your Splitlyfy friends. Add, remove, and stay in the loop of who you're splitting with.
+            Easily manage your Splitlyfy friends. Add, remove, and stay in the
+            loop of who you're splitting with.
           </Text>
         </View>
 
@@ -44,7 +46,7 @@ export default function GetStartedScreen() {
             width={width * 0.85}
             height={50}
             borderRadius={30}
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => navigation.navigate('SignUp')}
           />
 
           <CustomButton
@@ -53,7 +55,7 @@ export default function GetStartedScreen() {
             width={width * 0.85}
             height={50}
             borderRadius={30}
-            onPress={() => navigation.navigate("SignIn")}
+            onPress={() => navigation.navigate('SignIn')}
           />
         </View>
       </View>
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 40,
-    fontFamily:'NunitoSans-Variable'
+    fontFamily: 'NunitoSans-Variable',
   },
 
   content: {
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    fontFamily:'NunitoSans-Variable',
+    fontFamily: 'NunitoSans-Variable',
     color: '#222',
     marginBottom: 12,
   },

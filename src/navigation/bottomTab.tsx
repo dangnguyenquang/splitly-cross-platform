@@ -82,7 +82,7 @@ function BottomNavigationTabs() {
         component={CameraScreen}
         options={{
           tabBarLabel: TAB_CONFIG.Camera.label,
-          tabBarIconStyle: { marginTop: Platform.OS === 'ios' ? -4 : 0 }
+          tabBarIconStyle: { marginTop: Platform.OS === 'ios' ? -4 : 0 },
         }}
       />
       <Tab.Screen

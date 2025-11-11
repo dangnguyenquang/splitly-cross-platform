@@ -1,4 +1,4 @@
-import { GroupBasicInformation } from "../types";
+import { Group, GroupBasicInformation } from '../types';
 
 export type RootStackParamList = {
   Onboard: undefined;
@@ -6,10 +6,10 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   MainApp: undefined;
-  //   GroupDetail: { groupId: string };
   CreateGroup: undefined;
   SelectParticipants: { groupData: GroupBasicInformation };
-  GroupsScreen: undefined
+  GroupDetail: { groupId: string; group?: Group };
+  GroupsScreen: undefined;
 
   History: undefined;
   Request: undefined;

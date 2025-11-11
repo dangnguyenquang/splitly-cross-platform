@@ -10,7 +10,7 @@ export default function AccountScreen() {
         title="Account"
         onLeftPress={() => console.log('Menu pressed')}
         onRightPress={() => console.log('Notifications pressed')}
-        backgroundColor= "#fff"
+        backgroundColor="#fff"
         titleColor="#070707ff"
         shadow={true}
       />

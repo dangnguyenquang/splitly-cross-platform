@@ -8,23 +8,21 @@ interface TabSwitchProps {
   onTabChange: (tab: string) => void;
 }
 
-const TabSwitch: React.FC<TabSwitchProps> = ({ tabs, activeTab, onTabChange }) => {
+const TabSwitch: React.FC<TabSwitchProps> = ({
+  tabs,
+  activeTab,
+  onTabChange,
+}) => {
   return (
     <View style={styles.container}>
-      {tabs.map((tab) => (
+      {tabs.map(tab => (
         <Pressable
           key={tab}
-          style={[
-            styles.tab,
-            activeTab === tab && styles.activeTab,
-          ]}
+          style={[styles.tab, activeTab === tab && styles.activeTab]}
           onPress={() => onTabChange(tab)}
         >
           <Text
-            style={[
-              styles.tabText,
-              activeTab === tab && styles.activeTabText,
-            ]}
+            style={[styles.tabText, activeTab === tab && styles.activeTabText]}
           >
             {tab}
           </Text>

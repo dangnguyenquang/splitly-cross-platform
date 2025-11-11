@@ -11,5 +11,5 @@ type CardItemProps = {
 
   type?: string;
 
-  onPress?: () => void; 
+  onPress?: () => void;
 };
