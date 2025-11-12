@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Expense } from '@/types';
-import { categoryColorMap, categoryIconMap } from '@/utils/categoryIcon';
+import { categoryColorMap, categoryIconMap } from '@/utils/CategoryIcon';
 import { colors } from '@/src/constant/theme';
-import { SCREEN_WIDTH } from '@/utils/dimensions';
+import { SCREEN_WIDTH } from '@/utils/Dimensions';
 
 interface ExpenseCardProps {
   expense: Expense;

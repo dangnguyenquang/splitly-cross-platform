@@ -28,7 +28,7 @@ const participants: Contact[] = [
 const expenses: Expense[] = [
   {
     id: '1',
-    expenseType: 'Trip',
+    expenseType: 'Dining',
     title: 'Lunch',
     paidBy: 'Alice',
     amount: '2500000',
@@ -36,7 +36,7 @@ const expenses: Expense[] = [
   },
   {
     id: '2',
-    expenseType: 'Project',
+    expenseType: 'Games',
     title: 'Taxi',
     paidBy: 'Bob',
     amount: '40000000',
@@ -44,7 +44,7 @@ const expenses: Expense[] = [
   },
   {
     id: '3',
-    expenseType: 'Couple',
+    expenseType: 'General',
     title: 'Hotel',
     paidBy: 'Charlie',
     amount: '100000',
@@ -52,7 +52,7 @@ const expenses: Expense[] = [
   },
   {
     id: '4',
-    expenseType: 'Event',
+    expenseType: 'Movies',
     title: 'Museum tickets',
     paidBy: 'Alice',
     amount: '300000',
@@ -60,7 +60,7 @@ const expenses: Expense[] = [
   },
   {
     id: '5',
-    expenseType: 'Trip',
+    expenseType: 'Music',
     title: 'Lunch',
     paidBy: 'Alice',
     amount: '2500000',
@@ -68,7 +68,7 @@ const expenses: Expense[] = [
   },
   {
     id: '6',
-    expenseType: 'Project',
+    expenseType: 'General',
     title: 'Taxi',
     paidBy: 'Bob',
     amount: '400000',
@@ -76,7 +76,7 @@ const expenses: Expense[] = [
   },
   {
     id: '7',
-    expenseType: 'Couple',
+    expenseType: 'Groceries',
     title: 'Hotel',
     paidBy: 'Charlie',
     amount: '1500000',
@@ -84,7 +84,7 @@ const expenses: Expense[] = [
   },
   {
     id: '8',
-    expenseType: 'Event',
+    expenseType: 'Games',
     title: 'Museum tickets',
     paidBy: 'Alice',
     amount: '30000000',

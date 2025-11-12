@@ -8,13 +8,20 @@ import { AddIcon } from '../../../../components/ui/icon';
 import { colors } from '@/src/constant/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/types';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 type ExpenseNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+type ExpenseRouteProp = RouteProp<
+  { Expense: { groupId: string; group: any } },
+  'Expense'
+>;
 const ExpenseScreen: React.FC = () => {
   const [groupDetail, setGroupDetail] = useState<GroupDetailInformation>();
   const navigation = useNavigation<ExpenseNavigationProp>();
+  const route = useRoute<ExpenseRouteProp>();
+  const { groupId, group } = route.params;
+
   useEffect(() => {
-    // Simulate fetching group details
     const fetchGroupDetail = async () => {
       setGroupDetail(mockGroupDetail);
     };
@@ -34,7 +41,7 @@ const ExpenseScreen: React.FC = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={styles.container}>
       <FlatList
         data={groupDetail.expenses}
         keyExtractor={(item: Expense) => item.id}
@@ -54,7 +61,7 @@ const ExpenseScreen: React.FC = () => {
         isDisabled={false}
         isPressed={false}
         style={styles.fabButton}
-        onPress={() => navigation.navigate('AddExpense')}
+        onPress={() => navigation.navigate('AddExpense', { groupId, group })}
       >
         <FabIcon as={AddIcon} style={styles.fabIcon} />
         <FabLabel style={styles.fabIcon}>Add expense</FabLabel>
@@ -66,6 +73,10 @@ const ExpenseScreen: React.FC = () => {
 export default ExpenseScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   listContent: {
     paddingBottom: 120,
     paddingTop: 8,

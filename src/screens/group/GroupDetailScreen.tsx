@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image, StyleSheet, View } from 'react-native';
 import Header from '../../components/Header';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/utils/dimensions';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/utils/Dimensions';
 import { GroupDetailInformation } from '@/types';
 import { mockGroupDetail } from '@/data/mockDataGroupDetail';
 import GroupDetailTopTabs from '@/src/navigation/GroupDetailTopTab';
@@ -48,8 +48,8 @@ const GroupDetailScreen: React.FC = () => {
           style={styles.groupAvatar}
         />
       </View>
-      <View style={{ flex: 1, height: SCREEN_HEIGHT * 0.2 }}>
-        <GroupDetailTopTabs />
+      <View style={styles.topTabContainer}>
+        <GroupDetailTopTabs groupId={groupId} group={group} />
       </View>
     </SafeAreaView>
   );
@@ -73,6 +73,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#ccc',
+  },
+  topTabContainer: {
+    flex: 1,
+    height: SCREEN_HEIGHT * 0.2,
   },
 });
 

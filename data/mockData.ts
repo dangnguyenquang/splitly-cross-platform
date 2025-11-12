@@ -1,5 +1,5 @@
 // src/data/mockData.ts
-import { Contact, Group, CategoryOption } from '../types';
+import { Contact, Group, CategoryOption, ExpenseOption } from '../types';
 
 export const mockContacts: Contact[] = [
   {
@@ -68,4 +68,13 @@ export const categories: CategoryOption[] = [
   { label: 'Event', icon: '📅' },
   { label: 'Project', icon: '📦' },
   { label: 'Other', icon: '🧩' },
+];
+
+export const expenseCategory: ExpenseOption[] = [
+  { label: 'General' },
+  { label: 'Games' },
+  { label: 'Movies' },
+  { label: 'Music' },
+  { label: 'Groceries' },
+  { label: 'Dining' },
 ];

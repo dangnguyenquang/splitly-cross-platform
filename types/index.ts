@@ -47,3 +47,20 @@ export interface CategoryOption {
   label: CategoryType;
   icon: string;
 }
+
+export interface GroupDetailTopTabsProps {
+  groupId: string;
+  group?: Group;
+}
+
+export type ExpenseType =
+  | 'General'
+  | 'Games'
+  | 'Movies'
+  | 'Music'
+  | 'Groceries'
+  | 'Dining';
+
+export interface ExpenseOption {
+  label: ExpenseType;
+}
