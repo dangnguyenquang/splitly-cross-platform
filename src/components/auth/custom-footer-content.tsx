@@ -16,7 +16,7 @@ export default function FooterContent({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
-    <View className='flex-row items-center justify-center pt-16 gap-1'>
+    <View className='flex-row items-center justify-center pt-8 gap-1'>
       <Text style={styles.textFooter}>{text} </Text>
       <Pressable onPress={() => navigation.navigate(linkTo)}>
         <Text style={styles.textBold}>{boldText}</Text>
