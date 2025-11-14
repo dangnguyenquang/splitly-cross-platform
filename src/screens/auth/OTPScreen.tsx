@@ -1,13 +1,13 @@
 // screen
 import { View, Text } from 'react-native';
-import OtpInputs from '../../components/auth/otp-input';
-import CustomButton from '../../components/CustomButton';
-import { Countdown } from '../../components/auth/count-down';
+import OtpInputs from '@/src/components/auth/OtpInput';
+import CustomButton from '@/src/components/CustomButton';
+import { Countdown } from '@/src/components/auth/CountDown';
 import { useState, useCallback } from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '@/src/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { verifyOTP } from '../../api/auth.api';
+import { verifyOTP } from '@/src/api/auth.api';
 type OTPRoute = RouteProp<RootStackParamList, 'OTP'>;
 export default function OTPSreen() {
   const INITIAL = 30;
@@ -18,7 +18,7 @@ export default function OTPSreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { params } = useRoute<OTPRoute>();
-  
+
   const handleResend = useCallback(() => {
     setCanResend(false);
     setSeed(s => s + 1);
@@ -26,7 +26,7 @@ export default function OTPSreen() {
 
   const handleVerify = async () => {
     try {
-      if (params) {
+      if (params && otp.length === 6) {
         const res = verifyOTP(otp, params.email, navigation);
         console.log('res: ', res);
       }

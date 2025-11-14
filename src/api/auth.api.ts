@@ -8,10 +8,10 @@ import {
   registerSuccess,
 } from '../store/authSlice';
 import { AppDispatch } from '../store/store';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '@/src/types';
+import { RegisterForm } from '../screens/auth/SignUpScreen';
+import { LoginForm } from '../screens/auth/SignInScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RegisterForm } from '../screens/auth/sign-up-screen';
-import { LoginForm } from '../screens/auth/sign-in-screen';
 
 export const userLogin = async (
   dispatch: AppDispatch,
@@ -55,6 +55,7 @@ export const userRegister = async (
       });
     }
   } catch (err: unknown) {
+    console.log('Err api: ', err);
     dispatch(loginFail());
     if (axios.isAxiosError(err)) {
       throw err;

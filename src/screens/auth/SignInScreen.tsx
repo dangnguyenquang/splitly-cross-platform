@@ -1,21 +1,20 @@
 import { View, Text, Pressable } from 'react-native';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { colors } from '../../Constant/theme';
-import InputAuth from '../../components/auth/custom-input-auth';
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import FooterContent from '../../components/auth/custom-footer-content';
-import CustomButton from '../../components/CustomButton';
-import { useForm, Controller } from 'react-hook-form';
-import { userLogin } from '../../api/auth.api';
-import { useDispatch } from 'react-redux';
+import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import { colors } from '@/src/constant/theme';
+import InputAuth from '@/src/components/auth/CustomInputAuth';
+import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
+import FooterContent from '@/src/components/auth/CustomFooterContent';
+import CustomButton from '@/src/components/CustomButton';
+import { useForm, Controller } from 'react-hook-form';
+import { userLogin } from '@/src/api/auth.api';
+import { useDispatch } from 'react-redux';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../App';
-import { User } from '../../types';
+import { RootStackParamList, User } from '@/src/types';
 import axios from 'axios';
-import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ErrorToastify from '@/src/components/auth/ErrorToastify';
 
 export type LoginForm = {
   email: string;
@@ -69,21 +68,7 @@ export default function SignInScreen() {
         <Text className="text-lg font-normal mt-10 mb-8">
           Please enter email and password to sign in
         </Text>
-        <View className="pb-4">
-          {errors.root?.message && (
-            <View className="flex-row justify-between items-center bg-red-200 py-2 px-3 rounded-lg">
-              <View className="flex-row items-center gap-2">
-                <Ionicons
-                  name="information-circle-outline"
-                  size={24}
-                  color="red"
-                />
-                <Text className="text-slate-900">{errors.root.message}</Text>
-              </View>
-              <Text>x</Text>
-            </View>
-          )}
-        </View>
+        <ErrorToastify errors={errors} />
         <View className="">
           <Controller
             control={control}

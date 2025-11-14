@@ -7,5 +7,12 @@
     "./App.tsx",
     "types"
   ],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "exclude": ["**/node_modules", "**/Pods"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+
 }

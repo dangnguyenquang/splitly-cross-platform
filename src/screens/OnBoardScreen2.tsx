@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function OnboardScreen2() {
   return (
@@ -18,7 +18,8 @@ export default function OnboardScreen2() {
       <View style={styles.bottomContainer}>
         <Text style={styles.title}>Track your expenses easily</Text>
         <Text style={styles.description}>
-          Monitor and categorize your spending habits to manage your finances smartly.
+          Monitor and categorize your spending habits to manage your finances
+          smartly.
         </Text>
       </View>
     </View>
@@ -36,7 +37,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
   },
-  title: { fontSize: 20, fontWeight: '700', textAlign: 'center', color: '#000' },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#000',
+  },
   description: {
     textAlign: 'center',
     color: '#555',

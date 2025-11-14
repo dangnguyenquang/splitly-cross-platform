@@ -1,19 +1,20 @@
 import { View, Text, ScrollView } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
-import { colors } from '../../Constant/theme';
-import InputAuth from '../../components/auth/custom-input-auth';
+import { colors } from '@/src/constant/theme.ts';
+import InputAuth from '@/src/components/auth/CustomInputAuth';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import FooterContent from '../../components/auth/custom-footer-content';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '@/src/components/CustomButton';
+import FooterContent from '@/src/components/auth/CustomFooterContent';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '@/src/types';
 import { useForm, Controller } from 'react-hook-form';
-import { userRegister } from '../../api/auth.api';
+import { userRegister } from '@/src/api/auth.api';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ErrorToastify from '@/src/components/auth/ErrorToastify';
 export interface RegisterForm {
   userName: string;
   email: string;
@@ -27,6 +28,7 @@ export default function SignUpScreen() {
     control,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm<RegisterForm>({
     defaultValues: {
@@ -50,9 +52,14 @@ export default function SignUpScreen() {
       console.log(res);
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        return (
-          err.response?.data || err.message, err.response?.status || 'No status'
-        );
+        console.log('Err: ', err.response?.data.message);
+        if (err.response?.data.message === 'Email already taken.') {
+          setError('root', {
+            type: 'server',
+            message: 'Email has already exitsted',
+          });
+        }
+        return err;
       } else {
         return err;
       }
@@ -72,9 +79,10 @@ export default function SignUpScreen() {
             />
           </View>
         </View>
-        <Text className="text-lg font-normal my-6">
+        <Text className="text-lg font-normal mt-4 mb-6">
           Please enter email and password to sign up
         </Text>
+        <ErrorToastify errors={errors} />
         <View className="">
           <Controller
             control={control}
@@ -94,13 +102,13 @@ export default function SignUpScreen() {
             )}
           />
           {errors.userName && (
-            <Text className="text-red-600">This is required</Text>
+            <Text className="text-red-600">{errors.userName.message}</Text>
           )}
           <Controller
             control={control}
             name="email"
             rules={{
-              required: 'Email is required',
+              required: 'Please enter your email',
               maxLength: { value: 100, message: 'Maximum 100 letters' },
               pattern: {
                 value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
@@ -177,11 +185,9 @@ export default function SignUpScreen() {
             name="phoneNumber"
             rules={{
               required: 'Please enter your phone number',
-              minLength: { value: 10, message: 'At least 10 letters' },
-              validate: {
-                hasNumber: v =>
-                  (/\d/.test(v)) ||
-                  'Password must have only number',
+              pattern: {
+                value: /^0\d{9}$/,
+                message: 'Phone must be 10 digits and start with 0',
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -195,7 +201,7 @@ export default function SignUpScreen() {
             )}
           />
           {errors.phoneNumber && (
-            <Text className="text-red-600">This is required</Text>
+            <Text className="text-red-600">{errors.phoneNumber.message}</Text>
           )}
         </View>
         <View className="">
