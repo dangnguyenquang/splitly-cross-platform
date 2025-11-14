@@ -1,7 +1,6 @@
 // src/screens/SelectParticipantsScreen.tsx
 import React, { useState } from 'react';
 import { View, FlatList, StyleSheet, TextInput } from 'react-native';
-import { Contact } from '../../../types';
 import { mockContacts } from '../../../data/mockData';
 import ContactItem from '../../components/group/ContactItem';
 import Header from '../../components/Header';
@@ -11,7 +10,7 @@ import ActionButtons from '../../components/group/ActionButtons';
 
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/types';
+import { RootStackParamList, Contact } from '@/src/types';
 
 type SelectParticipantsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;

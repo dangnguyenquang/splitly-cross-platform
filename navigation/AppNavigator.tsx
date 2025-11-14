@@ -2,8 +2,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types';
-
+import { RootStackParamList } from '@/src/types';
 import BottomNavigationTabs from '@/src/navigation/BottomTab';
 import TransactionHistoryScreen from '@/src/screens/history';
 import RequestScreen from '@/src/screens/request';
@@ -17,6 +16,8 @@ import SignUpScreen from '@/src/screens/auth/SignUpScreen';
 import SelectParticipantsScreen from '@/src/screens/group/SelectParticipantsScreen';
 import GroupsScreen from '@/src/screens/group/GroupsScreen';
 import NewGroupScreen from '@/src/screens/group/NewGroupScreen';
+import OTPSreen from '@/src/screens/auth/OTPScreen';
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -41,6 +42,8 @@ function AppNavigator() {
                 <Stack.Screen name="Notifications" component={NotificationScreen} />
                 <Stack.Screen name="HistoryDetailScreen" component={HistoryDetailScreen} />
                 <Stack.Screen name="ReceiptScreen" component={ReceiptScreen} />
+                <Stack.Screen name="OTP" component={OTPSreen} />
+
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -1,0 +1,22 @@
+import axios from 'axios';
+import { Platform } from 'react-native';
+
+const PORT = 8080;
+
+export const BE_BASE_URL = Platform.select({
+  android: `http://10.0.2.2:${PORT}/api/v1`, // emulator Android
+  ios: `http://localhost:${PORT}/api/v1`, // simulator iOS
+});
+const response = axios.create({
+  baseURL: BE_BASE_URL,
+});
+response.interceptors.response.use(
+  function (response) {
+    return response.data;
+  },
+  function (error) {
+    return Promise.reject(error);
+  },
+);
+
+export { response };

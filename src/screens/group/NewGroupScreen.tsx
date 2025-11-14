@@ -1,7 +1,6 @@
 // src/screens/NewGroupScreen.tsx
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { CategoryType } from '../../../types';
 import Header from '../../components/Header';
 import UploadCover from '../../components/UploadCover';
 import InputField from '../../components/InputField';
@@ -11,7 +10,7 @@ import ActionButtons from '../../components/group/ActionButtons';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/types';
+import { RootStackParamList, CategoryType } from '@/src/types';
 
 type NewGroupScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;

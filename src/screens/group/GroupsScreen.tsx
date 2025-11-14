@@ -1,14 +1,13 @@
 // src/screens/GroupsScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { Group } from '../../../types';
 import GroupCard from '../../components/group/GroupCard';
 import Header from '../../components/Header';
 import EmptyState from '../../components/group/EmptyState';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/types';
+import { RootStackParamList, Group } from '@/src/types';
 
 type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '@/navigation/types';
+import { RootStackParamList } from '@/src/types';
 const { width, height } = Dimensions.get('window');
 
 export default function GetStartedScreen() {

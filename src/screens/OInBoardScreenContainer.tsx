@@ -15,7 +15,7 @@ import OnboardScreen3 from './OnBoardScreen3';
 import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/navigation/types';
+import { RootStackParamList } from '@/src/types';
 const { width } = Dimensions.get('window');
 const screens = [<OnboardScreen1 />, <OnboardScreen2 />, <OnboardScreen3 />];
 type OnboardNavigationProp = NativeStackNavigationProp<

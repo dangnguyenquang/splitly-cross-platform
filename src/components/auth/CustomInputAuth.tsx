@@ -15,12 +15,13 @@ export default function InputAuth({
   icon,
   placeholder,
   value,
-  secure,
   label,
   hiddenIcon,
   onChangeText,
 }: Readonly<InputAuthProps>) {
   const [isHidden, setIsHidden] = useState<boolean>(false);
+  const [secure, setSecure] = useState<boolean>(!!hiddenIcon);
+
   return (
     <View style={styles.container}>
       <Text className="">{label}</Text>
@@ -35,7 +36,10 @@ export default function InputAuth({
       {hiddenIcon && (
         <Pressable
           style={styles.iconHiddenWrap}
-          onPress={() => setIsHidden(prev => !prev)}
+          onPress={() => {
+            setIsHidden(prev => !prev);
+            setSecure?.(prev => !prev);
+          }}
           hitSlop={8}
         >
           <MaterialDesignIcons
