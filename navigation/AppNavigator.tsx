@@ -19,6 +19,7 @@ import NewGroupScreen from '@/src/screens/group/NewGroupScreen';
 import OTPSreen from '@/src/screens/auth/OTPScreen';
 
 
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigator() {
