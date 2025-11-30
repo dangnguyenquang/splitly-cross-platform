@@ -137,7 +137,7 @@ export default function SignInScreen() {
           />
         </View>
         <View className="w-screen flex-1 justify-end">
-          <CustomButton title="Sign in" onPress={handleSubmit(onSubmit)} />
+          <CustomButton title="Sign in" onPress={handleSubmit(onSubmit)} testID='sign-in-button'/>
         </View>
       </View>
     </SafeAreaView>

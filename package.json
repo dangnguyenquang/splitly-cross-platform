@@ -9,9 +9,10 @@
     "start": "react-native start",
     "format": "prettier --config .prettierrc.js --write src/**/*.{ts,tsx,css,scss,sass,json}",
     "format:check": "prettier --config .prettierrc.js --check src/**/*.{ts,tsx,css,scss,sass,json}",
-    "test": "jest",
+    "test": "jest --no-cache --config jest.config.ts",
     "test:watch": "jest --watch --config jest.config.ts",
-    "test:coverage": "jest --coverage --config jest.config.ts"
+    "test:coverage": "jest --coverage --config jest.config.ts",
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.13",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
@@ -76,8 +78,11 @@
     "@types/react-native": "^0.72.8",
     "@types/react-native-vector-icons": "^6.4.18",
     "@types/react-test-renderer": "^19.1.0",
+    "axios-mock-adapter": "^2.1.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^30.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "eslint": "^8.19.0",
     "jest": "^30.2.0",
     "metro-react-native-babel-preset": "^0.77.0",

@@ -5,5 +5,5 @@ export interface User {
     phone: string,
     gender?: boolean
     token?: string
-    group: undefined
+    group: string
 }

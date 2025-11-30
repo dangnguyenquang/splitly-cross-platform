@@ -10,8 +10,8 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "target": "ES6",
-    // "module": "commonjs",
-
+    "forceConsistentCasingInFileNames": true, 
+    "strict": true,
   },
   "include": [
     "**/*.ts",

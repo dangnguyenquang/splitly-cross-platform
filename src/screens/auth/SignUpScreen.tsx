@@ -220,7 +220,7 @@ export default function SignUpScreen() {
           />
         </View>
         <View className="w-screen flex-1 justify-end py-10">
-          <CustomButton title="Sign up" onPress={handleSubmit(onSubmit)} />
+          <CustomButton title="Sign up" onPress={handleSubmit(onSubmit)} testID='sign-up-button'/>
         </View>
       </ScrollView>
     </SafeAreaView>

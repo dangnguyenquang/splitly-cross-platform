@@ -75,7 +75,7 @@ export const verifyOTP = async (
     if (res.status === 200) {
       navigate.reset({
         index: 0,
-        routes: [{ name: 'GetStartedScreen' }],
+        routes: [{ name: 'MainApp' }],
       });
     }
   } catch (err: unknown) {

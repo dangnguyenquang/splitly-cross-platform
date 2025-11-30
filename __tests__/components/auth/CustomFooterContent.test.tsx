@@ -31,8 +31,8 @@ describe('FooterContent', () => {
       />
     );
 
-    fireEvent.press(getByText('LogIn'));
+    fireEvent.press(getByText('SignIn'));
     expect(mockNavigate).toHaveBeenCalledTimes(1);
-    expect(mockNavigate).toHaveBeenCalledWith('LogIn');
+    expect(mockNavigate).toHaveBeenCalledWith('SignIn');
   });
 });

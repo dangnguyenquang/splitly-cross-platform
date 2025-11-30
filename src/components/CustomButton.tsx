@@ -22,6 +22,7 @@ interface CustomButtonProps {
   style?: ViewStyle;
   logo?: ImageSourcePropType;
   logoSize?: number;
+  testID?: string;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -35,6 +36,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   style,
   logo,
   logoSize = 22,
+  testID
 }) => {
   const buttonStyle: ViewStyle = {
     width,
@@ -44,6 +46,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
   return (
     <TouchableOpacity
+      testID={testID}
       onPress={onPress}
       activeOpacity={0.8}
       style={[
