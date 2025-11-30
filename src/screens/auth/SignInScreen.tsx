@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native';
-import * as React from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { colors } from '@/src/constant/theme';

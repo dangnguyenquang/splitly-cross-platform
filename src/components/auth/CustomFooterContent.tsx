@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import React from 'react';
 import { colors } from '../../constant/theme';
 import { RootStackParamList } from '@/src/types';
 interface IFooterContentProps {

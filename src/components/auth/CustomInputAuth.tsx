@@ -31,6 +31,7 @@ export default function InputAuth({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secure}
+        
       />
       {icon && <View style={styles.iconWrap}>{icon}</View>}
       {hiddenIcon && (
@@ -41,6 +42,8 @@ export default function InputAuth({
             setSecure?.(prev => !prev);
           }}
           hitSlop={8}
+          accessibilityRole="button"
+          testID="input-password-toggle"
         >
           <MaterialDesignIcons
             name={isHidden ? 'eye-outline' : 'eye-off-outline'}

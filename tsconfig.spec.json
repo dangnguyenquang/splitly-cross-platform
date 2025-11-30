@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "types": ["jest", "react", "react-native"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "jsx": "react-native",
+    "allowJs": true,
+    "noEmit": true,
+    "target": "esnext",
+    "module": "esnext"
+  },
+  "exclude": ["node_modules"]
+}

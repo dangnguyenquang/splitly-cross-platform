@@ -13,6 +13,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { userRegister } from '@/src/api/auth.api';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorToastify from '@/src/components/auth/ErrorToastify';
 export interface RegisterForm {

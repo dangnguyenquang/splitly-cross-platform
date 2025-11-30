@@ -1,18 +1,26 @@
 {
   "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"]
+    },                    
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "target": "ES6",
+    // "module": "commonjs",
+
+  },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "nativewind-env.d.ts",
     "./App.tsx",
-    "types"
+    "types",
+    "__tests__"
   ],
   "exclude": ["**/node_modules", "**/Pods"],
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["./*"]
-    }
-  }
 
 }

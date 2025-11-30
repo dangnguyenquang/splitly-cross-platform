@@ -132,6 +132,7 @@ export default function OtpInputs({
             ref={(el: TextInput | null) => {
               inputsRef.current[i] = el;
             }}
+            testID={`otp-input-${i}`}
             value={digits[i]}
             onChangeText={t => handleChangeText(t, i)}
             onKeyPress={e => handleKeyPress(e, i)}

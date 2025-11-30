@@ -85,11 +85,13 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 onPress={onLeftPress}
                 style={styles.iconButton}
                 activeOpacity={0.7}
+                testID="left-press"
               >
                 <leftIcon.component
                   name={leftIcon.name}
                   size={leftIcon.size || 24}
                   color={leftIcon.color || titleColor}
+                  
                 />
               </TouchableOpacity>
             )}
@@ -111,6 +113,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 onPress={onRightPress}
                 style={styles.iconButton}
                 activeOpacity={0.7}
+                testID="right-press"
               >
                 <rightIcon.component
                   name={rightIcon.name}

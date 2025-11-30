@@ -1,4 +1,5 @@
 import { View, Text } from 'react-native';
+import React from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { FieldErrors } from 'react-hook-form';
 import { LoginForm } from '@/src/screens/auth/SignInScreen';

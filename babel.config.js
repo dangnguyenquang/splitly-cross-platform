@@ -1,5 +1,10 @@
 module.exports = {
-  presets: ['module:@react-native/babel-preset', 'nativewind/babel'],
+  presets: [
+    'module:@react-native/babel-preset', // handles React Native + JSX
+    'nativewind/babel',
+    '@babel/preset-typescript', // TS support
+  ],
+  
   plugins: [
     [
       'module-resolver',
