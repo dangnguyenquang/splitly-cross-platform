@@ -1,0 +1,93 @@
+import { userLogin, userRegister, verifyOTP } from '@/src/api/auth.api';
+import {
+  loginFail,
+  loginStart,
+  loginSuccess,
+  registerStart,
+  registerSuccess,
+} from '@/src/store/authSlice';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { AppDispatch } from '@/src/store/store';
+import { RegisterForm } from '@/src/screens/auth/SignUpScreen';
+import { LoginForm } from '@/src/screens/auth/SignInScreen';
+import { User } from '@/src/types/user';
+
+const mockAxios = new MockAdapter(axios);
+
+describe('User API tests', () => {
+  const mockDispatch = jest.fn() as unknown as AppDispatch;
+  const mockNavigate = { reset: jest.fn() } as any;
+
+  afterEach(() => {
+    mockAxios.reset();
+    jest.clearAllMocks();
+  });
+
+  it('should login successfully', async () => {
+    const loginForm: LoginForm = { email: 'test@example.com', password: '123456' };
+    const mockUser: User = {
+      userId: 1,
+      email: 'test@example.com',
+    //   name: 'Test User',
+      username: 'testuser',
+      phone: '0123456789',
+      group: 'default',
+    };
+    const mockResponse = { token: 'mockToken', user: mockUser };
+
+    mockAxios.onPost('/auth/login', loginForm).reply(200, mockResponse);
+
+    const result = await userLogin(mockDispatch, loginForm, mockNavigate);
+
+    expect(mockDispatch).toHaveBeenCalledWith(loginStart());
+    expect(mockDispatch).toHaveBeenCalledWith(loginSuccess(mockUser));
+    expect(mockNavigate.reset).toHaveBeenCalledWith({
+      index: 0,
+      routes: [{ name: 'GetStartedScreen' }],
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('should fail login', async () => {
+    const loginForm: LoginForm = { email: 'wrong@example.com', password: 'wrongpass' };
+    mockAxios.onPost('/auth/login').reply(401);
+
+    await expect(userLogin(mockDispatch, loginForm, mockNavigate)).rejects.toThrow();
+    expect(mockDispatch).toHaveBeenCalledWith(loginFail());
+  });
+
+  it('should register successfully', async () => {
+    const registerForm: RegisterForm = {
+      email: 'new@example.com',
+      password: '123456',
+    //   name: 'Test User',
+      userName: 'testuser',
+      phoneNumber: '0123456789',
+    };
+
+    mockAxios.onPost('/auth/register', registerForm).reply(201, {});
+
+    await userRegister(mockDispatch, registerForm, mockNavigate);
+
+    expect(mockDispatch).toHaveBeenCalledWith(registerStart());
+    expect(mockDispatch).toHaveBeenCalledWith(registerSuccess());
+    expect(mockNavigate.reset).toHaveBeenCalledWith({
+      index: 0,
+      routes: [{ name: 'OTP', params: { email: registerForm.email } }],
+    });
+  });
+
+  it('should verify OTP successfully', async () => {
+    const otp = '123456';
+    const email = 'test@example.com';
+    mockAxios.onPost('/auth/verify', { otp, email }).reply(200, {});
+
+    await verifyOTP(otp, email, mockNavigate);
+
+    expect(mockNavigate.reset).toHaveBeenCalledWith({
+      index: 0,
+      routes: [{ name: 'GetStartedScreen' }],
+    });
+  });
+});
