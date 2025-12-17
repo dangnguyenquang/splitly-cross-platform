@@ -11,15 +11,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { userLogin } from '@/src/api/auth.api';
 import { useDispatch } from 'react-redux';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList, User } from '@/src/types';
+import { LoginForm, RootStackParamList, User } from '@/src/types';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorToastify from '@/src/components/auth/ErrorToastify';
+import CheckBox from '@/src/components/CheckBox';
+import { useState } from 'react';
+import LoadingModal from '@/src/components/LoadingModal';
 
-export type LoginForm = {
-  email: string;
-  password: string;
-};
 export default function SignInScreen() {
   const {
     control,
@@ -33,10 +32,14 @@ export default function SignInScreen() {
     },
   });
   const dispatch = useDispatch();
+  const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const onSubmit = async (data: LoginForm) => {
     try {
+      setIsLoading(true);
       const res: User = await userLogin(dispatch, data, navigate);
       console.log('Response: ', res.email);
     } catch (err) {
@@ -49,6 +52,8 @@ export default function SignInScreen() {
         }
         return err;
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -75,10 +80,10 @@ export default function SignInScreen() {
             rules={{
               required: 'Email is required',
               maxLength: { value: 100, message: 'Maximum 100 letters' },
-              pattern: {
-                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                message: 'Email is invalid',
-              },
+              // pattern: {
+              //   value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+              //   message: 'Email is invalid',
+              // },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <InputAuth
@@ -97,13 +102,13 @@ export default function SignInScreen() {
           <Controller
             control={control}
             rules={{
-              required: 'Have not entered password',
-              minLength: { value: 8, message: 'At least 8 letters' },
-              validate: {
-                hasLetterAndNumber: v =>
-                  (/[A-Za-z]/.test(v) && /\d/.test(v)) ||
-                  'Password must have number and letter',
-              },
+              required: 'Password is required',
+              //minLength: { value: 8, message: 'At least 8 letters' },
+              // validate: {
+              //   hasLetterAndNumber: v =>
+              //     (/[A-Za-z]/.test(v) && /\d/.test(v)) ||
+              //     'Password must have number and letter',
+              // },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <InputAuth
@@ -123,13 +128,21 @@ export default function SignInScreen() {
         </View>
         <View>
           <View className="flex-row justify-between font-normal text-2xl pt-16">
-            <Text>Remember me?</Text>
-            <Pressable>
-              <Text className="text-primary">Forgot password?</Text>
+            <View>
+              <CheckBox
+                value={isChecked}
+                title="Remember me?"
+                setIsCheck={() => setIsChecked(prev => !prev)}
+              />
+            </View>
+            <Pressable onPress={() => navigate.navigate("ResetPassword")}>
+              <Text className="text-primary-10 font-bold">
+                Forgot password?
+              </Text>
             </Pressable>
           </View>
         </View>
-        <View>
+        <View className="pt-6">
           <FooterContent
             text="Don't have an account?"
             boldText="Sign up"
@@ -137,9 +150,21 @@ export default function SignInScreen() {
           />
         </View>
         <View className="w-screen flex-1 justify-end">
-          <CustomButton title="Sign in" onPress={handleSubmit(onSubmit)} />
+          <CustomButton
+            title="Sign in"
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </View>
+      {isLoading && (
+        <LoadingModal
+          isLoading={isLoading}
+          title="Sign in Successful!"
+          messageLine1="You will be directed to the"
+          messageLine2="homepage."
+          iconName="user"
+        />
+      )}
     </SafeAreaView>
   );
 }

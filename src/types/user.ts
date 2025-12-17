@@ -7,3 +7,17 @@ export interface User {
     token?: string
     group: undefined
 }
+
+export interface RegisterForm {
+  userName: string;
+  email: string;
+  password: string;
+  confirm?: string;
+  phoneNumber: string;
+  gender?: string;
+}
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};

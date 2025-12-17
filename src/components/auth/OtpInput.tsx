@@ -1,171 +1,144 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Text, TextInput, View, StyleSheet, Platform } from "react-native";
 
 type OtpInputProps = {
   length?: number;
-  value?: string; // <-- thêm: controlled từ parent (string)
-  defaultValue?: string; // <-- thêm: giá trị khởi tạo nếu không controlled
+  value?: string;
+  defaultValue?: string;
   onComplete?: (code: string) => void;
-  onChangeCode?: (code: string) => void; // gọi mỗi lần đổi
+  onChangeCode?: (code: string) => void;
   autoFocus?: boolean;
+
+  errorMessage?: string; // ✅ thêm
 };
 
-const onlyDigits = (s: string) => (s ?? '').replace(/\D/g, '');
+const onlyDigits = (s: string) => (s ?? "").replace(/\D/g, "");
 
 export default function OtpInputs({
-  length = 4,
-  value, // <-- string từ parent nếu controlled
-  defaultValue = '',
+  length = 6,
+  value,
+  defaultValue = "",
   onComplete,
   onChangeCode,
   autoFocus = true,
+  errorMessage,
 }: Readonly<OtpInputProps>) {
   const isControlled = value !== undefined;
 
-  // state nội bộ chỉ dùng khi không controlled
   const [inner, setInner] = useState<string>(
-    onlyDigits(defaultValue).slice(0, length),
+    onlyDigits(defaultValue).slice(0, length)
   );
 
-  // code hiện tại (string) và mảng ký tự
   const code = isControlled ? onlyDigits(value!).slice(0, length) : inner;
+
   const digits = useMemo(
-    () => Array.from({ length }, (_, i) => code[i] ?? ''),
-    [code, length],
+    () => Array.from({ length }, (_, i) => code[i] ?? ""),
+    [code, length]
   );
 
-  const inputsRef = useRef<(TextInput | null)[]>(
-    Array.from({ length }, () => null),
-  );
+  const inputRef = useRef<TextInput | null>(null);
+  const [focused, setFocused] = useState(false);
 
-  useEffect(() => {
-    inputsRef.current = Array.from(
-      { length },
-      (_, i) => inputsRef.current[i] ?? null,
-    );
-  }, [length]);
-
-  const focusIndex = (i: number) => {
-    if (i >= 0 && i < length) inputsRef.current[i]?.focus();
-  };
-
-  useEffect(() => {
-    if (autoFocus) focusIndex(0);
-  }, [autoFocus]);
-
-  // cập nhật code tổng (string) -> cập nhật state (nếu uncontrolled) + notify
   const setCode = (next: string) => {
     const clipped = onlyDigits(next).slice(0, length);
     if (!isControlled) setInner(clipped);
     onChangeCode?.(clipped);
 
-    // gọi onComplete khi đủ ký tự
-    if (clipped.length === length && clipped.split('').every(c => c !== '')) {
-      onComplete?.(clipped);
-    }
+    if (clipped.length === length) onComplete?.(clipped);
   };
 
-  // tạo bản digits mới với thay đổi tại vị trí i
-  const setAt = (i: number, val: string, base = digits) => {
-    const next = base.slice();
-    next[i] = val;
-    return next;
-  };
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
-  const handleChangeText = (text: string, i: number) => {
-    const sanitized = onlyDigits(text);
-
-    if (sanitized.length === 0) {
-      // xóa/backspace
-      if (digits[i] !== '') {
-        const nextArr = setAt(i, '');
-        setCode(nextArr.join(''));
-        focusIndex(Math.max(i - 1, 0));
-      } else {
-        const prev = i - 1;
-        if (prev >= 0) {
-          const nextArr = setAt(prev, '');
-          setCode(nextArr.join(''));
-          focusIndex(prev);
-        }
-      }
-      return;
-    }
-
-    if (sanitized.length === 1) {
-      const nextArr = setAt(i, sanitized);
-      setCode(nextArr.join(''));
-      const nextEmpty = nextArr.findIndex((d, idx) => idx > i && d === '');
-      focusIndex(nextEmpty !== -1 ? nextEmpty : Math.min(i + 1, length - 1));
-      return;
-    }
-
-    // (tùy thiết bị) nếu nhận được nhiều ký tự (paste)
-    let nextArr = digits.slice();
-    let idx = i;
-    for (const ch of sanitized) {
-      if (idx >= length) break;
-      nextArr = setAt(idx, ch, nextArr);
-      idx++;
-    }
-    setCode(nextArr.join(''));
-    focusIndex(Math.min(idx, length - 1));
-  };
-
-  const handleKeyPress = (e: any, i: number) => {
-    if (e.nativeEvent.key === 'Backspace' && digits[i] === '') {
-      const prev = i - 1;
-      if (prev >= 0) {
-        const nextArr = setAt(prev, '');
-        setCode(nextArr.join(''));
-        focusIndex(prev);
-      }
-    }
-  };
+  const activeIndex = Math.min(code.length, length - 1);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.wrapper}>
       <View style={styles.row}>
-        {Array.from({ length }).map((_, i) => (
-          <TextInput
+        {digits.map((d, i) => (
+          <View
             key={i}
-            ref={(el: TextInput | null) => {
-              inputsRef.current[i] = el;
-            }}
-            value={digits[i]}
-            onChangeText={t => handleChangeText(t, i)}
-            onKeyPress={e => handleKeyPress(e, i)}
-            style={[styles.box, digits[i] ? styles.boxFilled : null]}
-            keyboardType="number-pad"
-            maxLength={1} // lưu ý: có thể hạn chế paste nhiều ký tự trên iOS
-            textContentType="oneTimeCode"
-            autoComplete="sms-otp"
-            returnKeyType="next"
-            selectTextOnFocus
-          />
+            style={[
+              styles.box,
+              focused && i === activeIndex ? styles.boxFocused : null,
+              errorMessage ? styles.boxError : null,
+            ]}
+          >
+            <Text style={styles.digit}>{d}</Text>
+          </View>
         ))}
       </View>
+
+      {/* ✅ Input thật: nhận typing / backspace / paste / autofill */}
+      <TextInput
+        ref={inputRef}
+        value={code}
+        onChangeText={setCode}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        keyboardType={Platform.OS === "ios" ? "number-pad" : "numeric"}
+        maxLength={length}
+        textContentType="oneTimeCode"
+        autoComplete="sms-otp"
+        importantForAutofill="yes"
+        style={styles.overlayInput}
+      />
+
+      {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
     </View>
   );
 }
 
-const BOX_SIZE = 64;
+const BOX_W = 48;
+const BOX_H = 64;
+
 const styles = StyleSheet.create({
-  container: { gap: 1 },
+  wrapper: {
+    position: "relative",
+    alignSelf: "stretch",
+  },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 20,
-    marginVertical: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 16,
+    marginVertical: 20,
   },
   box: {
-    width: BOX_SIZE/1.5,
-    height: BOX_SIZE,
+    width: BOX_W,
+    height: BOX_H,
     borderRadius: 12,
-    textAlign: 'center',
-    fontSize: 22,
-    fontWeight: '600',
-    backgroundColor: '#D9D9D9',
+    backgroundColor: "#D9D9D9",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
   },
-  boxFilled: { borderColor: '#333' },
+  digit: {
+    fontSize: 22,
+    fontWeight: "600",
+  },
+  boxFocused: {
+    borderColor: "#333",
+  },
+  boxError: {
+    borderColor: "#DC2626",
+  },
+  errorText: {
+    marginTop: 6,
+    color: "#DC2626",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+
+  // ✅ overlay phủ lên dãy ô => tap/long-press để paste, OS autofill cũng ổn
+  overlayInput: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0,
+  },
 });

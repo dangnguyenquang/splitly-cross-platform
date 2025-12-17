@@ -8,9 +8,8 @@ import {
   registerSuccess,
 } from '../store/authSlice';
 import { AppDispatch } from '../store/store';
-import { RootStackParamList } from '@/src/types';
-import { RegisterForm } from '../screens/auth/SignUpScreen';
-import { LoginForm } from '../screens/auth/SignInScreen';
+import { LoginForm, RegisterForm, RootStackParamList } from '@/src/types';
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export const userLogin = async (
@@ -25,7 +24,7 @@ export const userLogin = async (
       dispatch(loginSuccess(res.data));
       navigate.reset({
         index: 0,
-        routes: [{ name: 'GetStartedScreen' }],
+        routes: [{ name: 'MainApp' }],
       });
     }
     return res.data;
@@ -75,9 +74,26 @@ export const verifyOTP = async (
     if (res.status === 200) {
       navigate.reset({
         index: 0,
-        routes: [{ name: 'GetStartedScreen' }],
+        routes: [{ name: 'SignIn' }],
       });
     }
+    return res
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      throw err;
+    }
+    throw err instanceof Error ? err : new Error(String(err));
+  }
+};
+
+
+export const resendOTP = async (
+  email: string,
+) => {
+  try {
+    const res = await response.post(`/auth/resend-otp/${email}`);
+    console.log(res);
+    return res
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       throw err;

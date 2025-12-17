@@ -17,6 +17,9 @@ import SelectParticipantsScreen from '@/src/screens/group/SelectParticipantsScre
 import GroupsScreen from '@/src/screens/group/GroupsScreen';
 import NewGroupScreen from '@/src/screens/group/NewGroupScreen';
 import OTPSreen from '@/src/screens/auth/OTPScreen';
+import SlashScreen from '@/src/screens/slash/SlashScreen';
+import ResetPasswordScreen from '@/src/screens/auth/ResetPasswordScreen';
+import NewPasswordScreen from '@/src/screens/auth/NewPasswordScreen';
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,13 +28,16 @@ function AppNavigator() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Onboard"
+                initialRouteName="Slash"
                 screenOptions={{ headerShown: false }}
             >
+                <Stack.Screen name="Slash" component={SlashScreen} />
                 <Stack.Screen name="Onboard" component={OnboardContainer} />
                 <Stack.Screen name="GetStartedScreen" component={GetStartedScreen} />
                 <Stack.Screen name="SignIn" component={SignInScreen} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />
+                <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+                <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
                 <Stack.Screen name="MainApp" component={BottomNavigationTabs} />
                 <Stack.Screen name="SelectParticipants" component={SelectParticipantsScreen} />
                 <Stack.Screen name="CreateGroup" component={NewGroupScreen} />
