@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   container: {
-    marginBottom: 10,
+    marginTop: 6,
   },
   iconWrap: {
     position: 'absolute',

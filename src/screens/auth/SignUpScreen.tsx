@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import { colors } from '@/src/constant/theme.ts';
@@ -8,27 +8,25 @@ import CustomButton from '@/src/components/CustomButton';
 import FooterContent from '@/src/components/auth/CustomFooterContent';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/src/types';
+import { RegisterForm, RootStackParamList } from '@/src/types';
 import { useForm, Controller } from 'react-hook-form';
 import { userRegister } from '@/src/api/auth.api';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorToastify from '@/src/components/auth/ErrorToastify';
-export interface RegisterForm {
-  userName: string;
-  email: string;
-  password: string;
-  confirm?: string;
-  phoneNumber: string;
-  gender?: string;
-}
+import CheckBox from '@/src/components/CheckBox';
+import { useEffect, useState } from 'react';
+import LoadingModal from '@/src/components/LoadingModal';
+
 export default function SignUpScreen() {
   const {
     control,
     handleSubmit,
     watch,
     setError,
+    trigger,
+    getValues,
     formState: { errors },
   } = useForm<RegisterForm>({
     defaultValues: {
@@ -38,33 +36,50 @@ export default function SignUpScreen() {
       confirm: '',
       phoneNumber: '',
     },
+    mode: 'onChange',
   });
   const password = watch('password');
+  const confirm = watch('confirm');
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
+  const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (data: RegisterForm) => {
-    const { confirm, ...register } = data;
-    const registerForm = { ...register, gender: 'male' };
-    console.log('Form: ', registerForm);
-    try {
-      const res = await userRegister(dispatch, registerForm, navigation);
-      console.log(res);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        console.log('Err: ', err.response?.data.message);
-        if (err.response?.data.message === 'Email already taken.') {
-          setError('root', {
-            type: 'server',
-            message: 'Email has already exitsted',
-          });
+    if (isChecked) {
+      const { confirm, ...register } = data;
+      const registerForm = { ...register, gender: 'male' };
+      console.log('Form: ', registerForm);
+      try {
+        setIsLoading(true);
+        const res = await userRegister(dispatch, registerForm, navigation);
+        console.log(res);
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          console.log('Err: ', err.response?.data.message);
+          if (err.response?.data.message === 'Email already taken.') {
+            setError('root', {
+              type: 'server',
+              message: 'Email has already exitsted',
+            });
+          }
+          return err;
+        } else {
+          return err;
         }
-        return err;
-      } else {
-        return err;
+      } finally {
+        setIsLoading(false);
       }
+    } else {
+      Alert.alert('Term & Policy', 'You have not agreed with our Policy', [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ]);
     }
   };
+  useEffect(() => {
+    if (confirm?.length) trigger('confirm');
+  }, [password, confirm, trigger]);
   return (
     <SafeAreaView>
       <ScrollView className="w-screen h-screen-safe px-10">
@@ -204,14 +219,20 @@ export default function SignUpScreen() {
             <Text className="text-red-600">{errors.phoneNumber.message}</Text>
           )}
         </View>
-        <View className="">
-          <FooterContent
-            text="I agree with Splitly"
-            boldText="Term & Policy"
-            linkTo="OTP"
+        <View className="pt-6">
+          <CheckBox
+            value={isChecked}
+            setIsCheck={() => setIsChecked(prev => !prev)}
+            title={
+              <FooterContent
+                text="I agree with Splitly"
+                boldText="Term & Policy"
+                linkTo="OTP"
+              />
+            }
           />
         </View>
-        <View>
+        <View className="pt-6">
           <FooterContent
             text="Already have an account?"
             boldText="Sign in"
@@ -222,6 +243,15 @@ export default function SignUpScreen() {
           <CustomButton title="Sign up" onPress={handleSubmit(onSubmit)} />
         </View>
       </ScrollView>
+      {isLoading && (
+        <LoadingModal
+          isLoading={isLoading}
+          title="Sign up Successful!"
+          messageLine1="You will be directed to the"
+          messageLine2="Sign In."
+          iconName="user"
+        />
+      )}
     </SafeAreaView>
   );
 }

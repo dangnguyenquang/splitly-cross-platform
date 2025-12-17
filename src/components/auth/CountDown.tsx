@@ -6,6 +6,12 @@ function msUntil(deadline: number) {
   return Math.max(0, deadline - Date.now());
 }
 
+function formatMMSS(totalSeconds: number) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
 export const Countdown = React.memo(function Countdown({
   seconds,
   onComplete,
@@ -34,5 +40,5 @@ export const Countdown = React.memo(function Countdown({
     return () => { if (id) { clearTimeout(id); id = null; } };
   }, [deadline, onComplete]);
 
-  return <Text className='text-primary'>{secLeft}s</Text>;
+  return <Text className='text-primary-10'>{formatMMSS(secLeft)}</Text>;
 });
