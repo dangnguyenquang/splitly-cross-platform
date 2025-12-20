@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -21,6 +21,8 @@ type ResetPassForm = { email: string };
 export default function ResetPasswordScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    
+  
 
   // Ẩn back button / header
   useLayoutEffect(() => {
@@ -43,7 +45,7 @@ export default function ResetPasswordScreen() {
   const onSubmit = async (data: ResetPassForm) => {
     try {
       await resendOTP(data.email);
-      navigation.navigate('OTP', { email: data.email });
+      navigation.navigate('OTP', { email: data.email, type: 'reset' });
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const status = err.response?.status;

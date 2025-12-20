@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { resendOTP, verifyOTP } from '@/src/api/auth.api';
+import { resendOTP, verifyOTP, verifyResetPassword } from '@/src/api/auth.api';
 import axios from 'axios';
 import LoadingModal from '@/src/components/LoadingModal';
 
@@ -75,7 +75,11 @@ export default function OTPSreen() {
       setSubmitting(true);
       setOtpError(undefined);
       console.log('start');
-      await verifyOTP(otp, params.email, navigation);
+      if (params.type === 'reset') {
+        await verifyResetPassword(otp, params.email, navigation);
+      } else {
+        await verifyOTP(otp, params.email, navigation);
+      }
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         console.log(params.email);
@@ -139,7 +143,7 @@ export default function OTPSreen() {
           isLoading={isLoading}
           title="Verify Successful!"
           messageLine1="You will be directed to the"
-          messageLine2="Sign In page."
+          messageLine2={`${params.type === 'reset' ? 'New Password' : 'Sign In'} Screen.`}
           iconName="user"
         />
       )}
