@@ -6,9 +6,9 @@ export type RootStackParamList = {
   GetStartedScreen: undefined;
   SignIn: undefined;
   SignUp: undefined;
-  OTP: { email: string };
+  OTP: { email: string, type: string };
   ResetPassword: undefined;
-  NewPassword: undefined;
+  NewPassword: { token: string };
   MainApp: undefined;
   //   GroupDetail: { groupId: string };
   CreateGroup: undefined;

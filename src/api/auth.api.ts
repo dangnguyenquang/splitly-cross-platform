@@ -101,3 +101,50 @@ export const resendOTP = async (
     throw err instanceof Error ? err : new Error(String(err));
   }
 };
+
+
+export const verifyResetPassword = async (
+  otp: string,
+  email: string,
+  navigate: NativeStackNavigationProp<RootStackParamList>,
+) => {
+  try {
+    const res = await response.post('/auth/verify-reset', { otp, email });
+    console.log(res);
+    if (res.status === 200) {
+      navigate.reset({
+        index: 0,
+        routes: [{ name: 'NewPassword', params: { token: res.data } }],
+      });
+    }
+    return res
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      throw err;
+    }
+    throw err instanceof Error ? err : new Error(String(err));
+  }
+};
+
+export const requestNewPassword = async (
+  password: string,
+  token: string,
+  navigate: NativeStackNavigationProp<RootStackParamList>,
+) => {
+  try {
+    const res = await response.post('/auth/reset-password', { resetToken: token, password });
+    console.log(res);
+    if (res.status === 200) {
+      navigate.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    }
+    return res
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      throw err;
+    }
+    throw err instanceof Error ? err : new Error(String(err));
+  }
+};

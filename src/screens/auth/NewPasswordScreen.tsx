@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -15,6 +15,7 @@ import ErrorToastify from "@/src/components/auth/ErrorToastify";
 import CustomButton from "@/src/components/CustomButton";
 import LoadingModal from "@/src/components/LoadingModal";
 import { RootStackParamList } from "@/src/types";
+import { requestNewPassword } from "@/src/api/auth.api";
 
 
 type CreateNewPasswordForm = {
@@ -22,16 +23,12 @@ type CreateNewPasswordForm = {
   confirmNewPassword: string;
 };
 
-type RouteParams = {
-  email?: string;
-  otp?: string;
-};
 
 export default function NewPasswordScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute();
-  const { email, otp } = (route.params as RouteParams) || {};
+
+  const { params } = useRoute<RouteProp<RootStackParamList, "NewPassword">>();
 
   useLayoutEffect(() => {
     // Ẩn header
@@ -57,11 +54,8 @@ export default function NewPasswordScreen() {
   const onSubmit = async (data: CreateNewPasswordForm) => {
     try {
       setIsLoading(true);
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "SignIn" }],
-      });
+      const res = await requestNewPassword(data.newPassword, params.token, navigation);
+      console.log(res);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const msg =
@@ -102,7 +96,7 @@ export default function NewPasswordScreen() {
 
         {/* Description */}
         <Text className="text-base text-gray-500 mt-4">
-          You’re almost there! Please create a new password for your Splitify
+          You're almost there! Please create a new password for your Splitify
           account.
         </Text>
 
