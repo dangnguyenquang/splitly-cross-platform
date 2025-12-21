@@ -1,4 +1,4 @@
-import { GroupBasicInformation } from './group';
+import { Group, GroupBasicInformation } from './group';
 import { User } from './user';
 
 export type RootStackParamList = {
@@ -13,7 +13,9 @@ export type RootStackParamList = {
   MainApp: undefined;
 
   CreateGroup: undefined;
+  AddExpense: { groupId: string; group?: Group };
   SelectParticipants: { groupData: GroupBasicInformation };
+  GroupDetail: { groupId: string; group?: Group };
   GroupsScreen: undefined;
   PersonalInfoDetail: { personalInfo: User|null };
 

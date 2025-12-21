@@ -1,16 +1,19 @@
-// src/screens/NewGroupScreen.tsx
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import Header from '../../components/Header';
 import UploadCover from '../../components/UploadCover';
 import InputField from '../../components/InputField';
 import CategoryPills from '../../components/group/CategoryPills';
 import { categories } from '../../../data/mockData';
 import ActionButtons from '../../components/group/ActionButtons';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList, CategoryType } from '@/src/types';
+import { RootStackParamList, CategoryType, Group } from '@/src/types';
+import { setCurrentGroup } from '@/src/store/groupSlice';
+import { useDispatch } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type NewGroupScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -24,7 +27,7 @@ const NewGroupScreen: React.FC = () => {
   const [currency, setCurrency] = useState('USD');
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryType>('Trip');
-
+  const dispatch = useDispatch();
   const navigation = useNavigation<NewGroupScreenNavigationProp>();
 
   const handleBack = () => {
@@ -32,25 +35,52 @@ const NewGroupScreen: React.FC = () => {
   };
 
   const handleSave = () => {
-    const groupData = {
-      title,
+    if (!title.trim()) {
+      Alert.alert('Validation', 'Title is required');
+      return;
+    }
+
+    const groupData: Group = {
+      groupId: '',
+      groupName: title,
       description,
       currency,
       category: selectedCategory,
-      coverImage,
+      groupImage:coverImage,
     };
-
-    navigation.navigate('SelectParticipants', { groupData: groupData });
+    dispatch(setCurrentGroup(groupData));
+    navigation.navigate('SelectParticipants', { groupData });
   };
 
-  const handleUploadCover = () => {
-    setCoverImage(
-      'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800',
-    );
-  };
+
+const handleUploadCover = async () => {
+  const result = await launchImageLibrary({
+    mediaType: 'photo',
+    quality: 0.8,
+    selectionLimit: 1,
+  });
+
+  if (result.didCancel) {
+    return;
+  }
+
+  if (result.errorCode) {
+    Alert.alert('Error', result.errorMessage || 'Image picker error');
+    return;
+  }
+
+  if (result.assets && result.assets.length > 0) {
+    const asset = result.assets[0];
+
+    if (asset.uri) {
+      setCoverImage(asset.uri);
+    }
+  }
+};
+
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header title="New Group" showBack onBack={handleBack} />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -88,7 +118,7 @@ const NewGroupScreen: React.FC = () => {
       </ScrollView>
 
       <ActionButtons onCancel={handleBack} onSave={handleSave} />
-    </View>
+    </SafeAreaView>
   );
 };
 

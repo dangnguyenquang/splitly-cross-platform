@@ -9,21 +9,73 @@ export interface Contact {
 }
 
 export type GroupBasicInformation = {
-  id?: string;
-  title: string;
+  groupId: string;
+  groupName: string;
   description: string;
-  coverImage?: string;
+  groupImage: string;
   currency: string;
   category: string;
 }
-
+export interface Expense {
+  id: string;
+  expenseType: string;
+  title: string;
+  paidBy: string;
+  amount: string;
+  dateTime: Date;
+}
 export type Group = GroupBasicInformation & {
   participants?: Contact[];
 }
-
+export interface GroupDetailInformation extends GroupBasicInformation {
+  id: string;
+  participants?: Contact[];
+  expenses?: Expense[];
+}
 export type CategoryType = 'Trip' | 'Family' | 'Couple' | 'Event' | 'Project' | 'Other';
 
 export interface CategoryOption {
   label: CategoryType;
   icon: string;
 }
+export interface GroupDetailTopTabsProps {
+  groupId: string;
+  group?: Group;
+}
+
+export type ExpenseType =
+  | 'General'
+  | 'Games'
+  | 'Movies'
+  | 'Music'
+  | 'Groceries'
+  | 'Dining';
+
+export interface ExpenseOption {
+  label: ExpenseType;
+}
+
+//group api handle
+export interface CreateGroupRequest {
+  groupName: string;
+  description: string;
+  category: string;
+  currency: string;
+  coverImage?: string;
+  emailList: string[];
+}
+
+export type ConnectionRole = 'REQUESTER' | 'RECEIVER';
+
+export interface Connection {
+  userId: number;
+  username: string;
+  email: string;
+  fullName: string;
+  avatarUrl: string;
+  createdAt: string; 
+  updatedAt: string;
+  role: ConnectionRole;
+  accepted: boolean;
+}
+

@@ -20,6 +20,7 @@ import OTPSreen from '@/src/screens/auth/OTPScreen';
 import SlashScreen from '@/src/screens/slash/SlashScreen';
 import ResetPasswordScreen from '@/src/screens/auth/ResetPasswordScreen';
 import NewPasswordScreen from '@/src/screens/auth/NewPasswordScreen';
+import GroupDetailScreen from '@/src/screens/group/GroupDetailScreen';
 import PersonalInfoScreen from '@/src/screens/account/userDetail';
 
 

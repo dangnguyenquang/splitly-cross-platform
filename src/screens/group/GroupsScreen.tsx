@@ -1,27 +1,67 @@
-// src/screens/GroupsScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { useSelector } from 'react-redux';
+import { AddIcon } from '../../../components/ui/icon';
 import GroupCard from '../../components/group/GroupCard';
 import Header from '../../components/Header';
 import EmptyState from '../../components/group/EmptyState';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList, Group } from '@/src/types';
 
-type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import { RootStackParamList, Group } from '@/src/types';
+import { RootState } from '@/src/store/store';
+import { getAllGroupsByUser } from '@/src/api/group.api';
+import { Fab, FabIcon } from '@/components/ui/fab';
+import { colors } from '@/src/constant/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+type GroupsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const GroupsScreen: React.FC = () => {
+  const navigation = useNavigation<GroupsScreenNavigationProp>();
+
   const [groups, setGroups] = useState<Group[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const token = useSelector(
+    (state: RootState) => state.auth.login.currentUser?.token
+  );
 
   useEffect(() => {
-    setGroups([]);
-  }, []);
+    const fetchGroups = async () => {
+      if (!token) return;
 
-  const navigation = useNavigation<GroupsScreenNavigationProp>();
+      setLoading(true);
+
+      try {
+        const data = await getAllGroupsByUser(token);
+
+        if (Array.isArray(data)) {
+          setGroups(data);
+        } else {
+          setGroups([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch groups:', error);
+        setGroups([]); 
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGroups();
+  }, [token]);
+
   const handleSelectGroup = (group: Group) => {
     console.log(group);
-    // navigation.navigate('GroupDetail', { groupId: group.id });
+    navigation.navigate('GroupDetailScreen', { groupId: group.groupId });
   };
 
   const handleCreateGroup = () => {
@@ -29,24 +69,45 @@ const GroupsScreen: React.FC = () => {
   };
 
   const renderGroup = ({ item }: { item: Group }) => (
-    <GroupCard group={item} onPress={() => handleSelectGroup(item)} />
+    <GroupCard
+      group={item}
+      onPress={() => handleSelectGroup(item)}
+    />
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header title="Groups" showLogo showMenu />
 
-      {groups.length === 0 ? (
+      {loading ? (
+        <ActivityIndicator size="large" style={{ marginTop: 40 }} />
+      ) : groups.length === 0 ? (
         <EmptyState onCreateGroup={handleCreateGroup} />
       ) : (
-        <FlatList
-          data={groups}
-          renderItem={renderGroup}
-          // keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-        />
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={groups}
+            keyExtractor={(item, index) =>
+              item?.groupId?.toString() ?? index.toString()
+            }
+            renderItem={renderGroup}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+          />
+          <Fab
+            size="lg"
+            placement="bottom right"
+            isHovered={false}
+            isDisabled={false}
+            isPressed={false}
+            onPress={() => navigation.navigate('CreateGroup')}
+            style={styles.fabButton}
+          >
+            <FabIcon as={AddIcon} style={styles.fabIcon} />
+          </Fab>
+        </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -57,6 +118,15 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingVertical: 16,
+  },
+  fabButton: {
+    backgroundColor: colors.primary,
+    color: colors.primary,
+    width: 60,
+    height: 60,
+  },
+  fabIcon: {
+    color: 'black',
   },
 });
 

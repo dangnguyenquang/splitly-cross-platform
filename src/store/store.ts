@@ -3,9 +3,11 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { combineReducers } from 'redux';
 import authSlice from './authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import groupSlice from './groupSlice';
 // Kết hợp các reducers
 const rootReducer = combineReducers({
-    auth: authSlice
+    auth: authSlice,
+    group: groupSlice
 });
 
 // Cấu hình redux-persist
