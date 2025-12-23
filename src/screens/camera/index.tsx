@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../components/header';
+import CustomHeader from '../../components/header/index';
+
 
 export default function CameraScreen() {
   return (

@@ -4,6 +4,7 @@ import CustomButton from '../components/CustomButton';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('window');
 
 export default function GetStartedScreen() {
@@ -11,7 +12,7 @@ export default function GetStartedScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Image
           source={require('../../assets/logo.png')}
@@ -63,7 +64,7 @@ export default function GetStartedScreen() {
         <Text style={styles.dot}> • </Text>
         <Text style={styles.footerLink}>Terms of Service</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

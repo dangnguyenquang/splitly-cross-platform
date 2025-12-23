@@ -16,6 +16,8 @@ import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREEN_METRICS } from '../constant/screensize';
 const { width } = Dimensions.get('window');
 const screens = [<OnboardScreen1 />, <OnboardScreen2 />, <OnboardScreen3 />];
 type OnboardNavigationProp = NativeStackNavigationProp<
@@ -50,7 +52,7 @@ export default function OnboardContainer() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Onboarding Slides */}
       <Animated.FlatList
         ref={flatListRef}
@@ -111,14 +113,14 @@ export default function OnboardContainer() {
           <CustomButton
             title="Skip"
             type="secondary"
-            width={190}
+            width={SCREEN_METRICS.width * 0.45}
             height={60}
             borderRadius={25}
             onPress={handleSkip}
           />
           <CustomButton
             title="Continue"
-            width={190}
+            width={SCREEN_METRICS.width * 0.45}
             height={60}
             borderRadius={25}
             onPress={handleNext}
@@ -128,14 +130,14 @@ export default function OnboardContainer() {
         <View style={[styles.buttonRow, { justifyContent: 'center' }]}>
           <CustomButton
             title="Get Started"
-            width={400}
+            width={SCREEN_METRICS.width * 0.8}
             height={50}
             borderRadius={30}
             onPress={() => navigation.navigate('GetStartedScreen')}
           />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

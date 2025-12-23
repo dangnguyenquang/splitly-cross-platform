@@ -1,4 +1,5 @@
 import { GroupBasicInformation } from './group';
+import { User } from './user';
 
 export type RootStackParamList = {
   Slash: undefined;
@@ -10,10 +11,11 @@ export type RootStackParamList = {
   ResetPassword: undefined;
   NewPassword: undefined;
   MainApp: undefined;
-  //   GroupDetail: { groupId: string };
+
   CreateGroup: undefined;
   SelectParticipants: { groupData: GroupBasicInformation };
   GroupsScreen: undefined;
+  PersonalInfoDetail: { personalInfo: User|null };
 
   History: undefined;
   Request: undefined;
