@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { height } = Dimensions.get('window');
 
 export default function OnboardScreen1() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Image Section */}
       <View style={styles.imageContainer}>
         <Image
@@ -23,7 +24,7 @@ export default function OnboardScreen1() {
           smartly.
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

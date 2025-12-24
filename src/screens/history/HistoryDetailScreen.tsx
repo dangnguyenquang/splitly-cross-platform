@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { colors } from '../../constant/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../components/header';
+import CustomHeader from '../../components/header/index';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';

@@ -1,12 +1,13 @@
 // src/screens/OnboardScreen2.tsx
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { height } = Dimensions.get('window');
 
 export default function OnboardScreen2() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/image_2.png')}
@@ -22,7 +23,7 @@ export default function OnboardScreen2() {
           smartly.
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -12,14 +12,16 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../components/header';
+import CustomHeader from '../../components/header/index';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../constant/theme';
 import SectionDivider from '../../components/history/SectionDivider';
-import MoneyRequestCard from '../../components/request/RequestCard';
+// import MoneyRequestCard from '../../components/request/RequestCard';
 import CustomButton from '../../components/CustomButton';
-import Divider from '../../components/request/Divider';
+import MoneyRequestCard from '@/src/components/request/RequestCard';
+import Divider from '@/src/components/request/Divider';
+// import Divider from '../../components/request/Divider';
 // import { Button, ButtonText } from "../../../components/ui/button"
 
 const DATA = [

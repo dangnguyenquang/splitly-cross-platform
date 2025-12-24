@@ -1,11 +1,12 @@
 export interface User {
     userId: number,
-    username: string,
+    fullName: string,
     email: string,
     phone: string,
-    gender?: boolean
-    token?: string
-    group: undefined
+    gender?: string,
+    token?: string,
+    group: undefined,
+    userImage?: string,
 }
 
 export interface RegisterForm {
@@ -20,4 +21,13 @@ export interface RegisterForm {
 export type LoginForm = {
   email: string;
   password: string;
+};
+
+export type PersonalInfo = {
+  userId:string;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender: string;
+  userImage: string; 
 };
