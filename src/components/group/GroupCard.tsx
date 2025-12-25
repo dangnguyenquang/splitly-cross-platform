@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import { Group } from '../../../types';
+import { Group } from '@/src/types';
 
 interface GroupCardProps {
   group: Group;
@@ -11,15 +11,15 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, onPress }) => {
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.coverImage}>
-        {group.coverImage ? (
-          <Image source={{ uri: group.coverImage }} style={styles.cover} />
+        {group.groupImage ? (
+          <Image source={{ uri: group.groupImage }} style={styles.cover} />
         ) : (
           <View style={styles.placeholderCover} />
         )}
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>{group.title}</Text>
+        <Text style={styles.title}>{group.groupName}</Text>
 
         <View style={styles.avatarContainer}>
           {group &&

@@ -36,7 +36,7 @@ export default function PersonalInfoScreen({ navigation }: any) {
   const route = useRoute<PersonalInfoRouteProp>();
   const dispatch = useDispatch();
   const token = useSelector(
-    (state: RootState) => state.auth.login.currentUser?.token
+    (state: RootState) => state.auth.login.currentUser?.token,
   );
   const user = route.params?.personalInfo;
 
@@ -99,7 +99,7 @@ export default function PersonalInfoScreen({ navigation }: any) {
           phone: updatedForm.phone,
           gender: updatedForm.gender,
           userImage: updatedForm.userImage,
-        })
+        }),
       );
 
       Alert.alert('Success', 'Personal information updated');
@@ -161,13 +161,11 @@ export default function PersonalInfoScreen({ navigation }: any) {
             label="Email"
             value={form.email}
             onChangeText={v => handleChange('email', v)}
- 
           />
           <InputField
             label="Phone Number"
             value={form.phone}
             onChangeText={v => handleChange('phone', v)}
-
           />
           <InputField
             label="Gender"
@@ -180,7 +178,6 @@ export default function PersonalInfoScreen({ navigation }: any) {
             <CustomButton
               title={loading ? 'Saving...' : 'Save'}
               onPress={handleSave}
-   
             />
           </View>
         </ScrollView>

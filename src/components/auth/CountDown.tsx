@@ -1,6 +1,6 @@
 // components/auth/count-down.tsx
-import React, {useEffect, useMemo, useState} from 'react';
-import {Text} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Text } from 'react-native';
 
 function msUntil(deadline: number) {
   return Math.max(0, deadline - Date.now());
@@ -15,10 +15,13 @@ function formatMMSS(totalSeconds: number) {
 export const Countdown = React.memo(function Countdown({
   seconds,
   onComplete,
-}: { seconds: number; onComplete?: () => void }) {
+}: {
+  seconds: number;
+  onComplete?: () => void;
+}) {
   const deadline = useMemo(() => Date.now() + seconds * 1000, [seconds]);
-  const [secLeft, setSecLeft] = useState(
-    () => Math.ceil(msUntil(deadline) / 1000)
+  const [secLeft, setSecLeft] = useState(() =>
+    Math.ceil(msUntil(deadline) / 1000),
   );
 
   useEffect(() => {
@@ -37,8 +40,13 @@ export const Countdown = React.memo(function Countdown({
     };
 
     id = setTimeout(tick, msUntil(deadline) % 1000 || 1000);
-    return () => { if (id) { clearTimeout(id); id = null; } };
+    return () => {
+      if (id) {
+        clearTimeout(id);
+        id = null;
+      }
+    };
   }, [deadline, onComplete]);
 
-  return <Text className='text-primary-10'>{formatMMSS(secLeft)}</Text>;
+  return <Text className="text-primary-10">{formatMMSS(secLeft)}</Text>;
 });

@@ -1,34 +1,32 @@
-import React, { useLayoutEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import React, { useLayoutEffect, useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Controller, useForm } from 'react-hook-form';
+import axios from 'axios';
 
-import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
-import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons";
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 
-import { colors } from "@/src/constant/theme";
-import InputAuth from "@/src/components/auth/CustomInputAuth";
-import ErrorToastify from "@/src/components/auth/ErrorToastify";
-import CustomButton from "@/src/components/CustomButton";
-import LoadingModal from "@/src/components/LoadingModal";
-import { RootStackParamList } from "@/src/types";
-import { requestNewPassword } from "@/src/api/auth.api";
-
+import { colors } from '@/src/constant/theme';
+import InputAuth from '@/src/components/auth/CustomInputAuth';
+import ErrorToastify from '@/src/components/auth/ErrorToastify';
+import CustomButton from '@/src/components/CustomButton';
+import LoadingModal from '@/src/components/LoadingModal';
+import { RootStackParamList } from '@/src/types';
+import { requestNewPassword } from '@/src/api/auth.api';
 
 type CreateNewPasswordForm = {
   newPassword: string;
   confirmNewPassword: string;
 };
 
-
 export default function NewPasswordScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { params } = useRoute<RouteProp<RootStackParamList, "NewPassword">>();
+  const { params } = useRoute<RouteProp<RootStackParamList, 'NewPassword'>>();
 
   useLayoutEffect(() => {
     // Ẩn header
@@ -46,7 +44,7 @@ export default function NewPasswordScreen() {
     getValues,
     formState: { errors },
   } = useForm<CreateNewPasswordForm>({
-    defaultValues: { newPassword: "", confirmNewPassword: "" },
+    defaultValues: { newPassword: '', confirmNewPassword: '' },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -54,18 +52,22 @@ export default function NewPasswordScreen() {
   const onSubmit = async (data: CreateNewPasswordForm) => {
     try {
       setIsLoading(true);
-      const res = await requestNewPassword(data.newPassword, params.token, navigation);
+      const res = await requestNewPassword(
+        data.newPassword,
+        params.token,
+        navigation,
+      );
       console.log(res);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const msg =
-          (err.response?.data)?.message ??
-          "Create new password failed. Please try again.";
-        setError("root", { type: "server", message: msg });
+          err.response?.data?.message ??
+          'Create new password failed. Please try again.';
+        setError('root', { type: 'server', message: msg });
         return;
       }
       const msg = err instanceof Error ? err.message : String(err);
-      setError("root", { type: "server", message: msg });
+      setError('root', { type: 'server', message: msg });
     } finally {
       setIsLoading(false);
     }
@@ -111,8 +113,8 @@ export default function NewPasswordScreen() {
             control={control}
             name="newPassword"
             rules={{
-              required: "New password is required",
-              minLength: { value: 8, message: "At least 8 characters" },
+              required: 'New password is required',
+              minLength: { value: 8, message: 'At least 8 characters' },
             }}
             render={({ field: { onChange, value } }) => (
               <InputAuth
@@ -136,9 +138,9 @@ export default function NewPasswordScreen() {
             control={control}
             name="confirmNewPassword"
             rules={{
-              required: "Confirm password is required",
-              validate: (v) =>
-                v === getValues("newPassword") || "Passwords do not match",
+              required: 'Confirm password is required',
+              validate: v =>
+                v === getValues('newPassword') || 'Passwords do not match',
             }}
             render={({ field: { onChange, value } }) => (
               <InputAuth

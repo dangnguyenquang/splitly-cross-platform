@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from '../types';
 interface AuthState {
   login: {
     currentUser: User | null;
@@ -27,10 +27,10 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    loginStart: (state) => {
+    loginStart: state => {
       state.login.isFetching = true;
     },
     loginSuccess: (state, action: PayloadAction<User>) => {
@@ -39,31 +39,31 @@ const authSlice = createSlice({
       state.login.isFetching = false;
       state.login.error = false;
     },
-    loginFail: (state) => {
+    loginFail: state => {
       state.login.error = true;
       state.login.isFetching = false;
     },
-    logOutStart: (state) => {
+    logOutStart: state => {
       state.login.isFetching = true;
     },
-    logOutSuccess: (state) => {
+    logOutSuccess: state => {
       state.login.currentUser = null;
       state.login.isFetching = false;
       state.login.error = false;
     },
-    logOutFail: (state) => {
+    logOutFail: state => {
       state.login.error = true;
       state.login.isFetching = false;
     },
-    registerStart: (state) => {
+    registerStart: state => {
       state.register.isFetching = true;
     },
-    registerSuccess: (state) => {
+    registerSuccess: state => {
       state.register.success = true;
       state.register.isFetching = false;
       state.register.error = false;
     },
-    registerFail: (state) => {
+    registerFail: state => {
       state.register.error = true;
       state.register.isFetching = false;
     },

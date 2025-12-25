@@ -20,7 +20,10 @@ import OTPSreen from '@/src/screens/auth/OTPScreen';
 import SlashScreen from '@/src/screens/slash/SlashScreen';
 import ResetPasswordScreen from '@/src/screens/auth/ResetPasswordScreen';
 import NewPasswordScreen from '@/src/screens/auth/NewPasswordScreen';
+import GroupDetailScreen from '@/src/screens/group/GroupDetailScreen';
 import PersonalInfoScreen from '@/src/screens/account/userDetail';
+import PaymentDetailScreen from '@/src/screens/group/PaymentDetailScreen';
+import AddExpenseScreen from '@/src/screens/group/AddExpenseScreen';
 
 
 
@@ -45,7 +48,9 @@ function AppNavigator() {
                 <Stack.Screen name="CreateGroup" component={NewGroupScreen} />
                 <Stack.Screen name="GroupsScreen" component={GroupsScreen} />
                 <Stack.Screen name="PersonalInfoDetail" component={PersonalInfoScreen} />
-
+                <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
+                <Stack.Screen name="PaymentDetail" component={PaymentDetailScreen} />
+                <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
                 <Stack.Screen name="History" component={TransactionHistoryScreen} />
                 <Stack.Screen name="Request" component={RequestScreen} />
                 <Stack.Screen name="Notifications" component={NotificationScreen} />

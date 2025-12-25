@@ -3,7 +3,6 @@ import { Dimensions, Platform, ScaledSize } from 'react-native';
 // Get initial dimensions
 const { width, height }: ScaledSize = Dimensions.get('window');
 
-
 export const SCREEN_METRICS = {
   width,
   height,
@@ -17,6 +16,6 @@ export const PLATFORM = {
   headerHeight: Platform.OS === 'ios' ? 44 : 56,
 };
 
-
 const GUIDE_LINE_BASE_WIDTH = 375;
-export const horizontalScale = (size: number): number => (width / GUIDE_LINE_BASE_WIDTH) * size;
+export const horizontalScale = (size: number): number =>
+  (width / GUIDE_LINE_BASE_WIDTH) * size;

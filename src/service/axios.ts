@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 const PORT = 8080;
 
 export const BE_BASE_URL = Platform.select({
-  android: `http://192.168.1.15:${PORT}/api/v1`, // emulator Android
+  android: `http://192.168.31.171:${PORT}/api/v1`, // emulator Android
   ios: `http://localhost:${PORT}/api/v1`, // simulator iOS
 });
 const response = axios.create({

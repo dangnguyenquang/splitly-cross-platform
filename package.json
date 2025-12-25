@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@gluestack-ui/core": "^3.0.12",
+    "@gluestack-ui/fab": "^0.1.28",
     "@gluestack-ui/utils": "^3.0.12",
     "@gluestack/ui-next-adapter": "^3.0.3",
     "@react-native-async-storage/async-storage": "^2.2.0",
@@ -40,8 +41,10 @@
     "react-hook-form": "^7.66.0",
     "react-icons": "^5.5.0",
     "react-native": "^0.82.0",
+    "react-native-element-dropdown": "^2.12.4",
     "react-native-fast-image": "^8.6.3",
     "react-native-image-picker": "^8.2.1",
+    "react-native-multiple-select": "^0.5.12",
     "react-native-pager-view": "^6.9.1",
     "react-native-reanimated": "^4.1.3",
     "react-native-safe-area-context": "^5.6.1",
