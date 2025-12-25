@@ -77,7 +77,7 @@ export const verifyOTP = async (
         routes: [{ name: 'SignIn' }],
       });
     }
-    return res
+    return res;
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       throw err;
@@ -86,14 +86,11 @@ export const verifyOTP = async (
   }
 };
 
-
-export const resendOTP = async (
-  email: string,
-) => {
+export const resendOTP = async (email: string) => {
   try {
     const res = await response.post(`/auth/resend-otp/${email}`);
     console.log(res);
-    return res
+    return res;
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       throw err;
@@ -101,7 +98,6 @@ export const resendOTP = async (
     throw err instanceof Error ? err : new Error(String(err));
   }
 };
-
 
 export const verifyResetPassword = async (
   otp: string,
@@ -117,7 +113,7 @@ export const verifyResetPassword = async (
         routes: [{ name: 'NewPassword', params: { token: res.data } }],
       });
     }
-    return res
+    return res;
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       throw err;
@@ -132,7 +128,10 @@ export const requestNewPassword = async (
   navigate: NativeStackNavigationProp<RootStackParamList>,
 ) => {
   try {
-    const res = await response.post('/auth/reset-password', { resetToken: token, password });
+    const res = await response.post('/auth/reset-password', {
+      resetToken: token,
+      password,
+    });
     console.log(res);
     if (res.status === 200) {
       navigate.reset({
@@ -140,7 +139,7 @@ export const requestNewPassword = async (
         routes: [{ name: 'SignIn' }],
       });
     }
-    return res
+    return res;
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       throw err;

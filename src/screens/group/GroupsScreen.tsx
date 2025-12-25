@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import { AddIcon } from '../../../components/ui/icon';
 import GroupCard from '../../components/group/GroupCard';
@@ -21,8 +16,7 @@ import { Fab, FabIcon } from '@/components/ui/fab';
 import { colors } from '@/src/constant/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-type GroupsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
+type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const GroupsScreen: React.FC = () => {
   const navigation = useNavigation<GroupsScreenNavigationProp>();
@@ -31,7 +25,7 @@ const GroupsScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const token = useSelector(
-    (state: RootState) => state.auth.login.currentUser?.token
+    (state: RootState) => state.auth.login.currentUser?.token,
   );
 
   useEffect(() => {
@@ -50,7 +44,7 @@ const GroupsScreen: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to fetch groups:', error);
-        setGroups([]); 
+        setGroups([]);
       } finally {
         setLoading(false);
       }
@@ -61,7 +55,10 @@ const GroupsScreen: React.FC = () => {
 
   const handleSelectGroup = (group: Group) => {
     console.log(group);
-    navigation.navigate('GroupDetailScreen', { groupId: group.groupId });
+    navigation.navigate('GroupDetail', {
+      groupId: group.groupId,
+      group: group,
+    });
   };
 
   const handleCreateGroup = () => {
@@ -69,10 +66,7 @@ const GroupsScreen: React.FC = () => {
   };
 
   const renderGroup = ({ item }: { item: Group }) => (
-    <GroupCard
-      group={item}
-      onPress={() => handleSelectGroup(item)}
-    />
+    <GroupCard group={item} onPress={() => handleSelectGroup(item)} />
   );
 
   return (

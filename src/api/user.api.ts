@@ -1,11 +1,8 @@
 import { response } from '../service/axios';
 import { PersonalInfo } from '../types';
 
-export const updateUser = async (
-    personalInfo: PersonalInfo,
-    token:string,
-) => {
-      const res = await response.put(
+export const updateUser = async (personalInfo: PersonalInfo, token: string) => {
+  const res = await response.put(
     `/users/${personalInfo.userId}`,
     personalInfo,
     {

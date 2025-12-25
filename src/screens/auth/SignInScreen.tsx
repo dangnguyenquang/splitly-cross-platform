@@ -135,7 +135,7 @@ export default function SignInScreen() {
                 setIsCheck={() => setIsChecked(prev => !prev)}
               />
             </View>
-            <Pressable onPress={() => navigate.navigate("ResetPassword")}>
+            <Pressable onPress={() => navigate.navigate('ResetPassword')}>
               <Text className="text-primary-10 font-bold">
                 Forgot password?
               </Text>
@@ -150,10 +150,7 @@ export default function SignInScreen() {
           />
         </View>
         <View className="w-screen flex-1 justify-end">
-          <CustomButton
-            title="Sign in"
-            onPress={handleSubmit(onSubmit)}
-          />
+          <CustomButton title="Sign in" onPress={handleSubmit(onSubmit)} />
         </View>
       </View>
       {isLoading && (

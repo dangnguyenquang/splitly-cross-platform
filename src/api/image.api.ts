@@ -14,7 +14,7 @@ export const uploadGroupImage = async (
   } as any);
 
   const res = await response.post(
-    `/image/upload-avatar/groups/${groupId}`,
+    `/groups/upload-avatar/groups/${groupId}`,
     formData,
     {
       headers: {

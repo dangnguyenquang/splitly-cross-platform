@@ -1,5 +1,4 @@
-import { Contact, Group } from "@/src/types";
-
+import { Contact, Group } from '@/src/types';
 
 export interface PersonOption {
   label: string;

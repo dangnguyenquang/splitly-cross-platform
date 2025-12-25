@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Text, TextInput, View, StyleSheet, Platform } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Text, TextInput, View, StyleSheet, Platform } from 'react-native';
 
 type OtpInputProps = {
   length?: number;
@@ -12,12 +12,12 @@ type OtpInputProps = {
   errorMessage?: string; // ✅ thêm
 };
 
-const onlyDigits = (s: string) => (s ?? "").replace(/\D/g, "");
+const onlyDigits = (s: string) => (s ?? '').replace(/\D/g, '');
 
 export default function OtpInputs({
   length = 6,
   value,
-  defaultValue = "",
+  defaultValue = '',
   onComplete,
   onChangeCode,
   autoFocus = true,
@@ -26,14 +26,14 @@ export default function OtpInputs({
   const isControlled = value !== undefined;
 
   const [inner, setInner] = useState<string>(
-    onlyDigits(defaultValue).slice(0, length)
+    onlyDigits(defaultValue).slice(0, length),
   );
 
   const code = isControlled ? onlyDigits(value!).slice(0, length) : inner;
 
   const digits = useMemo(
-    () => Array.from({ length }, (_, i) => code[i] ?? ""),
-    [code, length]
+    () => Array.from({ length }, (_, i) => code[i] ?? ''),
+    [code, length],
   );
 
   const inputRef = useRef<TextInput | null>(null);
@@ -77,7 +77,7 @@ export default function OtpInputs({
         onChangeText={setCode}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        keyboardType={Platform.OS === "ios" ? "number-pad" : "numeric"}
+        keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
         maxLength={length}
         textContentType="oneTimeCode"
         autoComplete="sms-otp"
@@ -95,12 +95,12 @@ const BOX_H = 64;
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: "relative",
-    alignSelf: "stretch",
+    position: 'relative',
+    alignSelf: 'stretch',
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     gap: 16,
     marginVertical: 20,
   },
@@ -108,33 +108,33 @@ const styles = StyleSheet.create({
     width: BOX_W,
     height: BOX_H,
     borderRadius: 12,
-    backgroundColor: "#D9D9D9",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#D9D9D9',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: "transparent",
+    borderColor: 'transparent',
   },
   digit: {
     fontSize: 22,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   boxFocused: {
-    borderColor: "#333",
+    borderColor: '#333',
   },
   boxError: {
-    borderColor: "#DC2626",
+    borderColor: '#DC2626',
   },
   errorText: {
     marginTop: 6,
-    color: "#DC2626",
-    textAlign: "center",
+    color: '#DC2626',
+    textAlign: 'center',
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: '500',
   },
 
   // ✅ overlay phủ lên dãy ô => tap/long-press để paste, OS autofill cũng ổn
   overlayInput: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     top: 0,

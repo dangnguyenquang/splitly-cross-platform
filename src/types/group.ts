@@ -15,9 +15,9 @@ export type GroupBasicInformation = {
   groupImage: string;
   currency: string;
   category: string;
-}
+};
 export interface Expense {
-  id: string;
+  paymentId: string;
   expenseType: string;
   title: string;
   paidBy: string;
@@ -26,13 +26,19 @@ export interface Expense {
 }
 export type Group = GroupBasicInformation & {
   participants?: Contact[];
-}
+};
 export interface GroupDetailInformation extends GroupBasicInformation {
   id: string;
   participants?: Contact[];
   expenses?: Expense[];
 }
-export type CategoryType = 'Trip' | 'Family' | 'Couple' | 'Event' | 'Project' | 'Other';
+export type CategoryType =
+  | 'Trip'
+  | 'Family'
+  | 'Couple'
+  | 'Event'
+  | 'Project'
+  | 'Other';
 
 export interface CategoryOption {
   label: CategoryType;
@@ -73,9 +79,57 @@ export interface Connection {
   email: string;
   fullName: string;
   avatarUrl: string;
-  createdAt: string; 
+  createdAt: string;
   updatedAt: string;
   role: ConnectionRole;
   accepted: boolean;
 }
 
+export interface PaymentResponse {
+  status: number;
+  message: string;
+  data: Payment[];
+}
+
+export interface Payment {
+  paymentId: number;
+  title: string;
+  estimatedAmount: number;
+  amount: number;
+  usedFundAmount: number;
+  status: string;
+  paymentRequestNote: string;
+  items: PaymentItem[];
+  consensusPayments: ConsensusPayment[];
+  user: {
+    userId: number;
+    fullName: string;
+  };
+  tag: {
+    tagId: number;
+    tagName: string;
+    deleted: boolean;
+  };
+}
+
+export interface PaymentItem {
+  itemId: number;
+  itemName: string;
+  amount: number;
+  quantity: number;
+  priceQuotation: number;
+}
+
+export interface ConsensusPayment {
+  userId: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  processAccepted: boolean;
+  successAccepted: boolean;
+}
+
+export interface Category {
+  tagId: number; // ⬅ number
+  tagName: string;
+}

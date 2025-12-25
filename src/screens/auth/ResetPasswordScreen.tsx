@@ -21,8 +21,6 @@ type ResetPassForm = { email: string };
 export default function ResetPasswordScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    
-  
 
   // Ẩn back button / header
   useLayoutEffect(() => {
@@ -50,7 +48,7 @@ export default function ResetPasswordScreen() {
       if (axios.isAxiosError(err)) {
         const status = err.response?.status;
         const msg =
-          (err.response?.data)?.message ??
+          err.response?.data?.message ??
           (status === 404
             ? 'Email not found.'
             : 'Failed to send OTP. Please try again.');

@@ -46,38 +46,36 @@ const NewGroupScreen: React.FC = () => {
       description,
       currency,
       category: selectedCategory,
-      groupImage:coverImage,
+      groupImage: coverImage,
     };
     dispatch(setCurrentGroup(groupData));
     navigation.navigate('SelectParticipants', { groupData });
   };
 
+  const handleUploadCover = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.8,
+      selectionLimit: 1,
+    });
 
-const handleUploadCover = async () => {
-  const result = await launchImageLibrary({
-    mediaType: 'photo',
-    quality: 0.8,
-    selectionLimit: 1,
-  });
-
-  if (result.didCancel) {
-    return;
-  }
-
-  if (result.errorCode) {
-    Alert.alert('Error', result.errorMessage || 'Image picker error');
-    return;
-  }
-
-  if (result.assets && result.assets.length > 0) {
-    const asset = result.assets[0];
-
-    if (asset.uri) {
-      setCoverImage(asset.uri);
+    if (result.didCancel) {
+      return;
     }
-  }
-};
 
+    if (result.errorCode) {
+      Alert.alert('Error', result.errorMessage || 'Image picker error');
+      return;
+    }
+
+    if (result.assets && result.assets.length > 0) {
+      const asset = result.assets[0];
+
+      if (asset.uri) {
+        setCoverImage(asset.uri);
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>

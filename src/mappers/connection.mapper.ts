@@ -1,8 +1,6 @@
-import { Connection, Contact } from "../types";
+import { Connection, Contact } from '../types';
 
-export const mapConnectionToContact = (
-  connection: Connection,
-): Contact => ({
+export const mapConnectionToContact = (connection: Connection): Contact => ({
   id: connection.userId.toString(),
   name: connection.fullName || connection.username,
   email: connection.email,

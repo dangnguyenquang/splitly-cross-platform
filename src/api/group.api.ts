@@ -4,9 +4,6 @@ import {
   createGroupStart,
   createGroupSuccess,
   createGroupFail,
-  fetchGroupsStart,
-  fetchGroupsSuccess,
-  fetchGroupsFail,
 } from '../store/groupSlice';
 import { AppDispatch } from '../store/store';
 import { Connection, CreateGroupRequest } from '../types';
@@ -25,29 +22,18 @@ export const createGroup = async (
     console.log('[API] Sending POST request to /groups/create-group');
     console.log('[API] Payload:', JSON.stringify(payload, null, 2));
 
-    const res = await response.post(
-      '/groups/create-group',
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log('[API] Response status:', res.status);
-    console.log('[API] Response data:', res.data);
+    const res = await response.post('/groups/create-group', payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     dispatch(createGroupSuccess(res.data.data));
-
-    // Navigate to MainApp after successful creation
-    navigate.navigate('MainApp');
-
     return res.data;
   } catch (err: any) {
     console.error('[API] Create group failed');
-    
+
     if (err.response) {
       console.error('[API] Error response:', {
         status: err.response.status,
@@ -69,14 +55,11 @@ export const getAllGroupsByUser = async (token: string) => {
   try {
     console.log('[API] Fetching all groups for user');
 
-    const res = await response.get(
-      '/management/user/groups',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await response.get('/management/user/groups', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     console.log('[API] Fetched Groups:', res.data);
     return res.data; // Return the groups array directly
@@ -101,14 +84,31 @@ export const getAllGroupsByUser = async (token: string) => {
 export const getAllConnectionsOfCurrentUsers = async (
   token: string,
 ): Promise<Connection[]> => {
-  const res = await response.get<Connection[]>(
-    '/users/connections',
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const res = await response.get<Connection[]>('/users/connections', {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   return res.data;
+};
+
+export const getPaymentsByGroupId = async (groupId: number, token: string) => {
+  const res = await response.get(`/payment-request/${groupId}/group`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    timeout: 15000,
+  });
+  console.log('Payments by Group ID response:', res.data);
+  return res.data;
+};
+export const getGroupUsers = async (groupId?: number, token?: string) => {
+  const res = await response.get(`/management/groups/${groupId}/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data ?? [];
 };

@@ -23,7 +23,7 @@ export default function CheckBox({
       onChange={setIsCheck}
       className="flex items-center justify-center"
     >
-      <CheckboxIndicator className='bg-primary'>
+      <CheckboxIndicator className="bg-primary">
         <CheckboxIcon as={CheckIcon} />
       </CheckboxIndicator>
       <CheckboxLabel className="items-center">{title}</CheckboxLabel>

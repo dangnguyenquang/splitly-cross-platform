@@ -1,28 +1,33 @@
 // src/screens/SelectParticipantsScreen.tsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, FlatList, StyleSheet, TextInput, Alert } from 'react-native';
-import { mockContacts } from '../../../data/mockData';
+import { FlatList, StyleSheet, TextInput, Alert } from 'react-native';
 import ContactItem from '../../components/group/ContactItem';
 import Header from '../../components/Header';
 import TabSwitch from '../../components/TabSwitch';
 import AvatarList from '../../components/group/AvatarList';
 import ActionButtons from '../../components/group/ActionButtons';
 
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList, Contact, Group, CreateGroupRequest, Connection } from '@/src/types';
+import {
+  RootStackParamList,
+  Contact,
+  CreateGroupRequest,
+  Connection,
+} from '@/src/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { createGroup, getAllConnectionsOfCurrentUsers } from '@/src/api/group.api';
+import {
+  createGroup,
+  getAllConnectionsOfCurrentUsers,
+} from '@/src/api/group.api';
 import axios from 'axios';
 import { RootState } from '@/src/store/store';
 import { uploadGroupImage } from '@/src/api/image.api';
-import { set } from 'react-hook-form';
 import { setCurrentGroup } from '@/src/store/groupSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type SelectParticipantsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
-
 
 const SelectParticipantsScreen: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -30,6 +35,8 @@ const SelectParticipantsScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('All Contacts');
   const [selectedContacts, setSelectedContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
   const currentGroup = useSelector(
     (state: RootState) => state.group.currentGroup,
@@ -39,7 +46,7 @@ const SelectParticipantsScreen: React.FC = () => {
   );
   const dispatch = useDispatch();
   const navigation = useNavigation<SelectParticipantsScreenNavigationProp>();
-useEffect(() => {
+  useEffect(() => {
     if (!token) {
       setLoading(false);
       return;
@@ -108,18 +115,21 @@ useEffect(() => {
   };
 
   const handleSave = async () => {
+    if (saving) return; // ⛔ prevent double submit
+
     console.log('================ CREATE GROUP =================');
 
     console.log('[1] Selected contacts:', selectedContacts);
 
+    // 1️⃣ Validate participants
     if (selectedContacts.length === 0) {
-      console.warn('[VALIDATION] No participants selected');
       Alert.alert('Validation', 'Please select at least one participant');
       return;
     }
 
     console.log('[2] Current group from Redux:', currentGroup);
 
+    // 2️⃣ Validate auth
     if (!token) {
       Alert.alert('Auth error', 'Missing token');
       return;
@@ -136,19 +146,18 @@ useEffect(() => {
     console.log('[3] CreateGroup payload:', payload);
 
     try {
+      setSaving(true); // 🔒 lock UI actions
+
+      // 3️⃣ Create group
       console.log('[4] Calling createGroup API...');
-      const group = await createGroup(
-        dispatch,
-        payload,
-        token,
-        navigation
-      );
+      const group = await createGroup(dispatch, payload, token, navigation);
 
       console.log('[5] Group created successfully:', group);
 
       const groupId = group.groupId;
       console.log('[6] Created groupId:', groupId);
 
+      // 4️⃣ Upload image (optional)
       let uploadedImageUrl = '';
 
       if (currentGroup?.groupImage) {
@@ -162,28 +171,38 @@ useEffect(() => {
 
         console.log('[8] Image uploaded successfully:', uploadedImageUrl);
       }
-      dispatch(setCurrentGroup({
-        ...group,
-        groupImage: uploadedImageUrl || currentGroup?.groupImage || '',
-      }));
-      console.log('=============== GROUP CREATED SUCCESSFULLY ================');
 
-      navigation.navigate('MainApp');
+      // 5️⃣ Update Redux AFTER everything succeeds
+      dispatch(
+        setCurrentGroup({
+          ...group,
+          groupImage: uploadedImageUrl || currentGroup?.groupImage || '',
+        }),
+      );
+
+      console.log(
+        '=============== GROUP CREATED SUCCESSFULLY ================',
+      );
+
+      // 6️⃣ Navigate ONLY AFTER success
+      navigation.replace('MainApp', {
+        screen: 'Group', // ✅ match your BottomTab
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
           '[API ERROR] createGroup Axios error:',
           error.response?.data || error.message,
         );
-        console.error('[API ERROR] createGroup unknown error:', error);
       } else {
         console.error('[API ERROR] createGroup unknown error:', error);
       }
 
       Alert.alert('Error', 'Failed to create group');
+    } finally {
+      setSaving(false); // 🔓 unlock even if error
     }
   };
-
 
   const renderContact = ({ item }: { item: Contact }) => (
     <ContactItem
@@ -220,7 +239,11 @@ useEffect(() => {
         keyExtractor={item => item.id}
         style={styles.list}
       />
-      <ActionButtons onCancel={handleBack} onSave={handleSave} />
+      <ActionButtons
+        onCancel={handleBack}
+        onSave={handleSave}
+        saveText="Create group"
+      />
     </SafeAreaView>
   );
 };
@@ -244,7 +267,3 @@ const styles = StyleSheet.create({
 });
 
 export default SelectParticipantsScreen;
-function setContacts(mappedContacts: Contact[]) {
-  throw new Error('Function not implemented.');
-}
-

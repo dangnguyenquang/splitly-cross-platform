@@ -1,41 +1,88 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '@/src/constant/theme';
-import { Expense } from '@/src/types';
 import { SCREEN_WIDTH } from '@/src/utils/dimension';
 
-
 interface ExpenseCardProps {
-  expense: Expense;
+  expense: any; // matches payment schema
   currency: string;
+  onPress?: () => void;
 }
 
-const ExpenseCard: React.FC<ExpenseCardProps> = ({ expense, currency }) => {
-  const icon = categoryIconMap[expense.expenseType] || '❓';
-  const bgColor = categoryColorMap[expense.expenseType] || '#eee';
+/* ===== Category mappings ===== */
+const categoryIconMap: Record<string, string> = {
+  Food: '🍔',
+  Travel: '🚌',
+  Shopping: '🛒',
+  Default: '💸',
+};
+
+const categoryColorMap: Record<string, string> = {
+  Food: '#FFE5D9',
+  Travel: '#E0F2FE',
+  Shopping: '#EDE9FE',
+  Default: '#F3F4F6',
+};
+
+/* ===== Status color ===== */
+const statusColorMap: Record<string, string> = {
+  success: '#22C55E',
+  processing: '#F59E0B',
+  failed: '#EF4444',
+};
+
+const ExpenseCard: React.FC<ExpenseCardProps> = ({
+  expense,
+  currency,
+  onPress,
+}) => {
+  const category = expense?.tag?.tagName || 'Default';
+  const icon = categoryIconMap[category] || categoryIconMap.Default;
+  const bgColor = categoryColorMap[category] || categoryColorMap.Default;
+
+  const statusColor = statusColorMap[expense.status] || colors.secondary;
+
+  const createdDate = expense?.groupInfoResponse?.createdAt
+    ? new Date(expense.groupInfoResponse.createdAt).toLocaleDateString()
+    : '';
 
   return (
-    <View style={styles.expenseCard}>
-      <View style={[styles.cardCategoryLogo, { backgroundColor: bgColor }]}>
-        <Text style={styles.categoryEmoji}>{icon}</Text>
-      </View>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress} disabled={!onPress}>
+      <View style={styles.expenseCard}>
+        {/* Category Icon */}
+        <View style={[styles.cardCategoryLogo, { backgroundColor: bgColor }]}>
+          <Text style={styles.categoryEmoji}>{icon}</Text>
+        </View>
 
-      {/* Thông tin chi phí */}
-      <View style={styles.cardInfo}>
-        <Text style={styles.boldText}>{expense.title}</Text>
-        <Text style={styles.secondaryText}>Paid by: {expense.paidBy}</Text>
-      </View>
+        {/* Main Info */}
+        <View style={styles.cardInfo}>
+          <Text style={styles.titleText} numberOfLines={1}>
+            {expense.title}
+          </Text>
 
-      <View style={styles.cardInfo2}>
-        <Text style={styles.boldTextCurrency}>
-          {expense.amount} {currency}
-        </Text>
-        <Text style={styles.secondaryText}>
-          {expense.dateTime.toDateString()}
-        </Text>
+          <Text style={styles.subText}>
+            Paid by: {expense?.user?.fullName || 'Unknown'}
+          </Text>
+
+          <Text style={styles.subText}>{expense.items?.length || 0} items</Text>
+        </View>
+
+        {/* Amount + Status */}
+        <View style={styles.cardInfoRight}>
+          <Text style={styles.amountText}>
+            {expense.amount} {currency}
+          </Text>
+
+          <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
+            <Text style={styles.statusText}>
+              {expense.status.toUpperCase()}
+            </Text>
+          </View>
+
+          <Text style={styles.dateText}>{createdDate}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -43,49 +90,72 @@ export default ExpenseCard;
 
 const styles = StyleSheet.create({
   expenseCard: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 24,
-    paddingVertical: 12,
-    borderColor: '#eee',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginHorizontal: 12,
+    borderBottomWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#ffffff',
   },
-  boldText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  boldTextCurrency: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  cardInfo: {
-    width: SCREEN_WIDTH * 0.4,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  cardInfo2: {
-    width: SCREEN_WIDTH * 0.3,
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    marginRight: 8,
-    marginBottom: 8,
-  },
+
   cardCategoryLogo: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
+
   categoryEmoji: {
-    fontSize: 18,
+    fontSize: 20,
   },
-  secondaryText: {
+
+  cardInfo: {
+    width: SCREEN_WIDTH * 0.42,
+  },
+
+  titleText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+  },
+
+  subText: {
+    fontSize: 12,
     color: colors.secondary,
+    marginTop: 2,
+  },
+
+  cardInfoRight: {
+    width: SCREEN_WIDTH * 0.28,
+    alignItems: 'flex-end',
+  },
+
+  amountText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#000',
+  },
+
+  statusBadge: {
+    marginTop: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+
+  statusText: {
+    fontSize: 10,
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+
+  dateText: {
+    fontSize: 11,
+    color: colors.secondary,
+    marginTop: 4,
   },
 });

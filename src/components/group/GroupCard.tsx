@@ -11,7 +11,7 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, onPress }) => {
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.coverImage}>
-        {group.groupImage? (
+        {group.groupImage ? (
           <Image source={{ uri: group.groupImage }} style={styles.cover} />
         ) : (
           <View style={styles.placeholderCover} />

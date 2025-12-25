@@ -21,7 +21,7 @@ import {
   ShoppingCart,
   Utensils,
 } from 'lucide-react-native';
-import { categories} from '@/data/mockData';
+import { categories } from '@/data/mockData';
 import { JSX } from 'react';
 
 // Updated categoryColorMap

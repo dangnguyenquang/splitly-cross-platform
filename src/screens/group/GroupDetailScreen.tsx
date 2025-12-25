@@ -24,16 +24,14 @@ const GroupDetailScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchGroups = async () => {
-    //   setGroupDetail(mockGroupDetail);
-    };
+    const fetchGroups = async () => {};
 
     fetchGroups();
   }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        title={group?.groupName|| 'Group Detail'}
+        title={group?.groupName || 'Group Detail'}
         showBack={true}
         showMenu
         onBack={handleBack}
@@ -41,7 +39,9 @@ const GroupDetailScreen: React.FC = () => {
       <View style={styles.groupAvatarContainer}>
         <Image
           source={{
-            uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
+            uri:
+              group?.groupImage ||
+              'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
           }}
           resizeMode="cover"
           style={styles.groupAvatar}

@@ -90,7 +90,7 @@ const TOP_AREA_H = PT + CIRCLE_D + 40;
 
 export default function LoadingModal({
   isLoading,
-  title ,
+  title,
   messageLine1,
   messageLine2,
   iconName,
@@ -165,7 +165,10 @@ export default function LoadingModal({
           </View>
 
           {/* title + message */}
-          <Text className="text-center text-[20px] font-semibold text-[#111]" style={{marginTop: 60}}>
+          <Text
+            className="text-center text-[20px] font-semibold text-[#111]"
+            style={{ marginTop: 60 }}
+          >
             {title}
           </Text>
 
