@@ -1,5 +1,5 @@
 // src/screens/OnboardContainer.tsx
-import React, { useRef, useState } from 'react';
+import React, { use, useRef, useState } from 'react';
 import {
   View,
   FlatList,
@@ -18,6 +18,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SCREEN_METRICS } from '../constant/screensize';
+import { useDispatch } from 'react-redux';
+import { setHasOnboarded } from '../store/appSlice';
 const { width } = Dimensions.get('window');
 const screens = [<OnboardScreen1 />, <OnboardScreen2 />, <OnboardScreen3 />];
 type OnboardNavigationProp = NativeStackNavigationProp<
@@ -30,7 +32,7 @@ export default function OnboardContainer() {
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
-
+const dispatch = useDispatch();
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(
       event.nativeEvent.contentOffset.x /
@@ -43,11 +45,13 @@ export default function OnboardContainer() {
     if (currentIndex < screens.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
+      dispatch(setHasOnboarded(true));
       console.log('Navigate to Home screen');
     }
   };
 
   const handleSkip = () => {
+    dispatch(setHasOnboarded(true));
     flatListRef.current?.scrollToEnd({ animated: true });
   };
 

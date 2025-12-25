@@ -3,31 +3,42 @@ import React, { useEffect } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import './global.css';
-import AppNavigator from './navigation/AppNavigator';
 import ThemeProvider from './src/context/theme';
 
+import { registerTokenDevice } from '@/src/api/notifee.api';
+import messaging from '@react-native-firebase/messaging';
+import { PermissionsAndroid } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { Provider } from 'react-redux';
-import { store, persistor } from './src/store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { GluestackUIProvider } from './components/ui/gluestack-ui-provider';
-import messaging from '@react-native-firebase/messaging';
-
-  import {PermissionsAndroid} from 'react-native';
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+import RootNavigator from './navigation/RootNavigator';
+import { persistor, store } from './src/store/store';
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+
   useEffect(() => {
-    (async () => {
+    let alive = true;
+
+    const run = async () => {
+      const deviceId = await DeviceInfo.getUniqueId();
       await messaging().registerDeviceForRemoteMessages();
       const token = await messaging().getToken();
-      console.log('FCM_TOKEN:', token);
-    })();
-    const unsub = messaging().onMessage(async rm => {
-      console.log('FCM_FOREGROUND:', rm);
-    });
-    return unsub;
+
+      // if (alive) {
+      //   await registerTokenDevice(deviceId, token, 'ANDROID');
+      // }
+    };
+
+    run().catch(console.log);
+
+    return () => {
+      alive = false;
+    };
   }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -37,7 +48,7 @@ function App() {
               <StatusBar
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
               />
-              <AppNavigator />
+              <RootNavigator />
             </ThemeProvider>
           </GluestackUIProvider>
         </SafeAreaProvider>

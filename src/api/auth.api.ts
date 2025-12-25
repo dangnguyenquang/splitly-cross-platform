@@ -22,10 +22,10 @@ export const userLogin = async (
     const res = await response.post('/auth/login', loginForm);
     if (res) {
       dispatch(loginSuccess(res.data));
-      navigate.reset({
-        index: 0,
-        routes: [{ name: 'MainApp' }],
-      });
+      // navigate.reset({
+      //   index: 0,
+      //   routes: [{ name: 'MainApp' }],
+      // });
     }
     return res.data;
   } catch (err: unknown) {

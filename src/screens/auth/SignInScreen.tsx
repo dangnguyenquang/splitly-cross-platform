@@ -156,7 +156,7 @@ export default function SignInScreen() {
       {isLoading && (
         <LoadingModal
           isLoading={isLoading}
-          title="Sign in Successful!"
+          title="Signing in..."
           messageLine1="You will be directed to the"
           messageLine2="homepage."
           iconName="user"
