@@ -1,246 +1,118 @@
-import React, { useState } from 'react';
-import {
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Pressable,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useMemo, useState } from 'react';
+import { Image, Pressable, ScrollView, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
 
-import CustomHeader from '../../components/header/index';
-import { SCREEN_METRICS } from '@/src/constant/screensize';
-import { RootStackParamList } from '@/src/types';
-import { useSelector } from 'react-redux';
+import AccountTopBar from '@/src/components/account/AccountTopBar';
+import MenuList, {
+  ACCOUNT_MENU,
+  AccountMenuKey,
+} from '@/src/components/account/MenuList';
+import QrBottomSheet from '@/src/components/account/QrBottomSheet';
+import UpgradeCard from '@/src/components/account/UpgradeCard';
+import UserInfoRow from '@/src/components/account/UserInfoRow';
+import { logOutFail, logOutStart, logOutSuccess } from '@/src/store/authSlice';
 import { RootState } from '@/src/store/store';
-import FastImage from 'react-native-fast-image';
+import type { RootStackParamList } from '@/src/types';
+import ConfirmBottomSheet from '@/src/components/modal/confirm';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function AccountScreen() {
-  const [showQR, setShowQR] = useState(false);
   const navigation = useNavigation<NavigationProp>();
   const user = useSelector((state: RootState) => state.auth.login.currentUser);
+  const [showQR, setShowQR] = useState(false);
+  const dispatch = useDispatch();
+  const qrValue = useMemo(() => user?.email ?? 'splitly', [user?.email]);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const openPersonal = () => {
+    navigation.navigate('PersonalInfoDetail', { personalInfo: user });
+  };
+  const navigate = useNavigation<NavigationProp>();
 
-  const handleOpenPersonalInfo = () => {
-    navigation.navigate('PersonalInfoDetail', {
-      personalInfo: user,
-    });
+  const onSelectMenu = (key: AccountMenuKey) => {
+    switch (key) {
+      case 'personal':
+        openPersonal();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleLogout = () => {
+    dispatch(logOutStart());
+    try {
+      setShowLogoutConfirm(false)
+      dispatch(logOutSuccess());
+    } catch (error) {
+      console.log('err', error);
+      dispatch(logOutFail());
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      {/* HEADER */}
-      <CustomHeader
-        title="Account"
-        rightIcon={{
-          component: MaterialIcons,
-          name: 'qr-code',
-          size: 22,
-          color: '#070707',
-        }}
-        onRightPress={() => setShowQR(true)}
-        backgroundColor="#fff"
-        titleColor="#070707"
-        shadow
-      />
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <AccountTopBar
+          title="Account"
+          left={
+            <Image
+              source={require('@/assets/logo.png')}
+              style={{ width: 40, height: 40 }}
+            />
+          }
+        />
 
-      {/* CONTENT */}
-      <View style={styles.content}>
-        {/* USER INFO */}
-        <TouchableOpacity
-          style={styles.userRow}
-          activeOpacity={0.7}
-          onPress={handleOpenPersonalInfo}
-        >
-          <FastImage
-            style={styles.avatar}
-            source={{ uri: user?.userImage }}
-            resizeMode={FastImage.resizeMode.cover}
+        <ScrollView className="px-4 pb-8" showsVerticalScrollIndicator={false}>
+          <UserInfoRow
+            fullName={user?.fullName}
+            email={user?.email}
+            avatarUrl={user?.userImage}
+            onPress={openPersonal}
+            onPressQR={() => setShowQR(true)}
           />
-          <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user?.fullName}</Text>
-            <Text style={styles.userEmail}>{user?.email}</Text>
-          </View>
 
-          <MaterialIcons name="chevron-right" size={22} color="#999" />
-        </TouchableOpacity>
+          <UpgradeCard
+            title="Upgrade Plan to Unlock More!"
+            desc="Enjoy all the benefits and explore more possibilities"
+            onPress={() => {
+              // navigation.navigate('UpgradePlan');
+            }}
+          />
 
-        {/* UPGRADE */}
-        <View style={styles.upgradeCard}>
-          <Text style={styles.upgradeTitle}>
-            ⭐ Upgrade plan to unlock more
-          </Text>
-          <Text style={styles.upgradeDesc}>
-            Enjoy all the benefits and explore more
-          </Text>
-        </View>
-      </View>
+          <MenuList items={ACCOUNT_MENU} onSelect={onSelectMenu} />
 
-      {/* QR BOTTOM SHEET */}
-      <Modal
-        transparent
-        animationType="slide"
-        visible={showQR}
-        onRequestClose={() => setShowQR(false)}
-      >
-        <Pressable style={styles.overlay} onPress={() => setShowQR(false)}>
-          <Pressable style={styles.sheet} onPress={() => {}}>
-            <Text style={styles.sheetTitle}>My QR Code</Text>
-
-            <View style={styles.qrWrapper}>
-              <Image
-                source={{
-                  uri:
-                    user?.userImage ||
-                    'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Example',
-                }}
-                style={styles.qrImage}
-              />
-            </View>
-
-            <View style={styles.actionRow}>
-              <TouchableOpacity style={styles.saveButton}>
-                <Text style={styles.saveText}>Save</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.shareButton}>
-                <Text style={styles.shareText}>Share</Text>
-              </TouchableOpacity>
-            </View>
+          <Pressable
+            className="mt-4 flex-row items-center px-4 py-4 bg-white rounded-2xl"
+            onPress={() => setShowLogoutConfirm(true)}
+          >
+            <MaterialIcons name="logout" size={20} color="#EF4444" />
+            <Text className="ml-3 text-[14px] text-[#EF4444] font-semibold">
+              Logout
+            </Text>
           </Pressable>
-        </Pressable>
-      </Modal>
+        </ScrollView>
+      </ScrollView>
+
+      <QrBottomSheet
+        visible={showQR}
+        onClose={() => setShowQR(false)}
+        qrValue={qrValue}
+      />
+      <ConfirmBottomSheet
+        visible={showLogoutConfirm}
+        title="Logout"
+        description="Are you sure want to logout?"
+        cancelText="Cancel"
+        confirmText="Yes, Logout"
+        danger
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+      />
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-
-  content: {
-    paddingHorizontal: 16,
-    paddingTop: 20,
-  },
-
-  userRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 20,
-  },
-
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    marginRight: 12,
-  },
-
-  userInfo: {
-    flex: 1,
-  },
-
-  userName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-  },
-
-  userEmail: {
-    fontSize: 13,
-    color: '#777',
-    marginTop: 2,
-  },
-
-  upgradeCard: {
-    backgroundColor: '#F4B400',
-    borderRadius: 12,
-    padding: 16,
-  },
-
-  upgradeTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#000',
-  },
-
-  upgradeDesc: {
-    fontSize: 13,
-    color: '#333',
-    marginTop: 4,
-  },
-
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-  },
-
-  sheet: {
-    backgroundColor: '#FFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-  },
-
-  sheetTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-
-  qrWrapper: {
-    alignItems: 'center',
-    marginVertical: 12,
-  },
-
-  qrImage: {
-    width: SCREEN_METRICS.width * 0.65,
-    height: SCREEN_METRICS.width * 0.65,
-  },
-
-  actionRow: {
-    flexDirection: 'row',
-    marginTop: 24,
-  },
-
-  saveButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#F4B400',
-    borderRadius: 24,
-    paddingVertical: 12,
-    marginRight: 10,
-    alignItems: 'center',
-  },
-
-  saveText: {
-    color: '#F4B400',
-    fontWeight: '600',
-  },
-
-  shareButton: {
-    flex: 1,
-    backgroundColor: '#F4B400',
-    borderRadius: 24,
-    paddingVertical: 12,
-    marginLeft: 10,
-    alignItems: 'center',
-  },
-
-  shareText: {
-    color: '#000',
-    fontWeight: '600',
-  },
-});

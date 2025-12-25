@@ -3,18 +3,20 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { combineReducers } from 'redux';
 import authSlice from './authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import appSlice from './appSlice';
 import groupSlice from './groupSlice';
 // Kết hợp các reducers
 const rootReducer = combineReducers({
-  auth: authSlice,
-  group: groupSlice,
+    auth: authSlice,
+    app: appSlice,
+    group: groupSlice,
 });
 
 // Cấu hình redux-persist
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth'],
+  whitelist: ['auth', 'app', 'group']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
