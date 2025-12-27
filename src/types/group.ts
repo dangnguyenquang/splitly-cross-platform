@@ -1,7 +1,7 @@
 // src/types/index.ts
 
 export interface Contact {
-  id: string;
+  id: number;
   name: string;
   email: string;
   avatar: string;
@@ -9,7 +9,7 @@ export interface Contact {
 }
 
 export type GroupBasicInformation = {
-  groupId: string;
+  groupId: number;
   groupName: string;
   description: string;
   groupImage: string;
@@ -17,7 +17,7 @@ export type GroupBasicInformation = {
   category: string;
 };
 export interface Expense {
-  paymentId: string;
+  paymentId: number;
   expenseType: string;
   title: string;
   paidBy: string;
@@ -28,7 +28,7 @@ export type Group = GroupBasicInformation & {
   participants?: Contact[];
 };
 export interface GroupDetailInformation extends GroupBasicInformation {
-  id: string;
+  id: number;
   participants?: Contact[];
   expenses?: Expense[];
 }

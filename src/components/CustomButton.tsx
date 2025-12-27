@@ -22,6 +22,7 @@ interface CustomButtonProps {
   style?: ViewStyle;
   logo?: ImageSourcePropType;
   logoSize?: number;
+  danger?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -34,6 +35,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   textStyle,
   style,
   logo,
+  danger,
   logoSize = 22,
 }) => {
   const buttonStyle: ViewStyle = {
@@ -54,6 +56,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
             ? styles.secondary
             : styles.logoButton,
         buttonStyle,
+        danger && { borderColor: 'red' },
         style,
       ]}
     >

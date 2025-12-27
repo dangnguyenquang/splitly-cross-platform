@@ -1,5 +1,6 @@
+import CustomButton from '@/src/components/CustomButton';
 import React from 'react';
-import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, Text, View } from 'react-native';
 
 type ConfirmBottomSheetProps = {
   visible: boolean;
@@ -47,39 +48,43 @@ export default function ConfirmBottomSheet({
           <View className="items-center">
             <View className="w-12 h-1.5 rounded-full bg-gray-200 mb-3" />
             <Text
-              className={`text-[16px] font-semibold ${danger ? 'text-red-500' : 'text-black'}  text-center`}
+              className={`text-2xl font-semibold ${danger ? 'text-red-500' : 'text-black'}  text-center`}
             >
               {title}
             </Text>
           </View>
-
-          <Text className="text-[13px] text-gray-500 text-center mt-2 leading-5">
+          <View className="border-t border-slate-100 my-5"></View>
+          <Text className="text-lg text-slate-800 font-semibold text-center mt-2 leading-5">
             {description}
           </Text>
 
+          {/* Buttons */}
           <View className="flex-row mt-5">
-            <TouchableOpacity
-              onPress={onCancel}
-              activeOpacity={0.8}
-              className="flex-1 border border-gray-200 rounded-full py-3 items-center mr-2"
-            >
-              <Text className="text-[14px] text-black font-semibold">
-                {cancelText}
-              </Text>
-            </TouchableOpacity>
+            {/* Cancel */}
+            <View className="flex-1 mr-2">
+              <CustomButton
+                title={cancelText}
+                onPress={onCancel}
+                type="secondary"
+                width="100%"
+                height={48}
+                borderRadius={999}
+                style={{ marginVertical: 0 }}
+              />
+            </View>
 
-            <TouchableOpacity
-              onPress={onConfirm}
-              activeOpacity={0.85}
-              className={`flex-1 rounded-full py-3 items-center ml-2 bg-[#F4B400]
-              `}
-            >
-              <Text
-                className={`text-[14px] font-semibold text-black`}
-              >
-                {confirmText}
-              </Text>
-            </TouchableOpacity>
+            {/* Confirm */}
+            <View className="flex-1 ml-2">
+              <CustomButton
+                title={confirmText}
+                onPress={onConfirm}
+                type="primary"
+                width="100%"
+                height={48}
+                borderRadius={999}
+                style={{ marginVertical: 0 }}
+              />
+            </View>
           </View>
         </Pressable>
       </Pressable>

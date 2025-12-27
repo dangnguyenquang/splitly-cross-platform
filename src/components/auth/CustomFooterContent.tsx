@@ -29,11 +29,11 @@ export default function FooterContent({
 const styles = StyleSheet.create({
   textFooter: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 14,
   },
   textBold: {
     color: colors.primary,
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 14,
   },
 });

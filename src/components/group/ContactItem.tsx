@@ -1,7 +1,7 @@
 // src/components/ContactItem.tsx
 import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import { Contact } from '../../../types';
+import { Contact } from '@/src/types';
 
 interface ContactItemProps {
   contact: Contact;
