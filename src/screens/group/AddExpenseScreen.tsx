@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '@/src/types';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   View,
   StyleSheet,
@@ -11,7 +7,13 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  Modal,
+  Text,
+  TextInput,
 } from 'react-native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREEN_WIDTH } from '@/src/utils/dimension';
 
 /* Redux */
@@ -21,7 +23,6 @@ import { RootState } from '@/src/store/store';
 /* Components */
 import Header from '../../components/Header';
 import InputField from '@/src/components/InputField';
-import UploadCover from '@/src/components/UploadCover';
 import CustomButton from '@/src/components/CustomButton';
 import PeopleMultiSelect from '@/src/components/group/peopleMultiSelector';
 import CategorySelector from '@/src/components/group/categorySelector';
@@ -32,26 +33,10 @@ import { getTags, Tag } from '@/src/api/tag.api';
 import { createPaymentRequest } from '@/src/api/payment.api';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
-  Asset,
-  launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import { uploadGroupImage } from '@/src/api/image.api';
-
-/* Static icons for categories */
-const categoryIconMap: Record<string, string> = {
-  Food: '🍔',
-  Travel: '🚌',
-  Music: '🎵',
-  Movie: '🎬',
-  Sport: '🏀',
-  Games: '🎮',
-  'Dining out': '🍽️',
-  Liquor: '🍷',
-  Market: '🛒',
-  Utilities: '💡',
-  Default: '💸',
-};
+import { RootStackParamList } from '@/src/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'AddExpense'>;
@@ -59,6 +44,12 @@ type RouteProps = RouteProp<RootStackParamList, 'AddExpense'>;
 interface GroupUser {
   userId: number;
   fullName: string;
+}
+
+interface ExpenseItem {
+  itemName: string;
+  quantity: number;
+  amount: number;
 }
 
 const AddExpenseScreen: React.FC = () => {
@@ -71,284 +62,274 @@ const AddExpenseScreen: React.FC = () => {
     (state: RootState) => state.auth.login.currentUser?.token,
   );
 
-  /* ===== STATE ===== */
+  /* ===== BASIC INFO ===== */
   const [title, setTitle] = useState('');
-  const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
-  const [selectedPeople, setSelectedPeople] = useState<number[]>([]);
   const [categoryId, setCategoryId] = useState('');
+  const [selectedPeople, setSelectedPeople] = useState<number[]>([]);
+  const [uri, setURI] = useState('');
 
+  /* ===== ITEMS ===== */
+  const [items, setItems] = useState<ExpenseItem[]>([]);
+  const [itemModalVisible, setItemModalVisible] = useState(false);
+  const [itemName, setItemName] = useState('');
+  const [itemQuantity, setItemQuantity] = useState('1');
+  const [itemAmount, setItemAmount] = useState('');
+
+  /* ===== USERS & TAGS ===== */
   const [participants, setParticipants] = useState<GroupUser[]>([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-
   const [categories, setCategories] = useState<Tag[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
-  const [uri, setURI] = useState<string>('');
-  /* ===== FETCH USERS & TAGS ON MOUNT ===== */
+
+  /* ===== FETCH DATA ===== */
   useEffect(() => {
     if (!groupId || !token) return;
 
-    const fetchGroupUsers = async () => {
+    const fetchAll = async () => {
       try {
         setLoadingUsers(true);
-        const users = await getGroupUsers(numericGroupId, token);
-        setParticipants(users);
-      } catch (error) {
-        console.error('Fetch group users failed:', error);
+        setLoadingCategories(true);
+        setParticipants(await getGroupUsers(numericGroupId, token));
+        setCategories(await getTags(token));
       } finally {
         setLoadingUsers(false);
-      }
-    };
-
-    const fetchTags = async () => {
-      try {
-        setLoadingCategories(true);
-        const tags = await getTags(token);
-        setCategories(tags);
-      } catch (error) {
-        console.error('Fetch tags failed:', error);
-      } finally {
         setLoadingCategories(false);
       }
     };
 
-    fetchGroupUsers();
-    fetchTags();
+    fetchAll();
   }, [groupId, token]);
 
-  /* ===== PEOPLE OPTIONS ===== */
-  const peopleOptions = participants.map(u => ({
-    label: u.fullName,
-    value: u.userId,
-  }));
+  /* ===== IMAGE ===== */
   const handlePickAvatar = async () => {
-    Alert.alert(
-      'Select Image',
-      'Choose image source',
-      [
-        {
-          text: 'Camera',
-          onPress: async () => {
-            const result = await launchCamera({
-              mediaType: 'photo',
-              quality: 0.8,
-              saveToPhotos: true,
-            });
+    const result = await launchImageLibrary({ mediaType: 'photo' });
+    if (!result.assets?.[0]?.uri) return;
 
-            processImageResult(result.assets?.[0]);
-          },
-        },
-        {
-          text: 'Gallery',
-          onPress: async () => {
-            const result = await launchImageLibrary({
-              mediaType: 'photo',
-              quality: 0.8,
-            });
-
-            processImageResult(result.assets?.[0]);
-          },
-        },
-        { text: 'Cancel', style: 'cancel' },
-      ],
-      { cancelable: true },
-    );
+    setURI(result.assets[0].uri);
+    await uploadGroupImage(result.assets[0].uri, token!, groupId);
   };
 
-  const processImageResult = async (asset?: Asset) => {
-    if (!asset?.uri) return;
+  /* ===== ITEMS ===== */
+  const totalAmount = items.reduce(
+    (sum, i) => sum + i.amount * i.quantity,
+    0,
+  );
 
-    // Immediately show preview
-    setURI(asset.uri);
-
-    try {
-      await uploadGroupImage(asset.uri, token!, groupId);
-    } catch (err) {
-      Alert.alert('Upload failed', 'Unable to upload image');
-      console.error(err);
+  const addItem = () => {
+    if (!itemName || !itemAmount) {
+      Alert.alert('Missing item info');
+      return;
     }
+
+    setItems(prev => [
+      ...prev,
+      {
+        itemName,
+        quantity: Number(itemQuantity),
+        amount: Number(itemAmount),
+      },
+    ]);
+
+    setItemName('');
+    setItemQuantity('1');
+    setItemAmount('');
+    setItemModalVisible(false);
   };
+
   /* ===== SAVE ===== */
   const handleSave = async () => {
-    if (!title || !amount || !categoryId) {
+    if (!title || !categoryId || items.length === 0) {
       Alert.alert('Missing fields');
       return;
     }
 
-    const numericAmount = Number(amount);
-    if (isNaN(numericAmount) || numericAmount <= 0) {
-      Alert.alert('Invalid amount');
-      return;
-    }
-
-    const selectedCategory = categories.find(
-      c => String(c.tagId) === categoryId,
-    );
-
-    if (!selectedCategory) {
-      Alert.alert('Invalid category');
-      return;
-    }
+    const tag = categories.find(c => String(c.tagId) === categoryId);
+    if (!tag) return;
 
     const payload = {
       title,
       tag: {
-        tagId: String(selectedCategory.tagId),
-        tagName: selectedCategory.tagName,
+        tagId: String(tag.tagId),
+        tagName: tag.tagName,
       },
-      items: [
-        {
-          itemName: title,
-          quantity: 1,
-          priceQuotation: numericAmount,
-          amount: numericAmount,
-        },
-      ],
+      items: items.map(i => ({
+        ...i,
+        priceQuotation: i.amount,
+      })),
       consensusPayments: selectedPeople.map(userId => ({ userId })),
-      estimatedAmount: numericAmount,
-      imageUrl: uri || '',
+      estimatedAmount: totalAmount,
+      imageUrl: uri,
       paymentRequestNote: note,
       usedFundAmount: 0,
     };
 
-    const res = await createPaymentRequest(payload, token!, numericGroupId);
-    if (!res) {
-      Alert.alert('Create payment request failed');
-      return;
-    }
-    console.log('CREATE PAYMENT REQUEST:', payload);
+    await createPaymentRequest(payload, token!, numericGroupId);
     navigation.goBack();
   };
 
+  /* ===== RENDER ===== */
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Add Payment Request" showBack onBack={navigation.goBack} />
 
       <ScrollView>
-        <InputField
-          label="Title"
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Expense title"
-        />
+        <InputField label="Title" value={title} onChangeText={setTitle} />
 
-        <InputField
-          label="Amount"
-          value={amount}
-          onChangeText={setAmount}
-          placeholder={`Amount (${group?.currency || 'VND'})`}
-        />
+        {/* Items */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Items</Text>
 
-        {loadingCategories ? (
-          <ActivityIndicator style={{ marginVertical: 16 }} />
-        ) : (
+          {items.map((i, idx) => (
+            <View key={idx} style={styles.itemRow}>
+              <Text>{i.itemName} x{i.quantity}</Text>
+              <Text>{i.amount}</Text>
+            </View>
+          ))}
+
+          <TouchableOpacity
+            style={styles.addItemBtn}
+            onPress={() => setItemModalVisible(true)}
+          >
+            <Text style={styles.addItemText}>+ Add Item</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.totalText}>
+          Total: {totalAmount} {group?.currency}
+        </Text>
+
+        {loadingCategories ? <ActivityIndicator /> : (
           <CategorySelector
             categories={categories}
-            selectedCategoryId={categoryId} // still a string
-            onSelect={setCategoryId} // string
+            selectedCategoryId={categoryId}
+            onSelect={setCategoryId}
           />
         )}
 
-        <InputField
-          label="Notes"
-          value={note}
-          onChangeText={setNote}
-          placeholder="Payment note"
-          multiline
+        <PeopleMultiSelect
+          data={participants.map(p => ({
+            label: p.fullName,
+            value: p.userId,
+          }))}
+          value={selectedPeople}
+          onChange={setSelectedPeople}
         />
 
-        {loadingUsers ? (
-          <ActivityIndicator style={{ marginVertical: 16 }} />
-        ) : (
-          <PeopleMultiSelect
-            data={peopleOptions}
-            value={selectedPeople}
-            onChange={setSelectedPeople}
-          />
-        )}
-        <View style={styles.coverContainer}>
+        <TouchableOpacity onPress={handlePickAvatar}>
           {uri ? (
-            // Show selected image
-            <TouchableOpacity onPress={handlePickAvatar} activeOpacity={0.8}>
-              <Image source={{ uri }} style={styles.coverImage} />
-              <View style={styles.cameraOverlay}>
-                <MaterialIcons name="camera-alt" size={24} color="#fff" />
-              </View>
-            </TouchableOpacity>
+            <Image source={{ uri }} style={styles.coverImage} />
           ) : (
-            // Show placeholder
-            <TouchableOpacity
-              onPress={handlePickAvatar}
-              style={styles.coverPlaceholder}
-              activeOpacity={0.8}
-            >
+            <View style={styles.coverPlaceholder}>
               <MaterialIcons name="camera-alt" size={24} color="#fff" />
-            </TouchableOpacity>
+            </View>
           )}
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
-          <CustomButton
-            title="Cancel"
-            width={SCREEN_WIDTH * 0.4}
-            height={50}
-            borderRadius={30}
-            type="secondary"
-            onPress={() => navigation.goBack()}
-          />
-
-          <CustomButton
-            title="Save"
-            width={SCREEN_WIDTH * 0.4}
-            height={50}
-            borderRadius={30}
-            onPress={handleSave}
-          />
+          <CustomButton title="Save" onPress={handleSave} />
         </View>
       </ScrollView>
+
+      {/* ===== ITEM MODAL ===== */}
+      <Modal visible={itemModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Add Item</Text>
+
+            <TextInput
+              placeholder="Item name"
+              value={itemName}
+              onChangeText={setItemName}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="Quantity"
+              keyboardType="numeric"
+              value={itemQuantity}
+              onChangeText={setItemQuantity}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="Estimated amount for each item"
+              keyboardType="numeric"
+              value={itemAmount}
+              onChangeText={setItemAmount}
+              style={styles.input}
+            />
+
+            <CustomButton title="Add" onPress={addItem} style={{alignSelf:'center'}} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 export default AddExpenseScreen;
 
+/* ===== STYLES ===== */
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
+  container: { flex: 1, backgroundColor: '#fff' },
+  section: { padding: 16 },
+  sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 8 },
+  itemRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 20,
-    marginVertical: 20,
+    justifyContent: 'space-between',
+    paddingVertical: 6,
   },
-  coverContainer: {
-    marginVertical: 16,
+  addItemBtn: {
+    marginTop: 8,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#F1F5F9',
     alignItems: 'center',
   },
-
+  addItemText: { fontWeight: '600' },
+  totalText: {
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginVertical: 12,
+  },
   coverPlaceholder: {
     width: SCREEN_WIDTH * 0.8,
     height: 180,
     backgroundColor: '#ddd',
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
   },
-
   coverImage: {
     width: SCREEN_WIDTH * 0.8,
     height: 180,
+    alignSelf: 'center',
     borderRadius: 12,
   },
+  buttonContainer: { marginVertical: 20, alignItems: 'center' },
 
-  cameraOverlay: {
-    position: 'absolute',
-    bottom: 8,
-    right: 8,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 6,
-    borderRadius: 18,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCard: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 20,
+  },
+  modalTitle: { fontSize: 16, fontWeight: '700', marginBottom: 12 },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 10,
   },
 });

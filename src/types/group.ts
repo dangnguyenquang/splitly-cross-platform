@@ -1,5 +1,3 @@
-// src/types/index.ts
-
 export interface Contact {
   id: number;
   name: string;
@@ -110,6 +108,7 @@ export interface Payment {
     tagName: string;
     deleted: boolean;
   };
+  containUser: boolean;
 }
 
 export interface PaymentItem {

@@ -6,7 +6,7 @@ const baseURL = Config.BE_URL;
 console.log('urL', baseURL);
 const PORT = 8080;
 export const BE_BASE_URL = Platform.select({
-  android: `${baseURL}:${PORT}/api/v1`, // emulator Android
+  android: `http://192.168.31.171:${PORT}/api/v1`, // emulator Android
   ios: `http://localhost:${PORT}/api/v1`, // simulator iOS
 });
 const response = axios.create({
