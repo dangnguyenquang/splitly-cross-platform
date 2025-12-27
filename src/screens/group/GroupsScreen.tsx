@@ -56,7 +56,7 @@ const GroupsScreen: React.FC = () => {
   const handleSelectGroup = (group: Group) => {
     console.log(group);
     navigation.navigate('GroupDetail', {
-      groupId: group.groupId,
+      groupId: group.groupId.toString(),
       group: group,
     });
   };

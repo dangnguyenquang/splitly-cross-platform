@@ -93,7 +93,7 @@ const ExpenseScreen: React.FC = () => {
     <View style={styles.container}>
       <FlatList
         data={expenses}
-        keyExtractor={(item: Expense) => item.paymentId}
+        keyExtractor={(item: Expense) => item.paymentId.toString()}
         renderItem={({ item }) => (
           <ExpenseCard
             expense={item}

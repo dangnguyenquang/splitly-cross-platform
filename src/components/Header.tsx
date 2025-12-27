@@ -24,9 +24,7 @@ const Header: React.FC<HeaderProps> = ({
       <View style={styles.leftSection}>
         {showLogo && (
           <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/2917/2917995.png',
-            }}
+            source={require('@/assets/logo.png')}
             style={styles.logo}
           />
         )}
