@@ -1,5 +1,8 @@
 import BottomNavigationTabs from '@/src/navigation/BottomTab';
 import PersonalInfoScreen from '@/src/screens/account/userDetail';
+import AddNewContactScreen from '@/src/screens/contact/AddNewContactScreen';
+import ContactDetailScreen from '@/src/screens/contact/ContactDetailScreen';
+import SearchContactScreen from '@/src/screens/contact/SearchContactScreen';
 import AddExpenseScreen from '@/src/screens/group/AddExpenseScreen';
 import GroupDetailScreen from '@/src/screens/group/GroupDetailScreen';
 import GroupsScreen from '@/src/screens/group/GroupsScreen';
@@ -44,6 +47,11 @@ function AppNavigator() {
         component={HistoryDetailScreen}
       />
       <Stack.Screen name="ReceiptScreen" component={ReceiptScreen} />
+      <Stack.Screen name="ContactDetail" component={ContactDetailScreen} />
+      <Stack.Screen name="NewContact" component={AddNewContactScreen} />
+      <Stack.Screen name="SearchContact" component={SearchContactScreen} />
+
+
     </Stack.Navigator>
   );
 }

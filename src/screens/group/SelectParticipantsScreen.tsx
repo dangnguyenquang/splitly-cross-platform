@@ -184,9 +184,9 @@ const SelectParticipantsScreen: React.FC = () => {
         '=============== GROUP CREATED SUCCESSFULLY ================',
       );
 
-      // 6️⃣ Navigate ONLY AFTER success
+      // Navigate ONLY AFTER success
       navigation.replace('MainApp', {
-        screen: 'Group', // ✅ match your BottomTab
+        screen: 'Group', // match your BottomTab
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {

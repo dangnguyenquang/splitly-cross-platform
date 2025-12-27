@@ -1,13 +1,14 @@
-import { View, Text } from 'react-native';
+import { LoginForm } from '@/src/types';
 import Ionicons from '@react-native-vector-icons/ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { FieldErrors } from 'react-hook-form';
-import { LoginForm } from '@/src/screens/auth/SignInScreen';
+import { Text, View } from 'react-native';
 interface ErrorToastifyIProps {
   errors: FieldErrors<LoginForm>;
+  onClose: () => void;
 }
-export default function ErrorToastify({
-  errors,
-}: Readonly<ErrorToastifyIProps>) {
+export default function ErrorToastify(props: Readonly<ErrorToastifyIProps>) {
+  const { errors, onClose } = props;
   return (
     <View className="pb-4">
       {errors.root?.message && (
@@ -16,7 +17,7 @@ export default function ErrorToastify({
             <Ionicons name="information-circle-outline" size={24} color="red" />
             <Text className="text-slate-900">{errors.root.message}</Text>
           </View>
-          <Text>x</Text>
+          <MaterialIcons name="close" size={20} color="red" onPress={onClose} />
         </View>
       )}
     </View>

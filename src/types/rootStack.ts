@@ -1,4 +1,6 @@
-import { Group, GroupBasicInformation } from './group';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Contact, Group, GroupBasicInformation } from './group';
 import { User } from './user';
 
 export type RootStackParamList = {
@@ -30,4 +32,12 @@ export type RootStackParamList = {
     payment: any;
     group: any;
   };
+  ContactDetail: { contact: Contact };
+  NewContact: undefined;
+  AddContact: undefined
+  SearchContact: { contact: Contact };
 };
+
+export type Navigation = NativeStackNavigationProp<RootStackParamList>;
+
+export type Route = RouteProp<RootStackParamList>;

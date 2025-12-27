@@ -3,13 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colors } from '../constant/theme';
-import ContactScreen from '../screens/contact';
+import ContactScreen from '../screens/contact/ContactScreen';
 import AccountScreen from '../screens/account';
 import CameraScreen from '../screens/camera';
 import HomeStackNavigator from './HomeNavigator';
 import GroupsScreen from '../screens/group/GroupsScreen';
 
-type RootTabParamList = {
+export type RootTabParamList = {
   Home: undefined;
   Group: undefined;
   Camera: undefined;
