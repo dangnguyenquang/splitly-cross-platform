@@ -24,10 +24,9 @@ const Header: React.FC<HeaderProps> = ({
       <View style={styles.leftSection}>
         {showLogo && (
           <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/2917/2917995.png',
-            }}
+            source={require('@/assets/logo.png')}
             style={styles.logo}
+            style={{ width: 40, height: 40 }}
           />
         )}
         {showBack && (
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingBottom: 16,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',

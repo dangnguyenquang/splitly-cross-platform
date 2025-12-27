@@ -129,6 +129,7 @@ export default function RequestScreen() {
             requestPersonName="Hoai Bao"
             showDivider={index < section.data.length - 1}
             handleOnPressRequestButton={() => setModalVisible(true)}
+            type={"receive"}
           />
         )}
         renderSectionHeader={({ section: { title } }) => (

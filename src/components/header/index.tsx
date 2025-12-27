@@ -7,19 +7,33 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
+  Image,
+  ImageSourcePropType,
 } from 'react-native';
 
-interface IconProps {
-  component: any; // Icon component, e.g., Ionicons, MaterialIcons
-  name: string;
-  size?: number;
-  color?: string;
-}
+/**
+ * Icon / Image union type
+ */
+type HeaderIcon =
+  | {
+    type: 'icon';
+    component: any; // Ionicons, MaterialIcons...
+    name: string;
+    size?: number;
+    color?: string;
+  }
+  | {
+    type: 'image';
+    source: ImageSourcePropType;
+    width?: number;
+    height?: number;
+    resizeMode?: 'contain' | 'cover' | 'stretch' | 'center';
+  };
 
 interface CustomHeaderProps {
   title: string;
-  leftIcon?: IconProps;
-  rightIcon?: IconProps;
+  leftIcon?: HeaderIcon;
+  rightIcon?: HeaderIcon;
   onLeftPress?: () => void;
   onRightPress?: () => void;
   backgroundColor?: string;
@@ -44,6 +58,38 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   const statusBarHeight =
     Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
 
+  const renderIcon = (
+    icon?: HeaderIcon,
+    onPress?: () => void,
+  ) => {
+    if (!icon || !onPress) return null;
+
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.iconButton}
+        activeOpacity={0.7}
+      >
+        {icon.type === 'icon' ? (
+          <icon.component
+            name={icon.name}
+            size={icon.size || 24}
+            color={icon.color || titleColor}
+          />
+        ) : (
+          <Image
+            source={icon.source}
+            style={{
+              width: icon.width || 24,
+              height: icon.height || 24,
+            }}
+            resizeMode={icon.resizeMode || 'contain'}
+          />
+        )}
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <>
       <StatusBar
@@ -51,6 +97,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
         backgroundColor={backgroundColor}
         translucent
       />
+
       <View
         style={[
           styles.headerWrapper,
@@ -69,30 +116,18 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
               height,
               ...(shadow
                 ? {
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.1,
-                    shadowRadius: 3,
-                    elevation: 3,
-                  }
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 3,
+                  elevation: 3,
+                }
                 : {}),
             },
           ]}
         >
           <View style={styles.side}>
-            {leftIcon && onLeftPress && (
-              <TouchableOpacity
-                onPress={onLeftPress}
-                style={styles.iconButton}
-                activeOpacity={0.7}
-              >
-                <leftIcon.component
-                  name={leftIcon.name}
-                  size={leftIcon.size || 24}
-                  color={leftIcon.color || titleColor}
-                />
-              </TouchableOpacity>
-            )}
+            {renderIcon(leftIcon, onLeftPress)}
           </View>
 
           <View style={styles.titleContainer}>
@@ -106,19 +141,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           </View>
 
           <View style={styles.side}>
-            {rightIcon && onRightPress && (
-              <TouchableOpacity
-                onPress={onRightPress}
-                style={styles.iconButton}
-                activeOpacity={0.7}
-              >
-                <rightIcon.component
-                  name={rightIcon.name}
-                  size={rightIcon.size || 24}
-                  color={rightIcon.color || titleColor}
-                />
-              </TouchableOpacity>
-            )}
+            {renderIcon(rightIcon, onRightPress)}
           </View>
         </View>
 
@@ -129,20 +152,37 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 };
 
 const styles = StyleSheet.create({
-  headerWrapper: { width: '100%' },
+  headerWrapper: {
+    width: '100%',
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 15,
     justifyContent: 'space-between',
   },
-  side: { width: 40, alignItems: 'center', justifyContent: 'center' },
-  titleContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 10 },
-  title: { fontSize: 24, fontWeight: '500', letterSpacing: 0.3 },
-  iconButton: { padding: 8, borderRadius: 20 },
+  side: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '500',
+    letterSpacing: 0.3,
+  },
+  iconButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
   borderBottom: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(0, 0, 0, 0.00)',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
 });
 

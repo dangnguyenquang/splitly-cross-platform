@@ -58,7 +58,7 @@ export default function SignUpScreen() {
         console.log(res);
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          console.log('Err: ', err.response?.data.message);
+          console.log('Err: ', err.message);
           if (err.response?.data.message === 'Email already taken.') {
             setError('root', {
               type: 'server',
