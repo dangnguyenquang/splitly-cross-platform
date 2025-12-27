@@ -50,6 +50,12 @@ export default function SignInScreen() {
             message: 'Invalid email or password',
           });
         }
+        else {
+          setError('root', {
+            type: 'server',
+            message: 'Login failed. Please try again.',
+          }); 
+        }
         return err;
       }
     } finally {

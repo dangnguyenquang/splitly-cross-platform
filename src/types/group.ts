@@ -4,6 +4,8 @@ export interface Contact {
   email: string;
   avatar: string;
   isFavorite?: boolean;
+  role?: ConnectionRole;
+  accepted?: boolean;
 }
 
 export type GroupBasicInformation = {

@@ -132,7 +132,7 @@ function ContactDetailScreen(): React.ReactElement {
             )}
 
             <Text className="mt-3 text-[12px] text-neutral-400">
-              Splitify Account
+              Splitly Account
             </Text>
 
             {/* Divider */}

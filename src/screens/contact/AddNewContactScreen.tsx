@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 function AddNewContactScreen(): React.ReactElement {
   const navigation = useNavigation<Navigation>();
 
-  const [fullName, setFullName] = useState('Brooklyn Simmons');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('piviba5959@gamintor.com');
   const [error, setError] = useState<string>('');
   const token = useSelector(
