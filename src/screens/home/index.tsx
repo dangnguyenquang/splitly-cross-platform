@@ -1,14 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header/index';
 import { colors } from '../../constant/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-
+import { registerTokenDevice } from '@/src/api/notifee.api';
+import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
 export default function HomeScreen() {
   const [transactions, setTransaction] = useState<any>([]);
   const navigation = useNavigation();
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const deviceId = await DeviceInfo.getUniqueId();
+
+      await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+      console.log('device token: ', token);
+      if (!cancelled) {
+        try {
+          const res = await registerTokenDevice(deviceId, token, 'ANDROID');
+          console.log('register token ok', res?.status);
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            console.log('register token failed', err);
+          }
+        }
+      }
+    };
+
+    run().catch(console.log);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [])
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CustomHeader
