@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,16 @@ import {
   FlatList,
   ScrollView,
   Image,
+  TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/src/constant/theme';
 import Header from '@/src/components/Header';
 import { SCREEN_WIDTH } from '@/src/utils/dimension';
+import { useSelector } from 'react-redux';
 
 type PaymentDetailRouteProp = RouteProp<
   {
@@ -28,10 +32,38 @@ const PaymentDetailScreen: React.FC = () => {
   const navigation = useNavigation();
   const { payment, group } = route.params;
 
+  const currentUser = useSelector(
+    (state: any) => state.auth.login.currentUser,
+  );
+
+  const isCurrentUserPayer =
+    payment.user.userId === currentUser.userId;
+
   const acceptedCount =
     payment.consensusPayments?.filter(
       (c: any) => c.processAccepted || c.successAccepted,
     ).length || 0;
+
+  /** ---------------- STATE ---------------- */
+  const [editingItem, setEditingItem] = useState<any>(null);
+  const [newAmount, setNewAmount] = useState<string>('');
+
+  const openEditModal = (item: any) => {
+    if (!isCurrentUserPayer) return;
+    setEditingItem(item);
+    setNewAmount(String(item.amount));
+  };
+
+  const closeModal = () => {
+    setEditingItem(null);
+    setNewAmount('');
+  };
+
+  const saveAmount = () => {
+    // 👉 CALL API UPDATE ITEM AMOUNT HERE
+    console.log('Update item', editingItem.itemId, newAmount);
+    closeModal();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,38 +79,39 @@ const PaymentDetailScreen: React.FC = () => {
 
         {/* Status */}
         <View style={styles.statusRow}>
-          <Text style={styles.label}>Status:</Text>
-          <Text
+          <Text style={styles.label}>Status</Text>
+          <View
             style={[
-              styles.status,
-              payment.status === 'success' ? styles.success : styles.processing,
+              styles.statusBadge,
+              payment.status === 'success'
+                ? styles.successBg
+                : styles.processingBg,
             ]}
           >
-            {payment.status.toUpperCase()}
-          </Text>
+            <Text style={styles.statusText}>
+              {payment.status.toUpperCase()}
+            </Text>
+          </View>
         </View>
 
         {/* Amount */}
-        <View style={styles.amountBox}>
+        <View style={styles.amountCard}>
           <Text style={styles.amount}>
             {payment.amount} {group?.currency || 'VND'}
           </Text>
           <Text style={styles.subAmount}>
             Estimated: {payment.estimatedAmount}
           </Text>
-          <Text style={styles.subAmount}>
-            Used fund: {payment.usedFundAmount}
-          </Text>
         </View>
 
         {/* Paid by */}
-        <View style={styles.section}>
+        <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Paid by</Text>
           <Text style={styles.value}>{payment.user.fullName}</Text>
         </View>
 
         {/* Items */}
-        <View style={styles.section}>
+        <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Items</Text>
 
           <FlatList
@@ -90,141 +123,159 @@ const PaymentDetailScreen: React.FC = () => {
                 <Text style={styles.itemName}>
                   {item.itemName} x{item.quantity}
                 </Text>
-                <Text style={styles.itemAmount}>{item.amount}</Text>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  disabled={!isCurrentUserPayer}
+                  onPress={() => openEditModal(item)}
+                >
+                  <Text
+                    style={[
+                      styles.itemAmount,
+                      isCurrentUserPayer && styles.editableAmount,
+                    ]}
+                  >
+                    {item.priceQuotation}
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
           />
         </View>
 
-        {/* Consensus */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            Consensus ({acceptedCount}/{group?.numberOfMember})
-          </Text>
+        {/* Related list / Participants */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Participants</Text>
 
           {payment.consensusPayments.map((c: any) => (
             <View key={c.userId} style={styles.consensusRow}>
               <Text style={styles.value}>{c.fullName}</Text>
-              <Text
+
+              <View
                 style={[
-                  styles.consensusStatus,
+                  styles.consensusBadge,
                   c.processAccepted || c.successAccepted
-                    ? styles.accepted
-                    : styles.pending,
+                    ? styles.acceptedBg
+                    : styles.pendingBg,
                 ]}
               >
-                {c.processAccepted || c.successAccepted
-                  ? 'Accepted'
-                  : 'Pending'}
-              </Text>
+                <Text style={styles.consensusText}>
+                  {c.processAccepted || c.successAccepted
+                    ? 'Accepted'
+                    : 'Pending'}
+                </Text>
+              </View>
             </View>
           ))}
         </View>
 
-        {/* Note */}
-        {payment.paymentRequestNote && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Note</Text>
-            <Text style={styles.value}>{payment.paymentRequestNote}</Text>
+        {/* Action buttons */}
+        {!payment.consensusPayments.find(
+          (c: any) => c.userId === currentUser.userId,
+        )?.processAccepted && (
+          <View style={styles.actionRow}>
+            <TouchableOpacity style={styles.declineBtn}>
+              <Text style={styles.declineText}>Decline</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.acceptBtn}>
+              <Text style={styles.acceptText}>Accept</Text>
+            </TouchableOpacity>
           </View>
         )}
-        <Image source={{ uri: payment.imageUrl }} style={styles.coverImage} />
+
+        {/* Image */}
+        {payment.imageUrl && (
+          <Image
+            source={{ uri: payment.imageUrl }}
+            style={styles.coverImage}
+          />
+        )}
       </ScrollView>
+
+      {/* -------- EDIT AMOUNT MODAL -------- */}
+      <Modal transparent visible={!!editingItem} animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Edit Item Amount</Text>
+
+            <TextInput
+              value={newAmount}
+              onChangeText={setNewAmount}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity onPress={closeModal}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={saveAmount}>
+                <Text style={styles.saveText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 export default PaymentDetailScreen;
+
+/* ---------------- STYLES ---------------- */
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  content: { padding: 16, paddingBottom: 40 },
 
-  content: {
-    padding: 16,
-    paddingBottom: 32,
-  },
+  title: { fontSize: 22, fontWeight: '700', marginBottom: 12 },
 
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 12,
-  },
+  statusRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  label: { fontSize: 14, color: colors.secondary, marginRight: 8 },
 
-  statusRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
   },
+  statusText: { fontSize: 12, fontWeight: '700', color: '#fff' },
+  successBg: { backgroundColor: '#22C55E' },
+  processingBg: { backgroundColor: '#F59E0B' },
 
-  label: {
-    fontSize: 14,
-    color: colors.secondary,
-    marginRight: 8,
-  },
-
-  status: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-
-  success: {
-    color: '#22C55E',
-  },
-
-  processing: {
-    color: '#F59E0B',
-  },
-
-  amountBox: {
-    padding: 16,
-    borderRadius: 12,
+  amountCard: {
     backgroundColor: '#F9FAFB',
+    padding: 16,
+    borderRadius: 14,
     marginBottom: 16,
   },
+  amount: { fontSize: 22, fontWeight: '700' },
+  subAmount: { fontSize: 13, color: colors.secondary, marginTop: 4 },
 
-  amount: {
-    fontSize: 20,
-    fontWeight: '700',
+  sectionCard: {
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F1F5F9',
   },
 
-  subAmount: {
-    fontSize: 13,
-    color: colors.secondary,
-    marginTop: 4,
-  },
-
-  section: {
-    marginBottom: 20,
-  },
-
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-
-  value: {
-    fontSize: 14,
-    color: '#111',
-  },
+  sectionTitle: { fontSize: 16, fontWeight: '600', marginBottom: 8 },
+  value: { fontSize: 14 },
 
   itemRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: '#EEE',
   },
-
-  itemName: {
-    fontSize: 14,
-  },
-
-  itemAmount: {
-    fontSize: 14,
-    fontWeight: '500',
+  itemName: { fontSize: 14 },
+  itemAmount: { fontSize: 14, fontWeight: '600' },
+  editableAmount: {
+    color: colors.primary,
+    textDecorationLine: 'underline',
   },
 
   consensusRow: {
@@ -232,22 +283,68 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 6,
   },
-
-  consensusStatus: {
-    fontSize: 12,
-    fontWeight: '600',
+  consensusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
   },
+  consensusText: { fontSize: 12, fontWeight: '600', color: '#fff' },
+  acceptedBg: { backgroundColor: '#22C55E' },
+  pendingBg: { backgroundColor: '#9CA3AF' },
 
-  accepted: {
-    color: '#22C55E',
-  },
-
-  pending: {
-    color: '#9CA3AF',
-  },
-  coverImage: {
-    width: SCREEN_WIDTH * 0.8,
-    height: 180,
+  actionRow: { flexDirection: 'row', marginBottom: 20 },
+  acceptBtn: {
+    flex: 1,
+    marginLeft: 8,
+    backgroundColor: '#22C55E',
+    paddingVertical: 14,
     borderRadius: 12,
+    alignItems: 'center',
   },
+  declineBtn: {
+    flex: 1,
+    marginRight: 8,
+    backgroundColor: '#F3F4F6',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  acceptText: { color: '#fff', fontWeight: '700' },
+  declineText: { fontWeight: '600' },
+
+  coverImage: {
+    width: SCREEN_WIDTH * 0.9,
+    height: 180,
+    borderRadius: 14,
+    alignSelf: 'center',
+  },
+
+  /* Modal */
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCard: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 20,
+  },
+  modalTitle: { fontSize: 16, fontWeight: '700', marginBottom: 12 },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 20,
+  },
+  cancelText: { color: colors.secondary },
+  saveText: { color: colors.primary, fontWeight: '700' },
 });

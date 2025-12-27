@@ -46,6 +46,10 @@ interface SectionData {
   data: ActivityItem[];
 }
 
+import { registerTokenDevice } from '@/src/api/notifee.api';
+import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [activity, setActivity] = useState<SectionData[]>([]);
@@ -182,6 +186,33 @@ export default function HomeScreen() {
   const displayAmount = balanceView === 'receive' ? totalReceive : totalPay;
   const displayLabel = balanceView === 'receive' ? 'You will receive' : 'You owe';
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const deviceId = await DeviceInfo.getUniqueId();
+
+      await messaging().registerDeviceForRemoteMessages();
+      const tokenDevice = await messaging().getToken();
+      console.log('device token: ', tokenDevice);
+      if (!cancelled) {
+        try {
+          const res = await registerTokenDevice(deviceId, tokenDevice, 'ANDROID');
+          console.log('register token ok', res?.status);
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            console.log('register token failed', err);
+          }
+        }
+      }
+    };
+
+    run().catch(console.log);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [])
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeader

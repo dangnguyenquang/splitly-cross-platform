@@ -99,7 +99,7 @@ export default function SignUpScreen() {
             <Text className="text-3xl font-semibold ">Create an account!</Text>
             <View className="">
               <FontAwesome6
-                name="hand-middle-finger"
+                name="hand-peace"
                 size={32}
                 iconStyle="solid"
                 color={colors.primary}

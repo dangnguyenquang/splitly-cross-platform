@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flex: 1,
     backgroundColor: '#FFF',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    // borderTopLeftRadius: 50,
+    // borderTopRightRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,

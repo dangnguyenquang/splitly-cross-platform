@@ -43,12 +43,23 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({
   const statusColor = statusColorMap[expense.status] || colors.secondary;
 
   const createdDate = expense?.groupInfoResponse?.createdAt
-    ? new Date(expense.groupInfoResponse.createdAt).toLocaleDateString()
+    ? new Date(expense.groupInfoResponse.createdAt).toLocaleTimeString([], {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+      })
     : '';
+
+  const isMine = expense?.containUser === true;
 
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress} disabled={!onPress}>
-      <View style={styles.expenseCard}>
+      <View
+        style={[
+          styles.expenseCard,
+          isMine && styles.myExpenseCard,
+        ]}
+      >
         {/* Category Icon */}
         <View style={[styles.cardCategoryLogo, { backgroundColor: bgColor }]}>
           <Text style={styles.categoryEmoji}>{icon}</Text>
@@ -56,15 +67,25 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({
 
         {/* Main Info */}
         <View style={styles.cardInfo}>
-          <Text style={styles.titleText} numberOfLines={1}>
-            {expense.title}
-          </Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.titleText} numberOfLines={1}>
+              {expense.title}
+            </Text>
+
+            {isMine && (
+              <View style={styles.mineBadge}>
+                <Text style={styles.mineBadgeText}>You</Text>
+              </View>
+            )}
+          </View>
 
           <Text style={styles.subText}>
             Paid by: {expense?.user?.fullName || 'Unknown'}
           </Text>
 
-          <Text style={styles.subText}>{expense.items?.length || 0} items</Text>
+          <Text style={styles.subText}>
+            {expense.items?.length || 0} items
+          </Text>
         </View>
 
         {/* Amount + Status */}
@@ -100,6 +121,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
+  myExpenseCard: {
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+
   cardCategoryLogo: {
     width: 52,
     height: 52,
@@ -117,10 +143,30 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.42,
   },
 
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
   titleText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+    maxWidth: '85%',
+  },
+
+  mineBadge: {
+    marginLeft: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+  },
+
+  mineBadgeText: {
+    fontSize: 10,
+    color: '#fff',
+    fontWeight: '600',
   },
 
   subText: {
