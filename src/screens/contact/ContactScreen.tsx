@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 
-import { getAllConnectionsOfCurrentUsers } from '@/src/api/group.api';
+import { getAllUserConnections } from '@/src/api/connection.api';
 import AvoidKeyboard from '@/src/components/AvoidKeyboard';
 import AlphabetIndex from '@/src/components/contacts/AlphabetIndex';
 import ContactRow from '@/src/components/contacts/ContactRow';
@@ -18,7 +18,7 @@ import { RootState } from '@/src/store/store';
 import type { Connection, Contact, Navigation } from '@/src/types';
 import { useNavigation } from '@react-navigation/native';
 
-const TABS = ['All Contacts', 'Favorites'] as const;
+const TABS = ['All Contacts', 'Invitations Received'] as const;
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -49,17 +49,18 @@ function ContactScreen(): React.ReactElement {
           return;
         }
 
-        const connections: Connection[] =
-          await getAllConnectionsOfCurrentUsers(token);
+        const connections: Connection[] = await getAllUserConnections(token);
 
         const mapped: Contact[] = connections.map(conn => ({
-          id: (conn.userId),
+          id: conn.userId,
           name: conn.fullName || conn.username || 'Unknown',
           email: conn.email || '',
           avatar: conn.avatarUrl || '',
           isFavorite: !!conn.accepted,
+          role: conn.role,
+          accepted: conn.accepted,
         }));
-
+        console.log("mapped", mapped);  
         mapped.sort((a, b) =>
           (a.name || '').localeCompare(b.name || '', undefined, {
             sensitivity: 'base',
@@ -86,7 +87,8 @@ function ContactScreen(): React.ReactElement {
 
   const filteredContacts = useMemo(() => {
     return contacts.filter(c => {
-      if (activeTab === 'Favorites') return !!c.isFavorite;
+      if (activeTab === 'Invitations Received') return c.role === 'RECEIVER' && c.accepted === false;
+      else if (activeTab === 'All Contacts') return c.accepted === true;
       return true;
     });
   }, [contacts, activeTab]);
@@ -172,7 +174,7 @@ function ContactScreen(): React.ReactElement {
             )}
           </View>
 
-          {/* AlphabetIndex: larger, fixed; background gray + wider like scrollbar */}
+          {/* AlphabetIndex */}
           {!loading && (
             <AlphabetIndex
               letters={ALPHABET}
@@ -181,9 +183,6 @@ function ContactScreen(): React.ReactElement {
               onPressLetter={(l: string) => {
                 const idx = letterToIndex.get(l);
                 if (idx == null) return;
-                // NOTE: we rely on FlatList internal ref? easiest is scrollToIndex via extra prop.
-                // If you want exact jump, add a ref and pass a scroll function down.
-                // Minimal: show a toast/alert for now. Replace with listRef.scrollToIndex in your project.
               }}
             />
           )}
