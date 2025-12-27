@@ -99,7 +99,7 @@ export default function SignInScreen() {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputAuth
-                  icon={<MaterialDesignIcons name="email-outline" size={32} />}
+                  icon={<MaterialDesignIcons name="email-outline" size={24} />}
                   placeholder="Email"
                   value={value}
                   onChangeText={onChange}
@@ -124,7 +124,7 @@ export default function SignInScreen() {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputAuth
-                  icon={<MaterialDesignIcons name="lock-outline" size={32} />}
+                  icon={<MaterialDesignIcons name="lock-outline" size={24} />}
                   placeholder="Password"
                   value={value}
                   onChangeText={onChange}
