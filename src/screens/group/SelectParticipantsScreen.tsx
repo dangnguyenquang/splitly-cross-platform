@@ -58,7 +58,7 @@ const SelectParticipantsScreen: React.FC = () => {
           await getAllConnectionsOfCurrentUsers(token);
 
         const mappedContacts: Contact[] = connections.map(conn => ({
-          id: conn.userId.toString(),
+          id: conn.userId,
           name: conn.fullName || conn.username,
           email: conn.email,
           avatar: conn.avatarUrl,
@@ -75,17 +75,7 @@ const SelectParticipantsScreen: React.FC = () => {
 
     fetchConnections();
   }, [token]);
-  // const filteredContacts = mockContacts.filter(contact => {
-  //   const matchesSearch =
-  //     contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     contact.email.toLowerCase().includes(searchQuery.toLowerCase());
 
-  //   const matchesTab =
-  //     activeTab === 'All Contacts' ||
-  //     (activeTab === 'Favorites' && contact.isFavorite);
-
-  //   return matchesSearch && matchesTab;
-  // });
   const filteredContacts = useMemo(() => {
     const q = searchQuery.toLowerCase();
 
@@ -236,7 +226,7 @@ const SelectParticipantsScreen: React.FC = () => {
       <FlatList
         data={filteredContacts}
         renderItem={renderContact}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         style={styles.list}
       />
       <ActionButtons

@@ -69,10 +69,10 @@ export default function SignInScreen() {
           }}
         >
           <View className="flex-row gap-10 items-center mt-10">
-            <Text className="text-3xl font-semibold ">Welcom back!</Text>
+            <Text className="text-3xl font-semibold ">Welcome back!</Text>
             <View className="">
               <FontAwesome6
-                name="hand-middle-finger"
+                name="hand-peace"
                 size={32}
                 iconStyle="solid"
                 color={colors.primary}
