@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, SectionList, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from '@react-native-vector-icons/material-icons';
-import Feather from '@react-native-vector-icons/feather';
-import { useNavigation } from '@react-navigation/native';
-import MoneyRequestCard from '@/src/components/request/RequestCard';
-import SectionDivider from '@/src/components/history/SectionDivider';
-import CustomHeader from '@/src/components/header/index';
-import { colors } from '@/src/constant/theme';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/src/store/store';
 import { getPayDebt, getReceiveDebt } from '@/src/api/debt.api';
+import CustomHeader from '@/src/components/header/index';
+import SectionDivider from '@/src/components/history/SectionDivider';
+import MoneyRequestCard from '@/src/components/request/RequestCard';
+import { colors } from '@/src/constant/theme';
+import { RootState } from '@/src/store/store';
+import Feather from '@react-native-vector-icons/feather';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 
 interface UserInfo {
   userId: number;
@@ -47,9 +55,9 @@ interface SectionData {
 }
 
 import { registerTokenDevice } from '@/src/api/notifee.api';
+import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import messaging from '@react-native-firebase/messaging';
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [activity, setActivity] = useState<SectionData[]>([]);
@@ -80,7 +88,11 @@ export default function HomeScreen() {
 
       items.forEach(item => {
         const itemDate = new Date(item.timestamp);
-        const itemDay = new Date(itemDate.getFullYear(), itemDate.getMonth(), itemDate.getDate());
+        const itemDay = new Date(
+          itemDate.getFullYear(),
+          itemDate.getMonth(),
+          itemDate.getDate(),
+        );
 
         if (itemDay.getTime() === today.getTime()) {
           todayItems.push(item);
@@ -147,7 +159,9 @@ export default function HomeScreen() {
       setTotalReceive(receiveTotal);
       setTotalPay(payTotal);
 
-      allActivities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+      allActivities.sort(
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
+      );
 
       return allActivities;
     };
@@ -180,11 +194,12 @@ export default function HomeScreen() {
   }, [token, currentUser]);
 
   const toggleBalanceView = () => {
-    setBalanceView(prev => prev === 'receive' ? 'pay' : 'receive');
+    setBalanceView(prev => (prev === 'receive' ? 'pay' : 'receive'));
   };
 
   const displayAmount = balanceView === 'receive' ? totalReceive : totalPay;
-  const displayLabel = balanceView === 'receive' ? 'You will receive' : 'You owe';
+  const displayLabel =
+    balanceView === 'receive' ? 'You will receive' : 'You owe';
 
   useEffect(() => {
     let cancelled = false;
@@ -197,7 +212,11 @@ export default function HomeScreen() {
       console.log('device token: ', tokenDevice);
       if (!cancelled) {
         try {
-          const res = await registerTokenDevice(deviceId, tokenDevice, 'ANDROID');
+          const res = await registerTokenDevice(
+            deviceId,
+            tokenDevice,
+            'ANDROID',
+          );
           console.log('register token ok', res?.status);
         } catch (err) {
           if (axios.isAxiosError(err)) {
@@ -212,7 +231,7 @@ export default function HomeScreen() {
     return () => {
       cancelled = true;
     };
-  }, [])
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeader
@@ -223,16 +242,16 @@ export default function HomeScreen() {
         titleColor="#050404ff"
         shadow={true}
         leftIcon={{
-          type: "image",
+          type: 'image',
           source: require('@/assets/logo-rmbg.png'),
         }}
-      rightIcon={{
-        type: "icon",
-        component: Feather,
-        name: 'bell',
-        size: 28,
-        color: '#000000ff',
-      }}
+        rightIcon={{
+          type: 'icon',
+          component: Feather,
+          name: 'bell',
+          size: 28,
+          color: '#000000ff',
+        }}
       />
 
       <View style={styles.moneyFunctionSection}>
@@ -315,7 +334,11 @@ export default function HomeScreen() {
           onPress={() => navigation.navigate('History' as never)}
         >
           <Text style={styles.viewAllText}>View all</Text>
-          <MaterialIcons name="chevron-right" size={22} color={colors.secondary} />
+          <MaterialIcons
+            name="chevron-right"
+            size={22}
+            color={colors.secondary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -325,7 +348,8 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>Loading transactions...</Text>
           </View>
-        ) : activity.length === 0 || activity.every(section => section.data.length === 0) ? (
+        ) : activity.length === 0 ||
+          activity.every(section => section.data.length === 0) ? (
           <View style={styles.centerContainer}>
             <Feather name="inbox" size={60} color="#ccc" />
             <Text style={styles.emptyStateText}>No transactions yet</Text>

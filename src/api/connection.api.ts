@@ -62,3 +62,31 @@ export const getAllUserConnections = async (
     throw error;
   }
 };
+
+export const acceptedUserContact = async (
+  requestUserId: number,
+): Promise<Connection> => {
+  try {
+    const res = await response.patch<Connection>(
+      `/users/connections/accept?requestUserId=${requestUserId}`
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const rejectedUserContact = async (
+  requestUserId: number,
+): Promise<Connection> => {
+  try {
+    const res = await response.patch<Connection>(
+      `/users/connections/reject?requestUserId=${requestUserId}`
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
