@@ -106,10 +106,10 @@ function ContactScreen(): React.ReactElement {
     return map;
   }, [filteredContacts]);
 
-  const handleToggleFavorite = (contactId: number) => {
+  const handleAcceptInvitation = (contactId: number) => {
     setContacts(prev =>
       prev.map(c =>
-        c.id === contactId ? { ...c, isFavorite: !c.isFavorite } : c,
+        c.id === contactId ? { ...c, accepted: !c.accepted } : c,
       ),
     );
     // TODO: call API update favorite later if needed
@@ -120,13 +120,21 @@ function ContactScreen(): React.ReactElement {
     navigation.navigate('NewContact');
   };
 
-  const renderItem = ({ item }: { item: Contact }) => (
+const renderItem = ({ item }: { item: Contact }) => {
+  const showAcceptAction = activeTab === 'Invitations Received'
+
+  return (
     <ContactRow
       contact={item}
-      onToggleFavorite={() => handleToggleFavorite(item.id)}
-      onPress={() => navigation.navigate('ContactDetail', { contact: item })}
+      showAcceptAction={showAcceptAction}
+      onAccept={() => handleAcceptInvitation(item.id)}
+      onPress={() =>
+        navigation.navigate('ContactDetail', { contact: item })
+      }
     />
   );
+};
+
 
   // Search overlay covers everything; hide alphabet/fab while searching (matches screenshot)
   if (searchOpen) {

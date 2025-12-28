@@ -56,7 +56,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   shadow = true,
 }) => {
   const statusBarHeight =
-    Platform.OS === 'ios' ? 44 : (StatusBar.currentHeight! - 20) || 0;
+    Platform.OS === 'ios' ? 44 : (StatusBar.currentHeight) || 0;
 
   const renderIcon = (
     icon?: HeaderIcon,
