@@ -1,21 +1,21 @@
+import Clipboard from '@react-native-clipboard/clipboard';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  ScrollView,
-  TouchableOpacity,
   Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { colors } from '../../constant/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../components/header/index';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
+import CustomHeader from '../../components/header/index';
 import Divider from '../../components/request/Divider';
-import Clipboard from '@react-native-clipboard/clipboard';
+import { colors } from '../../constant/theme';
 
 // const DATA = [
 //   {

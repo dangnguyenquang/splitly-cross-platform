@@ -3,10 +3,10 @@ import ContactRow from '@/src/components/contacts/ContactRow';
 import SearchHistoryHeader from '@/src/components/contacts/SearchHistoryHeader';
 import useSearchHistory from '@/src/components/contacts/useSearchHistory';
 import type { Contact, Navigation } from '@/src/types';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, TextInput, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
   contacts: Contact[];
@@ -85,12 +85,10 @@ function SearchOverlay(props: Readonly<Props>): React.ReactElement {
           renderItem={({ item }) => (
             <ContactRow
               contact={item}
-              onPress={() =>
-              {
+              onPress={() => {
                 handlePick(item);
-                navigation.navigate('ContactDetail', { contact: item })
-              }
-              }
+                navigation.navigate('ContactDetail', { contact: item });
+              }}
               variant="search"
             />
           )}

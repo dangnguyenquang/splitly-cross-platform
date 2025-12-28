@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import React from 'react';
-import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface HeaderProps {
   title: string;
@@ -25,8 +25,7 @@ const Header: React.FC<HeaderProps> = ({
         {showLogo && (
           <Image
             source={require('@/assets/logo.png')}
-            style={styles.logo}
-            style={{ width: 40, height: 40 }}
+            style={[styles.logo]}
           />
         )}
         {showBack && (

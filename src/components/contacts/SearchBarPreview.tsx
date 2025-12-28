@@ -1,6 +1,6 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Pressable, Text } from 'react-native';
 
 type Props = {
   onPress: () => void;

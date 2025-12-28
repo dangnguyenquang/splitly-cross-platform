@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons'
 import { colors } from '../constant/theme';
 import ContactScreen from '../screens/contact/ContactScreen';
 import AccountScreen from '../screens/account';

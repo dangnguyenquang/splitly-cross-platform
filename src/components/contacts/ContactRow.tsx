@@ -1,7 +1,7 @@
 import type { Contact } from '@/src/types';
 import React, { useMemo } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 
 type Props = {
   contact: Contact;

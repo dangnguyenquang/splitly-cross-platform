@@ -1,8 +1,8 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import InputAuth from '@/src/components/auth/CustomInputAuth';
 import AvoidKeyboard from '@/src/components/AvoidKeyboard';

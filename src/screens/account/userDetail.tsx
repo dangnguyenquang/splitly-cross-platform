@@ -1,29 +1,29 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
-  View,
-  StyleSheet,
   Alert,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import FastImage from 'react-native-fast-image';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CustomHeader from '../../components/header/index';
-import CustomButton from '@/src/components/CustomButton';
-import InputField from '@/src/components/InputField';
-import { PersonalInfo, RootStackParamList } from '@/src/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/src/store/store';
 import { uploadUserImage } from '@/src/api/upload.user.api';
 import { updateUser } from '@/src/api/user.api';
+import CustomButton from '@/src/components/CustomButton';
+import InputField from '@/src/components/InputField';
 import { setUser } from '@/src/store/authSlice';
+import { RootState } from '@/src/store/store';
+import { PersonalInfo, RootStackParamList } from '@/src/types';
+import { useDispatch, useSelector } from 'react-redux';
+import CustomHeader from '../../components/header/index';
 
 const defaultAvatar = 'https://i.pravatar.cc/150';
 

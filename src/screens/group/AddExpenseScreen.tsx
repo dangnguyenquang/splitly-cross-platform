@@ -1,42 +1,40 @@
+import { SCREEN_WIDTH } from '@/src/utils/dimension';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
   ActivityIndicator,
-  TouchableOpacity,
+  Alert,
   Image,
   Modal,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { SCREEN_WIDTH } from '@/src/utils/dimension';
 
 /* Redux */
-import { useSelector } from 'react-redux';
 import { RootState } from '@/src/store/store';
+import { useSelector } from 'react-redux';
 
 /* Components */
-import Header from '../../components/Header';
-import InputField from '@/src/components/InputField';
 import CustomButton from '@/src/components/CustomButton';
-import PeopleMultiSelect from '@/src/components/group/peopleMultiSelector';
 import CategorySelector from '@/src/components/group/categorySelector';
+import PeopleMultiSelect from '@/src/components/group/peopleMultiSelector';
+import InputField from '@/src/components/InputField';
+import Header from '../../components/Header';
 
 /* APIs */
 import { getGroupUsers } from '@/src/api/group.api';
-import { getTags, Tag } from '@/src/api/tag.api';
-import { createPaymentRequest } from '@/src/api/payment.api';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  launchImageLibrary,
-} from 'react-native-image-picker';
 import { uploadGroupImage } from '@/src/api/image.api';
+import { createPaymentRequest } from '@/src/api/payment.api';
+import { getTags, Tag } from '@/src/api/tag.api';
 import { RootStackParamList } from '@/src/types';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'AddExpense'>;
@@ -111,10 +109,7 @@ const AddExpenseScreen: React.FC = () => {
   };
 
   /* ===== ITEMS ===== */
-  const totalAmount = items.reduce(
-    (sum, i) => sum + i.amount * i.quantity,
-    0,
-  );
+  const totalAmount = items.reduce((sum, i) => sum + i.amount * i.quantity, 0);
 
   const addItem = () => {
     if (!itemName || !itemAmount) {
@@ -182,7 +177,9 @@ const AddExpenseScreen: React.FC = () => {
 
           {items.map((i, idx) => (
             <View key={idx} style={styles.itemRow}>
-              <Text>{i.itemName} x{i.quantity}</Text>
+              <Text>
+                {i.itemName} x{i.quantity}
+              </Text>
               <Text>{i.amount}</Text>
             </View>
           ))}
@@ -199,7 +196,9 @@ const AddExpenseScreen: React.FC = () => {
           Total: {totalAmount} {group?.currency}
         </Text>
 
-        {loadingCategories ? <ActivityIndicator /> : (
+        {loadingCategories ? (
+          <ActivityIndicator />
+        ) : (
           <CategorySelector
             categories={categories}
             selectedCategoryId={categoryId}
@@ -260,7 +259,11 @@ const AddExpenseScreen: React.FC = () => {
               style={styles.input}
             />
 
-            <CustomButton title="Add" onPress={addItem} style={{alignSelf:'center'}} />
+            <CustomButton
+              title="Add"
+              onPress={addItem}
+              style={{ alignSelf: 'center' }}
+            />
           </View>
         </View>
       </Modal>
