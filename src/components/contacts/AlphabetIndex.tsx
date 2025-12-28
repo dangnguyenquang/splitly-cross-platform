@@ -16,7 +16,7 @@ function AlphabetIndex(props: Readonly<Props>): React.ReactElement {
 
   // larger + fixed: we anchor top/bottom to safe area + keyboard height
   const bottom = 14 + (props.keyboardHeight || 0) + insets.bottom;
-  const top = 80 + insets.top;
+  const top = 140 + insets.top;
 
   return (
     <View pointerEvents="box-none" style={[styles.wrap, { top, bottom }]}>

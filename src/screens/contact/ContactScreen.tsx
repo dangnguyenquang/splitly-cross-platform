@@ -1,22 +1,24 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 
 import { getAllUserConnections } from '@/src/api/connection.api';
 import AvoidKeyboard from '@/src/components/AvoidKeyboard';
 import AlphabetIndex from '@/src/components/contacts/AlphabetIndex';
 import ContactRow from '@/src/components/contacts/ContactRow';
-import ContactsHeader from '@/src/components/contacts/ContactsHeader';
 import ContactsTabs from '@/src/components/contacts/ContactsTabs';
 import SearchBarPreview from '@/src/components/contacts/SearchBarPreview';
 import SearchOverlay from '@/src/components/contacts/SearchOverlay';
 import useKeyboard from '@/src/components/contacts/useKeyboard';
+import CustomHeader from '@/src/components/header/index';
 import LoadingSpin from '@/src/components/LoadingSpin';
+import { colors } from '@/src/constant/theme';
 import { RootState } from '@/src/store/store';
 import type { Connection, Contact, Navigation } from '@/src/types';
 import { useNavigation } from '@react-navigation/native';
+import { Feather } from 'lucide-react-native';
 
 const TABS = ['All Contacts', 'Invitations Received'] as const;
 
@@ -60,7 +62,7 @@ function ContactScreen(): React.ReactElement {
           role: conn.role,
           accepted: conn.accepted,
         }));
-        console.log("mapped", mapped);  
+        console.log('mapped', mapped);
         mapped.sort((a, b) =>
           (a.name || '').localeCompare(b.name || '', undefined, {
             sensitivity: 'base',
@@ -87,7 +89,8 @@ function ContactScreen(): React.ReactElement {
 
   const filteredContacts = useMemo(() => {
     return contacts.filter(c => {
-      if (activeTab === 'Invitations Received') return c.role === 'RECEIVER' && c.accepted === false;
+      if (activeTab === 'Invitations Received')
+        return c.role === 'RECEIVER' && c.accepted === false;
       else if (activeTab === 'All Contacts') return c.accepted === true;
       return true;
     });
@@ -141,9 +144,23 @@ function ContactScreen(): React.ReactElement {
     <SafeAreaView className="flex-1 bg-white">
       <AvoidKeyboard>
         <View className="flex-1">
-          <ContactsHeader
-            title="Contacts"
-            onPressMore={() => Alert.alert('More', 'TODO: open menu')}
+          <CustomHeader
+            title="Contact"
+            onLeftPress={() => console.log('Menu pressed')}
+            onRightPress={() => console.log('More pressed')}
+            titleColor="#050404ff"
+            shadow={true}
+            leftIcon={{
+              type: 'image',
+              source: require('@/assets/logo-rmbg.png'),
+            }}
+            rightIcon={{
+              type: 'icon',
+              component: MaterialIcons,
+              name: 'more-vert',
+              size: 28,
+              color: '#111827',
+            }}
           />
 
           <View className="px-4 pt-3">

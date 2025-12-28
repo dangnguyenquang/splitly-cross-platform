@@ -1,4 +1,4 @@
-import { response } from '../service/axios';
+import { response } from '@/src/service/axios';
 
 export const getPayDebt = async (token: string) => {
   const res = await response.get(

@@ -1,9 +1,9 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AccountTopBar from '@/src/components/account/AccountTopBar';
@@ -14,10 +14,11 @@ import MenuList, {
 import QrBottomSheet from '@/src/components/account/QrBottomSheet';
 import UpgradeCard from '@/src/components/account/UpgradeCard';
 import UserInfoRow from '@/src/components/account/UserInfoRow';
+import ConfirmBottomSheet from '@/src/components/modal/confirm';
 import { logOutFail, logOutStart, logOutSuccess } from '@/src/store/authSlice';
 import { RootState } from '@/src/store/store';
 import type { RootStackParamList } from '@/src/types';
-import ConfirmBottomSheet from '@/src/components/modal/confirm';
+import CustomHeader from '@/src/components/header/index';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -46,7 +47,7 @@ export default function AccountScreen() {
   const handleLogout = () => {
     dispatch(logOutStart());
     try {
-      setShowLogoutConfirm(false)
+      setShowLogoutConfirm(false);
       dispatch(logOutSuccess());
     } catch (error) {
       console.log('err', error);
@@ -57,15 +58,17 @@ export default function AccountScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <AccountTopBar
-          title="Account"
-          left={
-            <Image
-              source={require('@/assets/logo.png')}
-              style={{ width: 40, height: 40 }}
-            />
-          }
-        />
+          <CustomHeader
+            title="Account"
+            onLeftPress={() => console.log('Menu pressed')}
+            onRightPress={() => console.log('More pressed')}
+            titleColor="#050404ff"
+            shadow={true}
+            leftIcon={{
+              type: 'image',
+              source: require('@/assets/logo-rmbg.png'),
+            }}
+          />
 
         <ScrollView className="px-4 pb-8" showsVerticalScrollIndicator={false}>
           <UserInfoRow

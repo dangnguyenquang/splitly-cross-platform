@@ -1,9 +1,9 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { addContactUser } from '@/src/api/connection.api';
 import CustomButton from '@/src/components/CustomButton';

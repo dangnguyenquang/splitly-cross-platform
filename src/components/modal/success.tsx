@@ -1,7 +1,7 @@
+import { colors } from '@/src/constant/theme';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '@/src/constant/theme';
 
 type SuccessModalProps = {
   visible: boolean;

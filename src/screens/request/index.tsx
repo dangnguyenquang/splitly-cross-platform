@@ -1,3 +1,5 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -13,14 +15,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header/index';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../constant/theme';
 import SectionDivider from '../../components/history/SectionDivider';
+import { colors } from '../../constant/theme';
 // import MoneyRequestCard from '../../components/request/RequestCard';
-import CustomButton from '../../components/CustomButton';
-import MoneyRequestCard from '@/src/components/request/RequestCard';
 import Divider from '@/src/components/request/Divider';
+import MoneyRequestCard from '@/src/components/request/RequestCard';
+import CustomButton from '../../components/CustomButton';
 // import Divider from '../../components/request/Divider';
 // import { Button, ButtonText } from "../../../components/ui/button"
 
@@ -129,7 +129,7 @@ export default function RequestScreen() {
             requestPersonName="Hoai Bao"
             showDivider={index < section.data.length - 1}
             handleOnPressRequestButton={() => setModalVisible(true)}
-            type={"receive"}
+            type={'receive'}
           />
         )}
         renderSectionHeader={({ section: { title } }) => (

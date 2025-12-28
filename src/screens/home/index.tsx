@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, SectionList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Feather from '@react-native-vector-icons/feather';
 import { useNavigation } from '@react-navigation/native';
 import MoneyRequestCard from '@/src/components/request/RequestCard';
 import SectionDivider from '@/src/components/history/SectionDivider';
-import CustomHeader from '@/src/components/header';
+import CustomHeader from '@/src/components/header/index';
 import { colors } from '@/src/constant/theme';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/src/store/store';
@@ -224,7 +224,7 @@ export default function HomeScreen() {
         shadow={true}
         leftIcon={{
           type: "image",
-          source: require('@/assets/logo.png'),
+          source: require('@/assets/logo-rmbg.png'),
         }}
       rightIcon={{
         type: "icon",

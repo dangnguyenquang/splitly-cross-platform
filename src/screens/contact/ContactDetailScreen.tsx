@@ -1,15 +1,14 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { deleteConnectionUser } from '@/src/api/connection.api';
 import CustomButton from '@/src/components/CustomButton';
 import ConfirmBottomSheet from '@/src/components/modal/confirm';
 import SuccessModal from '@/src/components/modal/success';
-import { RootTabParamList } from '@/src/navigation/BottomTab';
 import { RootState } from '@/src/store/store';
 import type { Contact, RootStackParamList } from '@/src/types';
 import axios from 'axios';
@@ -201,8 +200,9 @@ function ContactDetailScreen(): React.ReactElement {
           visible={isSucess}
           message="Contact deleted successfully"
           onClose={() => {
-            setIsSucess(false) 
-            navigation.navigate('MainApp', { screen: 'Contact' });}}
+            setIsSucess(false);
+            navigation.navigate('MainApp', { screen: 'Contact' });
+          }}
         />
       )}
     </SafeAreaView>

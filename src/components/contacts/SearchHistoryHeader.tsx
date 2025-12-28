@@ -1,6 +1,6 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
   onClear: () => void;
@@ -10,7 +10,9 @@ type Props = {
 function SearchHistoryHeader(props: Readonly<Props>): React.ReactElement {
   return (
     <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-      <Text className="text-[13px] font-semibold text-neutral-700">Recent searches</Text>
+      <Text className="text-[13px] font-semibold text-neutral-700">
+        Recent searches
+      </Text>
 
       <Pressable
         onPress={props.onClear}

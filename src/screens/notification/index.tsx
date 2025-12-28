@@ -1,12 +1,12 @@
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { SectionList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/header/index';
-import { colors } from '../../constant/theme';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
 import SectionDivider from '../../components/history/SectionDivider';
 import NotificationItem from '../../components/notifications/NotificationCard';
+import { colors } from '../../constant/theme';
 const DATA = [
   {
     title: 'Today',
