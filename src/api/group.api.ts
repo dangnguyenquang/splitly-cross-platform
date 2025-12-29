@@ -6,7 +6,7 @@ import {
   createGroupFail,
 } from '../store/groupSlice';
 import { AppDispatch } from '../store/store';
-import { Connection, CreateGroupRequest } from '../types';
+import { Connection, CreateGroupRequest, GroupUsersResponse } from '../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types';
 
@@ -84,7 +84,7 @@ export const getAllGroupsByUser = async (token: string) => {
 export const getAllConnectionsOfCurrentUsers = async (
   token: string,
 ): Promise<Connection[]> => {
-  const res = await response.get<Connection[]>('/users/connections', {
+  const res = await response.get<Connection[]>('/users/connections/accepted', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -109,6 +109,72 @@ export const getGroupUsers = async (groupId?: number, token?: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(res.data)
 
   return res.data ?? [];
+};
+
+
+export const getUsersByGroup = async (
+  groupId: number,
+  token: string,
+): Promise<GroupUsersResponse> => {
+  const res = await response.get(
+    `/management/groups/${groupId}/users`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+};
+
+export const inviteUserToGroup = async (
+  groupId?: number,
+  email?: string,
+  token?: string,
+) => {
+  const res = await response.patch(`/management/groups/${groupId}/invitation`,
+    null,
+    {
+      params: { email },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+};
+
+export const uploadPaymentImage = async (
+  paymentId: number,
+  image: { uri: string; name?: string; type?: string },
+  imageType: 'BILL' | 'PRODUCT',
+  token: string,
+) => {
+  const formData = new FormData();
+
+  formData.append('images', {
+    uri: image.uri,
+    name: image.name || 'image.jpg',
+    type: image.type || 'image/jpeg',
+  } as any);
+
+  formData.append('type', imageType);
+
+  const res = await response.post(
+    `${URL}/payment-request/payments/${paymentId}/images`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return res.data;
 };

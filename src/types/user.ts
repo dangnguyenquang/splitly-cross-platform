@@ -31,3 +31,4 @@ export type PersonalInfo = {
   gender: string;
   userImage: string;
 };
+

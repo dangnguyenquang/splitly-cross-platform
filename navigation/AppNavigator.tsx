@@ -5,6 +5,7 @@ import ContactDetailScreen from '@/src/screens/contact/ContactDetailScreen';
 import SearchContactScreen from '@/src/screens/contact/SearchContactScreen';
 import AddExpenseScreen from '@/src/screens/group/AddExpenseScreen';
 import GroupDetailScreen from '@/src/screens/group/GroupDetailScreen';
+import GroupMembersScreen from '@/src/screens/group/GroupMembers';
 import GroupsScreen from '@/src/screens/group/GroupsScreen';
 import NewGroupScreen from '@/src/screens/group/NewGroupScreen';
 import PaymentDetailScreen from '@/src/screens/group/PaymentDetailScreen';
@@ -38,6 +39,7 @@ function AppNavigator() {
 
       <Stack.Screen name="PersonalInfoDetail" component={PersonalInfoScreen} />
       <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
+      <Stack.Screen name="GroupMember" component={GroupMembersScreen} />
       <Stack.Screen name="PaymentDetail" component={PaymentDetailScreen} />
       <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
       <Stack.Screen name="History" component={TransactionHistoryScreen} />

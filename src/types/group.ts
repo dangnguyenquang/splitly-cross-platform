@@ -138,3 +138,28 @@ export interface Category {
   tagId: number; // ⬅ number
   tagName: string;
 }
+
+export interface PermissionDTO {
+  permissionName: 'READ' | 'WRITE' | string;
+}
+export interface RoleDTO {
+  roleId: number;
+  roleName: 'LEADER' | 'MEMBER' | string;
+  permissions: PermissionDTO[];
+}
+export interface GroupUserDTO {
+  userId: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender?: string;
+  userImage?: string;
+  roles: RoleDTO[];
+}
+
+export interface GroupUsersResponse {
+  status: number;
+  message: string;
+  data: GroupUserDTO[];
+}
+

@@ -28,12 +28,14 @@ import InputField from '@/src/components/InputField';
 import Header from '../../components/Header';
 
 /* APIs */
-import { getGroupUsers } from '@/src/api/group.api';
+import { getGroupUsers, uploadPaymentImage} from '@/src/api/group.api';
 import { uploadGroupImage } from '@/src/api/image.api';
 import { createPaymentRequest } from '@/src/api/payment.api';
 import { getTags, Tag } from '@/src/api/tag.api';
 import { RootStackParamList } from '@/src/types';
+
 import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Feather from '@react-native-vector-icons/feather';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -53,11 +55,14 @@ interface ExpenseItem {
 const AddExpenseScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
-  const { group, groupId } = route.params;
+  const { groupId } = route.params;
   const numericGroupId = Number(groupId);
 
   const token = useSelector(
     (state: RootState) => state.auth.login.currentUser?.token,
+  );
+  const currentUserId = useSelector(
+    (state: RootState) => state.auth.login.currentUser?.userId,
   );
 
   /* ===== BASIC INFO ===== */
@@ -88,7 +93,15 @@ const AddExpenseScreen: React.FC = () => {
       try {
         setLoadingUsers(true);
         setLoadingCategories(true);
-        setParticipants(await getGroupUsers(numericGroupId, token));
+
+        const users = await getGroupUsers(numericGroupId, token);
+
+        // 🚫 remove current user from participant list
+        const filteredUsers = users.filter(
+          (user: GroupUser) => user.userId !== currentUserId,
+        );
+
+        setParticipants(filteredUsers);
         setCategories(await getTags(token));
       } finally {
         setLoadingUsers(false);
@@ -97,7 +110,7 @@ const AddExpenseScreen: React.FC = () => {
     };
 
     fetchAll();
-  }, [groupId, token]);
+  }, [groupId, token, currentUserId]);
 
   /* ===== IMAGE ===== */
   const handlePickAvatar = async () => {
@@ -109,7 +122,10 @@ const AddExpenseScreen: React.FC = () => {
   };
 
   /* ===== ITEMS ===== */
-  const totalAmount = items.reduce((sum, i) => sum + i.amount * i.quantity, 0);
+  const totalAmount = items.reduce(
+    (sum, i) => sum + i.amount * i.quantity,
+    0,
+  );
 
   const addItem = () => {
     if (!itemName || !itemAmount) {
@@ -126,6 +142,27 @@ const AddExpenseScreen: React.FC = () => {
       },
     ]);
 
+    closeItemModal();
+  };
+
+  const removeItem = (index: number) => {
+    Alert.alert(
+      'Remove item',
+      'Are you sure you want to remove this item?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            setItems(prev => prev.filter((_, i) => i !== index));
+          },
+        },
+      ],
+    );
+  };
+
+  const closeItemModal = () => {
     setItemName('');
     setItemQuantity('1');
     setItemAmount('');
@@ -159,7 +196,10 @@ const AddExpenseScreen: React.FC = () => {
       usedFundAmount: 0,
     };
 
-    await createPaymentRequest(payload, token!, numericGroupId);
+    const res = await createPaymentRequest(payload, token!, numericGroupId);
+    if (uri) {
+      await uploadPaymentImage(res.paymentId, { uri }, 'BILL', token!);
+    }
     navigation.goBack();
   };
 
@@ -171,17 +211,26 @@ const AddExpenseScreen: React.FC = () => {
       <ScrollView>
         <InputField label="Title" value={title} onChangeText={setTitle} />
 
-        {/* Items */}
+        {/* ===== ITEMS ===== */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Items</Text>
 
           {items.map((i, idx) => (
-            <View key={idx} style={styles.itemRow}>
+            <TouchableOpacity
+              key={idx}
+              style={styles.itemRow}
+              onLongPress={() => removeItem(idx)}
+              activeOpacity={0.7}
+            >
               <Text>
                 {i.itemName} x{i.quantity}
               </Text>
-              <Text>{i.amount}</Text>
-            </View>
+
+              <View style={styles.itemRight}>
+                <Text>{i.amount}</Text>
+                <Feather name="trash-2" size={16} color="#ef4444" />
+              </View>
+            </TouchableOpacity>
           ))}
 
           <TouchableOpacity
@@ -193,7 +242,7 @@ const AddExpenseScreen: React.FC = () => {
         </View>
 
         <Text style={styles.totalText}>
-          Total: {totalAmount} {group?.currency}
+          Total <Feather name="dollar-sign" size={18} /> {totalAmount}
         </Text>
 
         {loadingCategories ? (
@@ -230,10 +279,18 @@ const AddExpenseScreen: React.FC = () => {
         </View>
       </ScrollView>
 
-      {/* ===== ITEM MODAL ===== */}
+      {/* ===== ITEM MODAL (CLICK OUTSIDE TO CLOSE) ===== */}
       <Modal visible={itemModalVisible} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={closeItemModal}
+        >
+          <TouchableOpacity
+            style={styles.modalCard}
+            activeOpacity={1}
+            onPress={() => {}}
+          >
             <Text style={styles.modalTitle}>Add Item</Text>
 
             <TextInput
@@ -259,13 +316,9 @@ const AddExpenseScreen: React.FC = () => {
               style={styles.input}
             />
 
-            <CustomButton
-              title="Add"
-              onPress={addItem}
-              style={{ alignSelf: 'center' }}
-            />
-          </View>
-        </View>
+            <CustomButton title="Add" onPress={addItem} style={{alignSelf:'center'}} />
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );
@@ -277,15 +330,24 @@ export default AddExpenseScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
+
   section: { padding: 16 },
   sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 8 },
+
   itemRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 6,
+    paddingVertical: 8,
+    alignItems: 'center',
   },
+  itemRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
   addItemBtn: {
-    marginTop: 8,
+    marginTop: 10,
     padding: 10,
     borderRadius: 8,
     backgroundColor: '#F1F5F9',
@@ -327,7 +389,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 20,
   },
-  modalTitle: { fontSize: 16, fontWeight: '700', marginBottom: 12 },
+  modalTitle: { fontSize: 16, fontWeight: '700', marginBottom: 12, alignSelf:'center' },
   input: {
     borderWidth: 1,
     borderColor: '#E5E7EB',

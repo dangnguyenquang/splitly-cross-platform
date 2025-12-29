@@ -18,7 +18,7 @@ import Header from '@/src/components/Header';
 import { SCREEN_WIDTH } from '@/src/utils/dimension';
 import { useSelector } from 'react-redux';
 import CustomButton from '@/src/components/CustomButton';
-import { ConsensusPayment } from '@/src/types';
+import { ConsensusPayment, PaymentItem } from '@/src/types';
 import Feather from '@react-native-vector-icons/feather';
 import { markConsensusDecline, markConsensusSuccess, splitBill } from '@/src/api/payment.api';
 import { RootState } from '@/src/store/store';
@@ -43,6 +43,8 @@ const PaymentDetailScreen: React.FC = () => {
     (state: RootState) => state.auth.login.currentUser?.token,
   );
 
+  const [items, setItems] = useState<PaymentItem[]>([]);
+
   const [consensusPayments, setConsensusPayments] = useState<ConsensusPayment[]>(
     payment.consensusPayments ?? []
   );
@@ -50,11 +52,9 @@ const PaymentDetailScreen: React.FC = () => {
     c => c.userId === currentUser.userId
   );
 
-  const hasDecided =
-    currentUserConsensus &&
-    (currentUserConsensus.successAccepted === true ||
-    currentUserConsensus.processAccepted === false);
-
+  const isParticipant = consensusPayments.some(
+    c => c.userId === currentUser.userId
+  );
   useEffect(() => {
     // Ensure payer is included once
     if (!consensusPayments.some(c => c.userId === payment.user.userId)) {
@@ -71,6 +71,11 @@ const PaymentDetailScreen: React.FC = () => {
       ]);
     }
   }, []);
+  useEffect(() => {
+    if (payment?.items) {
+      setItems(payment.items);
+    }
+  }, [payment]);
 
   const isCurrentUserPayer = payment.user.userId === currentUser.userId;
   const acceptedCountTotal = consensusPayments.filter(
@@ -78,15 +83,28 @@ const PaymentDetailScreen: React.FC = () => {
   ).length;
   const totalParticipants = consensusPayments.length;
   const disableSplit = acceptedCountTotal !== totalParticipants;
+  const isReadyToSplit = payment.status === 'ready_to_split';
+
+  const canSplit =
+    isCurrentUserPayer &&
+    !isReadyToSplit &&
+    !disableSplit;
+
+  const isAccepted = currentUserConsensus?.successAccepted === true;
+  const isDeclined =
+    currentUserConsensus?.processAccepted === false &&
+    currentUserConsensus?.successAccepted === false;
+
+  
 
   /** ---------------- STATE ---------------- */
   const [editingItem, setEditingItem] = useState<any>(null);
   const [newAmount, setNewAmount] = useState<string>('');
 
-  const openEditModal = (item: any) => {
-    if (!isCurrentUserPayer) return;
+  const openEditModal = (item: PaymentItem) => {
+    if (!isCurrentUserPayer || payment.status !== 'waiting') return;
     setEditingItem(item);
-    setNewAmount(String(item.amount));
+    setNewAmount(String(item.priceQuotation));
   };
 
   const closeModal = () => {
@@ -95,7 +113,22 @@ const PaymentDetailScreen: React.FC = () => {
   };
 
   const saveAmount = () => {
-    console.log('Update item', editingItem.itemId, newAmount);
+    if (!editingItem) return;
+
+    const value = Number(newAmount);
+    if (isNaN(value) || value <= 0) {
+      Alert.alert('Invalid amount');
+      return;
+    }
+
+    setItems(prev =>
+      prev.map(item =>
+        item.itemId === editingItem.itemId
+          ? { ...item, priceQuotation: value }
+          : item,
+      ),
+    );
+
     closeModal();
   };
   /** ----------- Accept / Decline handlers ----------- */
@@ -171,7 +204,7 @@ const PaymentDetailScreen: React.FC = () => {
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Items</Text>
           <FlatList
-            data={payment.items}
+            data={items}
             keyExtractor={item => `item-${item.itemId}`}
             scrollEnabled={false}
             renderItem={({ item }) => (
@@ -215,45 +248,50 @@ const PaymentDetailScreen: React.FC = () => {
           ))}
         </View>
 
-        {/* Action buttons */}
-        {hasDecided && (
-          isCurrentUserPayer ? (
-            <View style={styles.actionRow}>
-              <CustomButton
-                title="Cancel"
-                width={SCREEN_WIDTH * 0.45}
-                type="secondary"
-                onPress={() => console.log('Cancel payment')}
-              />
-              <CustomButton
-                title="Ready to split"
-                width={SCREEN_WIDTH * 0.45}
-                onPress={() => {
-                  handleSplit()
-                }}
-                disabled={disableSplit}
-              />
-            </View>
-          ) : (
-            <View style={styles.actionRow}>
-              <CustomButton
-                title="Decline"
-                width={SCREEN_WIDTH * 0.45}
-                type="secondary"
-                onPress={() => {
-                  handleDecline();
-                }}
-              />
-              <CustomButton
-                title="Accept"
-                width={SCREEN_WIDTH * 0.45}
-                onPress={() => {
-                  handleAccept();
-                }}
-              />
-            </View>
-          )
+        {payment.status =='waiting' && isParticipant && (
+          <>
+            {isCurrentUserPayer && (
+              <View style={styles.actionRow}>
+                <CustomButton
+                  title="Cancel"
+                  width={SCREEN_WIDTH * 0.45}
+                  type="secondary"
+                  onPress={() => console.log('Cancel payment')}
+                />
+
+                <CustomButton
+                  title="Ready to split"
+                  width={SCREEN_WIDTH * 0.45}
+                  onPress={handleSplit}
+                  disabled={!canSplit}
+                />
+              </View>
+            )}
+
+            {!isCurrentUserPayer && (
+              <View style={styles.actionRow}>
+                <CustomButton
+                  title="Decline"
+                  width={SCREEN_WIDTH * 0.45}
+                  type="secondary"
+                  onPress={handleDecline}
+                  disabled={isDeclined}
+                />
+
+                <CustomButton
+                  title="Accept"
+                  width={SCREEN_WIDTH * 0.45}
+                  onPress={handleAccept}
+                  disabled={isAccepted}
+                />
+              </View>
+            )}
+          </>
         )}
+
+
+
+
 
         {/* Image */}
         {payment.imageUrl && (
@@ -261,11 +299,10 @@ const PaymentDetailScreen: React.FC = () => {
         )}
       </ScrollView>
 
-      {/* Edit Amount Modal */}
-      <Modal transparent visible={!!editingItem} animationType="fade">
+      {/* Modal */}
+      <Modal transparent visible={!!editingItem&& payment.status === 'waiting'} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Edit Item Amount</Text>
             <TextInput
               value={newAmount}
               onChangeText={setNewAmount}
@@ -274,7 +311,7 @@ const PaymentDetailScreen: React.FC = () => {
             />
             <View style={styles.modalActions}>
               <TouchableOpacity onPress={closeModal}>
-                <Text style={styles.cancelText}>Cancel</Text>
+                <Text>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={saveAmount}>
                 <Text style={styles.saveText}>Save</Text>

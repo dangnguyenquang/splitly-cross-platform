@@ -87,17 +87,17 @@ export const markConsensusDecline = async (
   paymentRequestId: number,
   token?: string
 ) => {
-  console.log('[markConsensusSuccess] full URL:', response.defaults.baseURL + `/payment-request/${paymentRequestId}/consensus/success`);
+  console.log('[markConsensusSuccess] full URL:', response.defaults.baseURL + `/payment-request/${paymentRequestId}/fail`);
 
   try {
     console.log('[markConsensusDecline] paymentRequestId:', paymentRequestId);
     console.log('[markConsensusDecline] token:', token);
 
     const res = await response.put(
-      `/payment-request/${paymentRequestId}/consensus/fail`,
+      `/payment-request/${paymentRequestId}/fail`,
       {
-        "successAccepted": false
-      }, // payload
+        // "successAccepted": false
+      }, 
       {
         headers: {
           Authorization: `Bearer ${token}`,
