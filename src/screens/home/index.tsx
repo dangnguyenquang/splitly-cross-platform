@@ -4,7 +4,7 @@ import MoneyRequestCard from '@/src/components/request/RequestCard';
 import { colors } from '@/src/constant/theme';
 import Feather from '@react-native-vector-icons/feather';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -30,7 +30,7 @@ import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 
-interface UserInfo {
+export interface UserInfo {
   userId: number;
   fullName: string;
   phone: string;
@@ -40,7 +40,7 @@ interface UserInfo {
   roles: any;
 }
 
-interface DebtItem {
+export interface DebtItem {
   debtor: UserInfo;
   creditor: UserInfo;
   amount: number;
@@ -68,7 +68,7 @@ export interface ActivityItem {
   rawAmount?: number
 }
 
-interface SectionData {
+export interface SectionData {
   title: string;
   data: ActivityItem[];
 }
@@ -85,7 +85,6 @@ export default function HomeScreen() {
   const [totalPay, setTotalPay] = useState(0);
   const [reminderMessage, setReminderMessage] = useState('');
   const [sendingReminder, setSendingReminder] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const currentUser = useSelector(
     (state: RootState) => state.auth.login.currentUser,
@@ -189,31 +188,36 @@ export default function HomeScreen() {
     return allActivities;
   }, [currentUser]);
 
-  useEffect(() => {
-    const fetchDebts = async () => {
-      try {
-        setLoading(true);
-        const [receiveDebtData, payDebtData] = await Promise.all([
-          getReceiveDebt(false),
-          getPayDebt(false),
-        ]);
+  const fetchDebts = useCallback(async () => {
+    try {
+      setLoading(true);
 
-        const transformedData = transformDebtData(
-          receiveDebtData || [],
-          payDebtData || [],
-        );
+      const [receiveDebtData, payDebtData] = await Promise.all([
+        getReceiveDebt(false),
+        getPayDebt(false),
+      ]);
 
-        const groupedData = groupByDate(transformedData);
-        setActivity(groupedData);
-      } catch (error) {
-        console.error('Error fetching debts:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const transformedData = transformDebtData(
+        receiveDebtData || [],
+        payDebtData || [],
+      );
 
-    fetchDebts();
-  }, [currentUser, transformDebtData, groupByDate, refreshKey]);
+      const groupedData = groupByDate(transformedData);
+      setActivity(groupedData);
+    } catch (error) {
+      console.error('Error fetching debts:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [transformDebtData, groupByDate]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!currentUser) return;
+
+      fetchDebts();
+    }, [currentUser, fetchDebts])
+  );
 
   const toggleBalanceView = () => {
     setBalanceView(prev => (prev === 'receive' ? 'pay' : 'receive'));
@@ -326,7 +330,7 @@ export default function HomeScreen() {
       try {
         await confirmDebt(item.userDebtId);
 
-        setRefreshKey(prev => prev + 1);
+        fetchDebts();
       } catch (error) {
         console.error("Failed to confirm payment", error);
       }

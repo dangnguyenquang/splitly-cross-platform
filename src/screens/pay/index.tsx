@@ -1,6 +1,6 @@
 import MaterialIcons from '@react-native-vector-icons/material-icons';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -31,6 +31,7 @@ const { width } = Dimensions.get('window');
 
 export default function PayScreen() {
   const navigation = useNavigation();
+  const isActiveRef = useRef(true);
 
   // --- STATE ---
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -104,25 +105,39 @@ export default function PayScreen() {
     return allActivities;
   }, [currentUser]);
 
-  useEffect(() => {
-    const fetchDebts = async () => {
-      try {
-        setLoading(true);
-        const response = await getPayDebt(false);
-        const transformedData = transformPayData(response || []);
-        const groupedData = groupByDate(transformedData);
-        setActivity(groupedData);
-      } catch (error) {
-        console.error('Error fetching pay debts:', error);
-      } finally {
+  const fetchPayDebts = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await getPayDebt(false);
+
+      if (!isActiveRef.current) return;
+
+      const transformedData = transformPayData(response || []);
+      const groupedData = groupByDate(transformedData);
+      setActivity(groupedData);
+    } catch (error) {
+      console.error('Error fetching pay debts:', error);
+    } finally {
+      if (isActiveRef.current) {
         setLoading(false);
       }
-    };
-
-    if (currentUser) {
-      fetchDebts();
     }
-  }, [currentUser, transformPayData, groupByDate]);
+  }, [transformPayData, groupByDate]);
+
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!currentUser) return;
+
+      isActiveRef.current = true;
+      fetchPayDebts();
+
+      return () => {
+        isActiveRef.current = false;
+      };
+    }, [currentUser, fetchPayDebts])
+  );
 
   const handleTransactionPress = (item: ActivityItem) => {
     setSelectedTransaction(item);

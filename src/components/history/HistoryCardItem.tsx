@@ -1,83 +1,171 @@
+import Feather from '@react-native-vector-icons/feather';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+
+const COLORS = {
+  primary: '#111827',
+  secondary: '#6B7280',
+  success: '#059669', 
+  successBg: '#D1FAE5',
+  danger: '#DC2626',  
+  dangerBg: '#FEE2E2',
+  white: '#FFFFFF',
+  divider: '#F3F4F6',
+};
+
+interface CardItemProps {
+  username: string;
+  showDivider?: boolean;
+  avatarUrl?: string;
+  time?: string;
+  amount?: string;
+  type?: string;
+  onPress?: () => void;
+}
 
 const CardItem: React.FC<CardItemProps> = ({
   username,
   showDivider = true,
   avatarUrl = 'https://i.pravatar.cc/150?img=1',
   time = '09:41 PM',
-  amount = '100000vnd',
+  amount = '100,000đ',
   type = 'Pay',
-  onPress = () => {},
-}) => (
-  <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-    <View style={styles.item}>
-      <View style={styles.userSection}>
-        <View style={styles.avatar}>
-          <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+  onPress = () => { },
+}) => {
+  const isPayment = type.toLowerCase() === 'pay';
+  
+
+  const statusColor = isPayment ? COLORS.danger : COLORS.success;
+  const statusBg = isPayment ? COLORS.dangerBg : COLORS.successBg;
+  const statusIcon = isPayment ? 'arrow-outward' : 'south-west'; 
+  const sign = isPayment ? '-' : '+';
+
+  return (
+    <TouchableOpacity 
+      onPress={onPress} 
+      activeOpacity={0.7}
+    >
+      <View style={styles.item}>
+        <View style={styles.leftSection}>
+          <View style={styles.avatarWrapper}>
+            <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+          </View>
+
+          <View style={styles.infoWrapper}>
+            <Text style={styles.username} numberOfLines={1}>
+              {username}
+            </Text>
+            <Text style={styles.time}>{time}</Text>
+          </View>
         </View>
 
-        <View>
-          <Text style={{ fontSize: 20, fontWeight: '300' }}>{username}</Text>
-          <Text style={styles.underText}>{time}</Text>
+        <View style={styles.rightSection}>
+          <Text style={[styles.amount, { color: statusColor }]}>
+            {sign}{amount} <Feather name="dollar-sign" color={statusColor} size={16}/>
+          </Text>
+          
+          <View style={[styles.badge, { backgroundColor: statusBg }]}>
+            <MaterialIcons
+              name={statusIcon} 
+              size={12} 
+              color={statusColor} 
+              style={{ marginRight: 2 }}
+            />
+            <Text style={[styles.badgeText, { color: statusColor }]}>
+              {type}
+            </Text>
+          </View>
         </View>
       </View>
 
-      <View style={styles.moneySection}>
-        <Text style={{ fontSize: 20, fontWeight: '500' }}>{amount}</Text>
-        <Text style={styles.underText}>{type}</Text>
-      </View>
-    </View>
-    {showDivider && <View style={styles.lineCard}></View>}
-  </TouchableOpacity>
-);
+      {showDivider && (
+        <View style={styles.dividerContainer}>
+           <View style={styles.divider} />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingBottom: 10,
-    borderRadius: 8,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
   },
-  title: {
-    fontSize: 16,
-    color: '#333',
-  },
-  userSection: {
+  leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    flex: 1,
+    marginRight: 16,
   },
-  underText: {
-    fontSize: 12,
-    color: '#939393',
+  avatarWrapper: {
+    marginRight: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
+    backgroundColor: 'white',
+    borderRadius: 24,
   },
   avatar: {
-    width: 54,
-    height: 54,
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     borderWidth: 2,
-    borderColor: '#ddd',
+    borderColor: '#fff',
   },
-  moneySection: {
+  infoWrapper: {
     justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  SectionDivider: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  lineCard: {
     flex: 1,
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.primary,
+    marginBottom: 4,
+  },
+  time: {
+    fontSize: 13,
+    color: COLORS.secondary,
+    fontWeight: '500',
+  },
+
+  rightSection: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  amount: {
+    fontSize: 17,
+    fontWeight: '800', 
+    marginBottom: 6,
+    fontVariant: ['tabular-nums'], 
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8, 
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  dividerContainer: {
+    paddingLeft: 82, 
+    paddingRight: 20,
+  },
+  divider: {
     height: 1,
-    backgroundColor: '#ccc',
-    marginBottom: 10,
-    marginTop: 10,
-    marginLeft: 24,
-    marginRight: 24,
+    backgroundColor: COLORS.divider,
   },
 });
+
 export default CardItem;
