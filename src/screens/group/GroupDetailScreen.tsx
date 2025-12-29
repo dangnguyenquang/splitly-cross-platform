@@ -8,6 +8,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import GroupDetailTopTabs from '@/src/navigation/GroupDetailTopTab';
 import { GroupDetailInformation, RootStackParamList } from '@/src/types';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/src/utils/dimension';
+import CustomHeader from '../../components/header/index';
+import { colors } from '@/src/constant/theme';
+import Feather from '@react-native-vector-icons/feather';
 
 type GroupDetailScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -30,11 +33,31 @@ const GroupDetailScreen: React.FC = () => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Header
+      <CustomHeader
         title={group?.groupName || 'Group Detail'}
-        showBack={true}
-        showMenu
-        onBack={handleBack}
+        onLeftPress={() => navigation.goBack()}
+        onRightPress={() =>
+          navigation.navigate('GroupMember', {
+            group:group, 
+          })
+        }
+        backgroundColor={"#FFFFFF"}
+        titleColor="#050404ff"
+        shadow={true}
+        leftIcon={{
+          type: 'icon',
+          component: Feather,
+          name: 'arrow-left',
+          size: 28,
+          color: '#000000ff',
+        }}
+        rightIcon={{
+          type: 'icon',
+          component: Feather,
+          name: 'more-vertical', 
+          size: 28,
+          color: '#000000ff',
+        }}
       />
       <View style={styles.groupAvatarContainer}>
         <Image

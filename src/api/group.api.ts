@@ -6,7 +6,7 @@ import {
   createGroupFail,
 } from '../store/groupSlice';
 import { AppDispatch } from '../store/store';
-import { Connection, CreateGroupRequest } from '../types';
+import { Connection, CreateGroupRequest, GroupUsersResponse } from '../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types';
 
@@ -109,6 +109,42 @@ export const getGroupUsers = async (groupId?: number, token?: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(res.data)
 
   return res.data ?? [];
+};
+
+
+export const getUsersByGroup = async (
+  groupId: number,
+  token: string,
+): Promise<GroupUsersResponse> => {
+  const res = await response.get(
+    `/management/groups/${groupId}/users`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+};
+
+export const inviteUserToGroup = async (
+  groupId?: number,
+  email?: string,
+  token?: string,
+) => {
+  const res = await response.patch(`/management/groups/${groupId}/invitation`,
+    null,
+    {
+      params: { email },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
 };

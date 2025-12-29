@@ -15,6 +15,7 @@ import { getAllGroupsByUser } from '@/src/api/group.api';
 import { Fab, FabIcon } from '@/components/ui/fab';
 import { colors } from '@/src/constant/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomHeader from '../../components/header/index';
 
 type GroupsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -71,8 +72,13 @@ const GroupsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Groups" showLogo showMenu />
-
+      <CustomHeader
+        title='Groups'
+        onLeftPress={() => navigation.goBack()}
+        backgroundColor="#FFFFFF"
+        titleColor="#050404ff"
+        shadow={true}
+      />
       {loading ? (
         <ActivityIndicator size="large" style={{ marginTop: 40 }} />
       ) : groups.length === 0 ? (

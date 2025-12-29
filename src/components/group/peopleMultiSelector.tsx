@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { MultiSelect } from 'react-native-element-dropdown';
 
 interface Option {
@@ -14,25 +14,36 @@ interface Props {
 }
 
 const PeopleMultiSelect: React.FC<Props> = ({ data, value, onChange }) => {
+  const [isFocus, setIsFocus] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Apply to People</Text>
+      <Text style={styles.label}>Apply to people</Text>
 
       <MultiSelect
         data={data.map(item => ({
           ...item,
-          value: String(item.value), // 🔴 convert to string for library
+          value: String(item.value), // library requires string
         }))}
         labelField="label"
         valueField="value"
-        placeholder="Select people"
-        style={styles.dropdown}
+        placeholder={!isFocus ? 'Select participants' : '...'}
+        search
+        searchPlaceholder="Search people..."
+        style={[
+          styles.dropdown,
+          isFocus && styles.dropdownFocus,
+        ]}
+        containerStyle={styles.dropdownContainer}
+        placeholderStyle={styles.placeholder}
         selectedTextStyle={styles.selectedText}
-        /** 🔴 MultiSelect requires string[] */
+        inputSearchStyle={styles.searchInput}
+        iconStyle={styles.icon}
         value={value.map(String)}
-        /** 🔴 onChange also returns string[] */
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
         onChange={(selectedValues: string[]) => {
-          onChange(selectedValues.map(Number)); // convert back to number[]
+          onChange(selectedValues.map(Number));
         }}
       />
     </View>
@@ -44,23 +55,65 @@ export default PeopleMultiSelect;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 12,
   },
+
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    marginBottom: 6,
-    color: '#333',
+    marginBottom: 8,
+    color: '#1f2937', // slate-800
   },
+
   dropdown: {
-    height: 50,
-    borderColor: '#ccc',
+    height: 52,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingHorizontal: 12,
     borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
+    borderColor: '#e5e7eb', // gray-200
+
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 3 },
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
+
+  dropdownFocus: {
+    borderColor: '#3b82f6', // blue-500
+  },
+
+  dropdownContainer: {
+    borderRadius: 12,
+  },
+
+  placeholder: {
+    fontSize: 14,
+    color: '#9ca3af', // gray-400
+  },
+
   selectedText: {
     fontSize: 14,
-    color: '#333',
+    color: '#111827', // gray-900
+    fontWeight: '500',
+  },
+
+  searchInput: {
+    height: 40,
+    fontSize: 14,
+    borderRadius: 8,
+    color: '#111827',
+  },
+
+  icon: {
+    width: 22,
+    height: 22,
   },
 });
