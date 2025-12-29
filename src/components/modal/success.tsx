@@ -23,7 +23,7 @@ export default function SuccessModal({
   return (
     <Modal
       transparent
-      animationType="slide" // ✅ trượt từ dưới lên như ConfirmBottomSheet
+      animationType="slide"
       visible={visible}
       onRequestClose={onClose}
     >

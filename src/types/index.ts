@@ -1,3 +1,4 @@
 export * from './user';
 export * from './group';
 export * from './rootStack';
+export * from './invoice';

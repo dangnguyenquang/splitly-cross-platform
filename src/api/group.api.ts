@@ -1,14 +1,14 @@
 // src/api/group.api.ts
+import { RootStackParamList } from '@/src/types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { response } from '../service/axios';
 import {
+  createGroupFail,
   createGroupStart,
   createGroupSuccess,
-  createGroupFail,
 } from '../store/groupSlice';
 import { AppDispatch } from '../store/store';
 import { Connection, CreateGroupRequest, GroupUsersResponse } from '../types';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/src/types';
 
 export const createGroup = async (
   dispatch: AppDispatch,
@@ -109,24 +109,20 @@ export const getGroupUsers = async (groupId?: number, token?: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(res.data)
+  console.log(res.data);
 
   return res.data ?? [];
 };
-
 
 export const getUsersByGroup = async (
   groupId: number,
   token: string,
 ): Promise<GroupUsersResponse> => {
-  const res = await response.get(
-    `/management/groups/${groupId}/users`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const res = await response.get(`/management/groups/${groupId}/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   return res.data;
 };
@@ -136,7 +132,8 @@ export const inviteUserToGroup = async (
   email?: string,
   token?: string,
 ) => {
-  const res = await response.patch(`/management/groups/${groupId}/invitation`,
+  const res = await response.patch(
+    `/management/groups/${groupId}/invitation`,
     null,
     {
       params: { email },

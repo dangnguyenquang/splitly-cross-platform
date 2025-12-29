@@ -29,6 +29,7 @@ import { registerTokenDevice } from '@/src/api/notifee.api';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
+import { Navigation } from '@/src/types';
 
 export interface UserInfo {
   userId: number;
@@ -73,6 +74,7 @@ export interface SectionData {
   data: ActivityItem[];
 }
 
+
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
@@ -90,7 +92,7 @@ export default function HomeScreen() {
     (state: RootState) => state.auth.login.currentUser,
   );
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<Navigation>();
 
   const groupByDate = useCallback((items: ActivityItem[]): SectionData[] => {
     const now = new Date();
@@ -429,6 +431,16 @@ export default function HomeScreen() {
               <Feather name="credit-card" size={26} color="#1a1a1a" />
             </TouchableOpacity>
             <Text style={styles.functionLabel}>Pay</Text>
+          </View>
+
+          <View style={styles.functionItem}>
+            <TouchableOpacity
+              style={styles.functionCircle}
+              onPress={() => navigation.navigate('QuickPayment' as never) }
+            >
+              <Feather name="plus-circle" size={26} color="#1a1a1a" />
+            </TouchableOpacity>
+            <Text style={styles.functionLabel}>Create</Text>
           </View>
 
           <View style={styles.functionItem}>
