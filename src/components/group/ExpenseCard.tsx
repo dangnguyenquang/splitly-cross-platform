@@ -91,7 +91,7 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({
         {/* Amount + Status */}
         <View style={styles.cardInfoRight}>
           <Text style={styles.amountText}>
-            {expense.amount} {currency}
+            {expense.estimatedAmount} {currency}
           </Text>
 
           <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
