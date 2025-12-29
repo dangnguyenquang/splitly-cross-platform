@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import CustomButton from '@/src/components/CustomButton';
 import { ConsensusPayment } from '@/src/types';
 import Feather from '@react-native-vector-icons/feather';
-import { markConsensusDecline, markConsensusSuccess } from '@/src/api/payment.api';
+import { markConsensusDecline, markConsensusSuccess, splitBill } from '@/src/api/payment.api';
 import { RootState } from '@/src/store/store';
 
 type PaymentDetailRouteProp = RouteProp<
@@ -46,6 +46,14 @@ const PaymentDetailScreen: React.FC = () => {
   const [consensusPayments, setConsensusPayments] = useState<ConsensusPayment[]>(
     payment.consensusPayments ?? []
   );
+  const currentUserConsensus = consensusPayments.find(
+    c => c.userId === currentUser.userId
+  );
+
+  const hasDecided =
+    currentUserConsensus &&
+    (currentUserConsensus.successAccepted === true ||
+    currentUserConsensus.processAccepted === false);
 
   useEffect(() => {
     // Ensure payer is included once
@@ -94,12 +102,8 @@ const PaymentDetailScreen: React.FC = () => {
   const handleAccept = async () => {
     try {
       await markConsensusSuccess(payment.paymentId,token);
-      // setConsensusPayments(prev =>
-      //   prev.map(c =>
-      //     c.userId === userId ? { ...c, successAccepted: true, processAccepted: true } : c
-      //   )
-      // );
       Alert.alert('Success', 'Payment accepted successfully');
+      navigation.goBack()
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to accept payment');
@@ -109,17 +113,25 @@ const PaymentDetailScreen: React.FC = () => {
   const handleDecline = async () => {
     try {
       await markConsensusDecline(payment.paymentId, token);
-      // setConsensusPayments(prev =>
-      //   prev.map(c =>
-      //     c.userId === userId ? { ...c, successAccepted: false, processAccepted: false } : c
-      //   )
-      // );
+
       Alert.alert('Success', 'Payment declined successfully');
+      navigation.goBack()
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to decline payment');
     }
   };
+  const handleSplit = async () => {
+    try {
+      await splitBill(payment.paymentId, token);
+      Alert.alert('Success', 'Successfully splitbill');
+      navigation.goBack()
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Fail to split bill');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Payment Detail" showBack onBack={() => navigation.goBack()} />
@@ -204,7 +216,7 @@ const PaymentDetailScreen: React.FC = () => {
         </View>
 
         {/* Action buttons */}
-        {payment.status !== 'success' && (
+        {hasDecided && (
           isCurrentUserPayer ? (
             <View style={styles.actionRow}>
               <CustomButton
@@ -214,9 +226,11 @@ const PaymentDetailScreen: React.FC = () => {
                 onPress={() => console.log('Cancel payment')}
               />
               <CustomButton
-                title="Split"
+                title="Ready to split"
                 width={SCREEN_WIDTH * 0.45}
-                onPress={() => console.log('Split payment')}
+                onPress={() => {
+                  handleSplit()
+                }}
                 disabled={disableSplit}
               />
             </View>

@@ -65,7 +65,9 @@ export const markConsensusSuccess = async (
 
     const res = await response.put(
       `/payment-request/${paymentRequestId}/consensus/success`,
-      {}, // payload
+      {
+       "successAccepted": true
+      }, // payload
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,7 +95,9 @@ export const markConsensusDecline = async (
 
     const res = await response.put(
       `/payment-request/${paymentRequestId}/consensus/fail`,
-      {}, // payload
+      {
+        "successAccepted": false
+      }, // payload
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -109,3 +113,28 @@ export const markConsensusDecline = async (
   }
 };
 
+export const splitBill = async (
+  paymentRequestId: number,
+  token?: string
+) => {
+  try {
+    console.log('[markConsensusDecline] paymentRequestId:', paymentRequestId);
+    console.log('[markConsensusDecline] token:', token);
+
+    const res = await response.put(
+      `/payment-request/${paymentRequestId}/ready-to-split`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    console.log('[markConsensusDecline] response:', res.data);
+
+    return res.data;
+  } catch (error: any) {
+    console.error('[markConsensusDecline] error:', error.response?.status, error.response?.data);
+    throw error;
+  }
+};
