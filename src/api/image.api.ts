@@ -8,7 +8,7 @@ export const uploadGroupImage = async (
   const formData = new FormData();
 
   formData.append('file', {
-    uri: imageUri,
+    uri: imageUri.startsWith('file://') ? imageUri : `file://${imageUri}`,
     name: `group-${groupId}.jpg`,
     type: 'image/jpeg',
   } as any);

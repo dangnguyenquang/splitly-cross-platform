@@ -75,7 +75,7 @@ const GroupsScreen: React.FC = () => {
       <CustomHeader
         title='Groups'
         onLeftPress={() => navigation.goBack()}
-        backgroundColor="#FFFFFF"
+        backgroundColor={"#FFFFFF"}
         titleColor="#050404ff"
         shadow={true}
       />

@@ -40,12 +40,12 @@ function AddNewContactScreen(): React.ReactElement {
       setLoading(true);
       const res = await findUserByEmail(token!, email);
       console.log('res', res);
-      if (res.data.length > 0) {
+      if (res.data) {
         item = {
-          id: res.data[0].userId,
-          name: res.data[0].fullName,
-          email: res.data[0].email,
-          avatar: res.data[0].userImage,
+          id: res.data.userId,
+          name: res.data.fullName,
+          email: res.data.email,
+          avatar: res.data.userImage,
           isFavorite: false,
         };
         navigation.navigate('SearchContact', { contact: item });

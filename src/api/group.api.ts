@@ -84,7 +84,7 @@ export const getAllGroupsByUser = async (token: string) => {
 export const getAllConnectionsOfCurrentUsers = async (
   token: string,
 ): Promise<Connection[]> => {
-  const res = await response.get<Connection[]>('/users/connections', {
+  const res = await response.get<Connection[]>('/users/connections/accepted', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -142,6 +142,36 @@ export const inviteUserToGroup = async (
       params: { email },
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+};
+
+export const uploadPaymentImage = async (
+  paymentId: number,
+  image: { uri: string; name?: string; type?: string },
+  imageType: 'BILL' | 'PRODUCT',
+  token: string,
+) => {
+  const formData = new FormData();
+
+  formData.append('images', {
+    uri: image.uri,
+    name: image.name || 'image.jpg',
+    type: image.type || 'image/jpeg',
+  } as any);
+
+  formData.append('type', imageType);
+
+  const res = await response.post(
+    `${URL}/payment-request/payments/${paymentId}/images`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     },
   );

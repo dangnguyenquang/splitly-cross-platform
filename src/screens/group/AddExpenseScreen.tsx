@@ -28,7 +28,7 @@ import InputField from '@/src/components/InputField';
 import Header from '../../components/Header';
 
 /* APIs */
-import { getGroupUsers } from '@/src/api/group.api';
+import { getGroupUsers, uploadPaymentImage} from '@/src/api/group.api';
 import { uploadGroupImage } from '@/src/api/image.api';
 import { createPaymentRequest } from '@/src/api/payment.api';
 import { getTags, Tag } from '@/src/api/tag.api';
@@ -196,7 +196,10 @@ const AddExpenseScreen: React.FC = () => {
       usedFundAmount: 0,
     };
 
-    await createPaymentRequest(payload, token!, numericGroupId);
+    const res = await createPaymentRequest(payload, token!, numericGroupId);
+    if (uri) {
+      await uploadPaymentImage(res.paymentId, { uri }, 'BILL', token!);
+    }
     navigation.goBack();
   };
 
