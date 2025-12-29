@@ -1,6 +1,6 @@
 import MaterialIcons from '@react-native-vector-icons/material-icons';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -37,7 +37,6 @@ export default function RequestScreen() {
   const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [reminderMessage, setReminderMessage] = useState('');
 
   const [selectedTransaction, setSelectedTransaction] = useState<ActivityItem | null>(null);
@@ -106,25 +105,40 @@ export default function RequestScreen() {
     return allActivities;
   }, [currentUser]);
 
-  useEffect(() => {
-    const fetchDebts = async () => {
-      try {
-        setLoading(true);
-        const response = await getReceiveDebt(false);
-        const transformedData = transformReceiveData(response || []);
-        const groupedData = groupByDate(transformedData);
-        setActivity(groupedData);
-      } catch (error) {
-        console.error('Error fetching receive debts:', error);
-      } finally {
+  const isActiveRef = useRef(true);
+
+  const fetchReceiveDebts = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await getReceiveDebt(false);
+
+      if (!isActiveRef.current) return;
+
+      const transformedData = transformReceiveData(response || []);
+      const groupedData = groupByDate(transformedData);
+      setActivity(groupedData);
+    } catch (error) {
+      console.error('Error fetching receive debts:', error);
+    } finally {
+      if (isActiveRef.current) {
         setLoading(false);
       }
-    };
-
-    if (currentUser) {
-      fetchDebts();
     }
-  }, [currentUser, transformReceiveData, groupByDate, refreshKey]);
+  }, [transformReceiveData, groupByDate]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!currentUser) return;
+
+      isActiveRef.current = true;
+      fetchReceiveDebts();
+
+      return () => {
+        isActiveRef.current = false;
+      };
+    }, [currentUser, fetchReceiveDebts])
+  );
 
   const handleTransactionPress = (item: ActivityItem) => {
     setSelectedTransaction(item);
@@ -188,7 +202,7 @@ export default function RequestScreen() {
       try {
         await confirmDebt(item.userDebtId);
 
-        setRefreshKey(prev => prev + 1);
+        fetchReceiveDebts();
       } catch (error) {
         console.error("Failed to confirm payment", error);
       }
