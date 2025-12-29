@@ -13,6 +13,7 @@ import TransactionHistoryScreen from '@/src/screens/history';
 import { HistoryDetailScreen } from '@/src/screens/history/HistoryDetailScreen';
 import ReceiptScreen from '@/src/screens/history/ReceiptScreen';
 import NotificationScreen from '@/src/screens/notification';
+import QuickPaymentScreen from '@/src/screens/payment/QuickPaymentScreen';
 import RequestScreen from '@/src/screens/request';
 import { RootStackParamList } from '@/src/types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -50,6 +51,8 @@ function AppNavigator() {
       <Stack.Screen name="ContactDetail" component={ContactDetailScreen} />
       <Stack.Screen name="NewContact" component={AddNewContactScreen} />
       <Stack.Screen name="SearchContact" component={SearchContactScreen} />
+      <Stack.Screen name="QuickPayment" component={QuickPaymentScreen} />
+
 
 
     </Stack.Navigator>

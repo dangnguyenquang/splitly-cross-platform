@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Contact, Group, GroupBasicInformation } from './group';
 import { User } from './user';
+import { BillData } from '@/src/types/invoice';
 
 export type RootStackParamList = {
   Slash: undefined;
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   NewContact: undefined;
   AddContact: undefined
   SearchContact: { contact: Contact };
+  QuickPayment: {bill?: BillData, billImageUrl?: string}
 };
 
 export type Navigation = NativeStackNavigationProp<RootStackParamList>;

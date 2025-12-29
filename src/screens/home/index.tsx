@@ -58,6 +58,7 @@ import { registerTokenDevice } from '@/src/api/notifee.api';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
+import { Navigation } from '@/src/types';
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [activity, setActivity] = useState<SectionData[]>([]);
@@ -73,7 +74,7 @@ export default function HomeScreen() {
     (state: RootState) => state.auth.login.currentUser,
   );
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<Navigation>();
 
   useEffect(() => {
     const groupByDate = (items: ActivityItem[]): SectionData[] => {
@@ -298,7 +299,7 @@ export default function HomeScreen() {
           <View style={styles.functionItem}>
             <TouchableOpacity
               style={styles.functionCircle}
-              onPress={() => console.log('Create Payment pressed')}
+              onPress={() => navigation.navigate('QuickPayment' as never) }
             >
               <Feather name="plus-circle" size={26} color="#1a1a1a" />
             </TouchableOpacity>

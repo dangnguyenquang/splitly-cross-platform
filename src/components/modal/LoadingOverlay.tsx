@@ -1,26 +1,21 @@
 import React, { useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  Platform,
-} from 'react-native';
-import { Spinner } from '@/components/ui/spinner';
-import { colors } from '../constant/theme';
+import { View, Text, StyleSheet } from 'react-native';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
+import { Spinner } from '@/components/ui/spinner';
+import { colors } from '@/src/constant/theme';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 
-type FontAwesomeName = React.ComponentProps<typeof FontAwesome>['name'];
+type MaterialName = React.ComponentProps<typeof MaterialIcons>['name'];
 
-interface LoadingProps {
-  isLoading: boolean;
+interface LoadingOverlayProps {
+  visible: boolean;
   title?: string;
   messageLine1?: string;
   messageLine2?: string;
-  iconName?: FontAwesomeName;
+  iconName?: MaterialName;
 }
 
-/* ===== Dots logic giữ nguyên ===== */
+/* ===== dots ===== */
 type Dot = {
   x: number;
   y: number;
@@ -34,23 +29,17 @@ function makeRingDots(opts: {
   centerY: number;
   innerR: number;
   outerR: number;
-  minSize?: number;
-  maxSize?: number;
   boundsW: number;
   boundsH: number;
-  jitter?: number;
-}): Dot[] {
+}) {
   const {
     count = 8,
     centerX,
     centerY,
     innerR,
     outerR,
-    minSize = 10,
-    maxSize = 30,
     boundsW,
     boundsH,
-    jitter = 0.5,
   } = opts;
 
   const dots: Dot[] = [];
@@ -58,13 +47,10 @@ function makeRingDots(opts: {
 
   while (dots.length < count && guard < 2000) {
     guard++;
-    const i = dots.length;
-    const base = (i / count) * Math.PI * 2;
-    const angle = base + (Math.random() - 0.5) * jitter;
-    const radius = innerR + Math.random() * (outerR - innerR);
 
-    const s = Math.random();
-    const size = Math.round(minSize + (maxSize - minSize) * (s * s * s));
+    const angle = (dots.length / count) * Math.PI * 2;
+    const radius = innerR + Math.random() * (outerR - innerR);
+    const size = 10 + Math.random() * 20;
 
     const x = centerX + radius * Math.cos(angle) - size / 2;
     const y = centerY + radius * Math.sin(angle) - size / 2;
@@ -82,7 +68,7 @@ function makeRingDots(opts: {
   return dots;
 }
 
-/* ===== Layout constants ===== */
+/* ===== layout ===== */
 const CARD_W = 300;
 const CIRCLE_D = 128;
 const PT = 80;
@@ -90,13 +76,13 @@ const centerX = CARD_W / 2;
 const centerY = PT + CIRCLE_D / 2;
 const TOP_AREA_H = PT + CIRCLE_D + 40;
 
-export default function LoadingModal({
-  isLoading,
+export default function LoadingOverlay({
+  visible,
   title,
   messageLine1,
   messageLine2,
   iconName,
-}: Readonly<LoadingProps>) {
+}: Readonly<LoadingOverlayProps>) {
   const dots = useMemo(
     () =>
       makeRingDots({
@@ -110,15 +96,10 @@ export default function LoadingModal({
     [],
   );
 
+  if (!visible) return null;
+
   return (
-    <Modal
-      visible={isLoading}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={() => {
-      }}
-    >
+    <View style={StyleSheet.absoluteFill} pointerEvents="auto">
       <View style={styles.overlay}>
         <View style={styles.cardShadow}>
           <View style={styles.cardInner}>
@@ -141,16 +122,21 @@ export default function LoadingModal({
               ))}
             </View>
 
-            {/* circle icon */}
+            {/* icon */}
             <View style={{ alignItems: 'center' }}>
               <View style={styles.bigCircle}>
                 {iconName && (
-                  <FontAwesome name={iconName} size={44} color="#111" />
+                              <MaterialIcons
+                                name={iconName}
+                                size={44}
+                                color="#111"
+                              />
                 )}
               </View>
             </View>
 
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>{title ?? 'Loading'}</Text>
+
             <Text style={styles.sub}>Please wait...</Text>
             <Text style={styles.sub}>
               {`${messageLine1 ?? ''} ${messageLine2 ?? ''}`}
@@ -162,14 +148,15 @@ export default function LoadingModal({
           </View>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 }
 
+/* ===== styles ===== */
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.35)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -180,7 +167,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.18,
     shadowRadius: 14,
-    elevation: 10,
+    elevation: 12,
   },
   cardInner: {
     width: CARD_W,
@@ -188,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     overflow: 'hidden',
     paddingTop: PT,
-    paddingBottom: 10,
+    paddingBottom: 16,
   },
   dotsLayer: {
     position: 'absolute',
@@ -221,6 +208,6 @@ const styles = StyleSheet.create({
   spinnerWrap: {
     marginTop: 24,
     alignItems: 'center',
-    paddingBottom: 24,
+    paddingBottom: 16,
   },
 });
