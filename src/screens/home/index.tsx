@@ -1,20 +1,22 @@
-import { getPayDebt, getReceiveDebt } from '@/src/api/debt.api';
 import CustomHeader from '@/src/components/header/index';
 import SectionDivider from '@/src/components/history/SectionDivider';
 import MoneyRequestCard from '@/src/components/request/RequestCard';
 import { colors } from '@/src/constant/theme';
-import { RootState } from '@/src/store/store';
 import Feather from '@react-native-vector-icons/feather';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
+  Image,
+  Modal,
   SectionList,
-  StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +25,10 @@ import { RootState } from '@/src/store/store';
 import { confirmDebt, getPayDebt, getReceiveDebt, sendCheckPaymentRemindMessage, sendPaymentRemindMessage } from '@/src/api/debt.api';
 import Divider from '@/src/components/request/Divider';
 import CustomButton from '@/src/components/CustomButton';
+import { registerTokenDevice } from '@/src/api/notifee.api';
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
 
 interface UserInfo {
   userId: number;
@@ -67,10 +73,6 @@ interface SectionData {
   data: ActivityItem[];
 }
 
-import { registerTokenDevice } from '@/src/api/notifee.api';
-import messaging from '@react-native-firebase/messaging';
-import axios from 'axios';
-import DeviceInfo from 'react-native-device-info';
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
