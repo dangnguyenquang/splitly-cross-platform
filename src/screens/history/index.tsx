@@ -18,12 +18,14 @@ export default function TransactionHistoryScreen() {
         backgroundColor={colors.background}
         titleColor="#050404ff"
         leftIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'arrow-back',
           size: 28,
           color: '#000000ff',
         }}
         rightIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'search',
           size: 28,

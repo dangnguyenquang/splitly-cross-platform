@@ -23,13 +23,13 @@ import { colors } from '../../constant/theme';
 import Divider from '@/src/components/request/Divider';
 import MoneyRequestCard from '@/src/components/request/RequestCard';
 import CustomButton from '../../components/CustomButton';
-import { confirmDebt, getReceiveDebt, sendPaymentRemindMessage } from '@/src/api/debt.api';
+import { getPayDebt, sendCheckPaymentRemindMessage } from '@/src/api/debt.api';
 import { ActivityItem } from '../home';
 import Feather from '@react-native-vector-icons/feather';
 
 const { width } = Dimensions.get('window');
 
-export default function RequestScreen() {
+export default function PayScreen() {
   const navigation = useNavigation();
 
   // --- STATE ---
@@ -37,11 +37,10 @@ export default function RequestScreen() {
   const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [reminderMessage, setReminderMessage] = useState('');
 
   const [selectedTransaction, setSelectedTransaction] = useState<ActivityItem | null>(null);
-  const [sendingReminder, setSendingReminder] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState(false)
 
   const currentUser = useSelector(
     (state: any) => state.auth.login.currentUser,
@@ -78,26 +77,25 @@ export default function RequestScreen() {
     return sections;
   }, []);
 
-  const transformReceiveData = useCallback((receiveDebts: any[]) => {
+  const transformPayData = useCallback((payDebts: any[]) => {
     const allActivities: any[] = [];
     const currentUserId = currentUser?.userId;
 
-    receiveDebts.forEach((debt, index) => {
+    payDebts.forEach((debt, index) => {
 
-      if (debt.creditor.userId === currentUserId) {
+      if (debt.debtor.userId === currentUserId) {
         allActivities.push({
-          id: `receive-${debt.debtor.userId}-${index}-${debt.userDebtId}`,
-          ownerName: debt.debtor.fullName,
-          ownerAvatar: debt.debtor.userImage || '',
+          id: `pay-${debt.creditor.userId}-${index}-${debt.userDebtId}`,
+          requestPersonName: debt.creditor.fullName,
+          requestPersonAvatar: debt.creditor.userImage || '',
           amount: `${debt.amount.toLocaleString('vi-VN')}`,
-          requestPersonName: 'You',
-          requestPersonAvatar: currentUser?.userImage || '',
+          owner: 'You',
+          ownerAvatar: currentUser?.userImage || '',
           timestamp: new Date(debt.createdAt),
-          type: 'receive',
+          type: 'pay',
           userDebtId: debt.userDebtId,
-          debtorEmail: debt.debtor.email,
           rawAmount: debt.amount,
-          paymentReminderAt: debt.paymentReminderAt
+          paymentVerificationReminderAt: debt.paymentVerificationReminderAt
         });
       }
     });
@@ -110,12 +108,12 @@ export default function RequestScreen() {
     const fetchDebts = async () => {
       try {
         setLoading(true);
-        const response = await getReceiveDebt(false);
-        const transformedData = transformReceiveData(response || []);
+        const response = await getPayDebt(false);
+        const transformedData = transformPayData(response || []);
         const groupedData = groupByDate(transformedData);
         setActivity(groupedData);
       } catch (error) {
-        console.error('Error fetching receive debts:', error);
+        console.error('Error fetching pay debts:', error);
       } finally {
         setLoading(false);
       }
@@ -124,7 +122,7 @@ export default function RequestScreen() {
     if (currentUser) {
       fetchDebts();
     }
-  }, [currentUser, transformReceiveData, groupByDate, refreshKey]);
+  }, [currentUser, transformPayData, groupByDate]);
 
   const handleTransactionPress = (item: ActivityItem) => {
     setSelectedTransaction(item);
@@ -133,7 +131,7 @@ export default function RequestScreen() {
 
   const canSendReminder = (): boolean => {
     if (!selectedTransaction) return false;
-    const reminderTime = selectedTransaction.paymentReminderAt;
+    const reminderTime = selectedTransaction.paymentVerificationReminderAt;
     if (!reminderTime) return true;
 
     const lastReminderDate = new Date(reminderTime);
@@ -143,8 +141,8 @@ export default function RequestScreen() {
   };
 
   const getTimeUntilNextReminder = (): string => {
-    if (!selectedTransaction || !selectedTransaction.paymentReminderAt) return '';
-    const lastReminderDate = new Date(selectedTransaction.paymentReminderAt);
+    if (!selectedTransaction || !selectedTransaction.paymentVerificationReminderAt) return '';
+    const lastReminderDate = new Date(selectedTransaction.paymentVerificationReminderAt);
     const now = new Date();
     const hoursSinceLastReminder = (now.getTime() - lastReminderDate.getTime()) / (1000 * 60 * 60);
     const hoursRemaining = Math.max(0, 12 - hoursSinceLastReminder);
@@ -167,9 +165,9 @@ export default function RequestScreen() {
 
     try {
       setSendingReminder(true);
-      await sendPaymentRemindMessage(
+      await sendCheckPaymentRemindMessage(
         Number(selectedTransaction.userDebtId),
-        reminderMessage || `Reminder: You owe me ${selectedTransaction.amount}`
+        reminderMessage || `Please verify my payment of ${selectedTransaction.amount}`
       );
 
       setModalVisible(false);
@@ -183,23 +181,10 @@ export default function RequestScreen() {
     }
   };
 
-  const handleConfirmPayment = async (item: ActivityItem) => {
-    if (item.userDebtId) {
-      try {
-        await confirmDebt(item.userDebtId);
-
-        setRefreshKey(prev => prev + 1);
-      } catch (error) {
-        console.error("Failed to confirm payment", error);
-      }
-    }
-  };
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CustomHeader
-        title="Request"
+        title="Pay"
         onLeftPress={() => navigation.goBack()}
         backgroundColor={colors.background}
         titleColor="#050404ff"
@@ -227,7 +212,6 @@ export default function RequestScreen() {
               requestPersonName={item.requestPersonName}
               ownerAvatar={item.ownerAvatar}
               showDivider={index < section.data.length - 1}
-              handleOnPressConfirmButton={() => handleConfirmPayment(item)}
               handleOnPressRequestButton={() => handleTransactionPress(item)}
               type={item.type}
             />
@@ -256,7 +240,6 @@ export default function RequestScreen() {
         </TouchableOpacity>
       </View> */}
 
-      {/* --- REQUEST MODAL --- */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -267,7 +250,7 @@ export default function RequestScreen() {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={{ fontSize: 24, fontWeight: '600', alignSelf: 'center', padding: 20 }}>
-                Request Details
+                Pay Details
               </Text>
               <Divider />
 
@@ -284,16 +267,16 @@ export default function RequestScreen() {
               <View style={styles.userContainer}>
                 <View style={styles.avatar}>
                   <Image
-                    source={{ uri: selectedTransaction?.ownerAvatar || '' }}
+                    source={{ uri: selectedTransaction?.requestPersonAvatar || '' }}
                     style={styles.avatarImage}
                   />
                 </View>
                 <View>
                   <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                    {selectedTransaction?.ownerName || 'User Name'}
+                    {selectedTransaction?.requestPersonName || 'User Name'}
                   </Text>
                   {/* <Text style={{ color: colors.secondary, fontWeight: 'bold' }}>
-                    {selectedTransaction?.debtorEmail || 'No email info'}
+                    {selectedTransaction?.creditorEmail || 'No email info'}
                   </Text> */}
                 </View>
               </View>

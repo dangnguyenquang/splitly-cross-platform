@@ -93,12 +93,14 @@ export default function NotificationScreen() {
         titleColor="#050404ff"
         shadow={true}
         leftIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'arrow-back',
           size: 28,
           color: '#000000ff',
         }}
         rightIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'settings',
           size: 26,

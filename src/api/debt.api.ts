@@ -1,28 +1,54 @@
 import { response } from '@/src/service/axios';
 
-export const getPayDebt = async (token: string) => {
-  const res = await response.get(
-    `/debt/pay`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      timeout: 15000,
+export const getPayDebt = async (status?: boolean) => {
+  const res = await response.get(`/debt/pay`, {
+    params: {
+      status,
     },
+  });
+
+  return res.data;
+};
+
+export const getReceiveDebt = async (status?: boolean) => {
+  const res = await response.get(
+    `/debt/receive`, {
+    params: {
+      status,
+    },
+  }
   );
 
   return res.data;
 };
 
-export const getReceiveDebt = async (token: string) => {
-  const res = await response.get(
-    `/debt/receive`,
+export const sendPaymentRemindMessage = async (userDebtId: number, message: string) => {
+  const res = await response.post(
+    `/debt/remind-payment`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      timeout: 15000,
-    },
+      userDebtId,
+      message
+    }
+  );
+
+  return res.data;
+};
+
+export const sendCheckPaymentRemindMessage = async (userDebtId: number, message: string) => {
+  const res = await response.post(
+    `/debt/remind-verification`,
+    {
+      userDebtId,
+      message
+    }
+  );
+
+  return res.data;
+};
+
+export const confirmDebt = async (userDebtId: number) => {
+  const res = await response.patch(
+    `/debt/${userDebtId}/confirm`,
   );
 
   return res.data;
