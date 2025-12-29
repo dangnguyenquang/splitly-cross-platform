@@ -116,6 +116,7 @@ export default function PersonalInfoScreen({ navigation }: any) {
       <CustomHeader
         title="Personal Info"
         leftIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'arrow-back',
           size: 24,

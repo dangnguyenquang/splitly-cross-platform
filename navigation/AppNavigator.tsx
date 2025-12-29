@@ -13,6 +13,7 @@ import TransactionHistoryScreen from '@/src/screens/history';
 import { HistoryDetailScreen } from '@/src/screens/history/HistoryDetailScreen';
 import ReceiptScreen from '@/src/screens/history/ReceiptScreen';
 import NotificationScreen from '@/src/screens/notification';
+import PayScreen from '@/src/screens/pay';
 import RequestScreen from '@/src/screens/request';
 import { RootStackParamList } from '@/src/types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -41,6 +42,7 @@ function AppNavigator() {
       <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
       <Stack.Screen name="History" component={TransactionHistoryScreen} />
       <Stack.Screen name="Request" component={RequestScreen} />
+      <Stack.Screen name="Pay" component={PayScreen} />
       <Stack.Screen name="Notifications" component={NotificationScreen} />
       <Stack.Screen
         name="HistoryDetailScreen"

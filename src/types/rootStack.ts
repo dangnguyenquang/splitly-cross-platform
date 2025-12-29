@@ -36,6 +36,7 @@ export type RootStackParamList = {
   NewContact: undefined;
   AddContact: undefined
   SearchContact: { contact: Contact };
+  Pay: undefined;
 };
 
 export type Navigation = NativeStackNavigationProp<RootStackParamList>;

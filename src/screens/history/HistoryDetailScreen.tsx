@@ -107,12 +107,14 @@ export function HistoryDetailScreen() {
         titleColor="#050404ff"
         shadow={true}
         leftIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'arrow-back',
           size: 28,
           color: '#000000ff',
         }}
         rightIcon={{
+          type: "icon",
           component: MaterialIcons,
           name: 'more-vert',
           size: 28,

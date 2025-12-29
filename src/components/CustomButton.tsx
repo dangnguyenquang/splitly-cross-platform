@@ -23,6 +23,7 @@ interface CustomButtonProps {
   logo?: ImageSourcePropType;
   logoSize?: number;
   danger?: boolean;
+  disabled?: boolean
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -37,6 +38,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   logo,
   danger,
   logoSize = 22,
+  disabled = false,
 }) => {
   const buttonStyle: ViewStyle = {
     width,
@@ -46,6 +48,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
   return (
     <TouchableOpacity
+      disabled={disabled}
       onPress={onPress}
       activeOpacity={0.8}
       style={[
