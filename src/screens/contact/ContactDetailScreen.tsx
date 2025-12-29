@@ -2,11 +2,16 @@ import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { deleteConnectionUser } from '@/src/api/connection.api';
+import {
+  acceptedUserContact,
+  deleteConnectionUser,
+  rejectedUserContact,
+} from '@/src/api/connection.api';
 import CustomButton from '@/src/components/CustomButton';
+import CustomHeader from '@/src/components/header/index';
 import ConfirmBottomSheet from '@/src/components/modal/confirm';
 import SuccessModal from '@/src/components/modal/success';
 import { RootState } from '@/src/store/store';
@@ -16,6 +21,26 @@ import { useSelector } from 'react-redux';
 
 type ScreenNav = NativeStackNavigationProp<RootStackParamList, 'ContactDetail'>;
 type ScreenRoute = RouteProp<RootStackParamList, 'ContactDetail'>;
+type SuccessAction =
+  | 'DELETE_CONTACT'
+  | 'SEND_REQUEST'
+  | 'SEND_PAYMENT'
+  | 'ACCEPT_REQUEST'
+  | 'DECLINE_REQUEST'
+  | 'ACCEPT_PAYMENT'
+  | 'DECLINE_PAYMENT';
+
+const SUCCESS_MESSAGES: Record<SuccessAction, string> = {
+  DELETE_CONTACT: 'Contact deleted successfully',
+  SEND_REQUEST: 'Request sent successfully',
+  SEND_PAYMENT: 'Payment request sent successfully',
+
+  ACCEPT_REQUEST: 'Request accepted',
+  DECLINE_REQUEST: 'Request declined',
+
+  ACCEPT_PAYMENT: 'Payment accepted',
+  DECLINE_PAYMENT: 'Payment declined',
+};
 
 function ContactDetailScreen(): React.ReactElement {
   const navigation = useNavigation<ScreenNav>();
@@ -23,9 +48,10 @@ function ContactDetailScreen(): React.ReactElement {
 
   const contact: Contact = route.params.contact;
 
-  const [isFavorite, setIsFavorite] = useState<boolean>(!!contact.isFavorite);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isSucess, setIsSucess] = useState<boolean>(false);
+  const [successAction, setSuccessAction] =
+    useState<SuccessAction>('ACCEPT_PAYMENT');
 
   const initials = useMemo(() => {
     const parts = (contact.name || '').trim().split(/\s+/).filter(Boolean);
@@ -35,27 +61,41 @@ function ContactDetailScreen(): React.ReactElement {
     return s || '?';
   }, [contact.name]);
   const token = useSelector((s: RootState) => s.auth?.login.currentUser?.token);
-  function handleBack(): void {
-    navigation.goBack();
-  }
-
-  function handleToggleStar(): void {
-    setIsFavorite(prev => !prev);
-    // TODO: call API update favorite later if you want
-  }
 
   const handleDelete = () => {
-    // TODO: open ConfirmBottomSheet
-    // Alert.alert('Delete', 'TODO: confirm delete');
     setIsDelete(true);
   };
 
-  const handleRequest = () => {
-    // TODO: navigate/request flow
+  const handleRequestOrReject = async () => {
+    try {
+      if (!contact.accepted) {
+        const res = await rejectedUserContact(contact.id);
+        if (res.userId) {
+          setIsSucess(true);
+          setSuccessAction('DECLINE_REQUEST');
+        }
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log('Err: ', error);
+      }
+    }
   };
 
-  const handlePay = () => {
-    // TODO: navigate/pay flow
+  const handlePayOrAccept = async () => {
+    try {
+      if (!contact.accepted) {
+        const res = await acceptedUserContact(contact.id);
+        if (res.userId) {
+          setIsSucess(true);
+          setSuccessAction('ACCEPT_REQUEST');
+        }
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log('Err: ', error);
+      }
+    }
   };
 
   const handleDeleteContact = async () => {
@@ -64,6 +104,7 @@ function ContactDetailScreen(): React.ReactElement {
       console.log('res', res);
       if (res.status === 200) {
         setIsDelete(false);
+        setSuccessAction('DELETE_CONTACT');
         setIsSucess(true);
       }
     } catch (error) {
@@ -78,31 +119,19 @@ function ContactDetailScreen(): React.ReactElement {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 ">
         {/* Header */}
-        <View className="px-4 pt-2 pb-3">
-          <View className="flex-row items-center justify-between">
-            <Pressable onPress={handleBack} hitSlop={10} className="w-10">
-              <MaterialIcons name="arrow-back" size={22} color="#111827" />
-            </Pressable>
-
-            <View className="flex-1 items-center">
-              <Text className="text-2xl font-semibold text-neutral-900">
-                Contact
-              </Text>
-            </View>
-
-            <Pressable
-              onPress={handleToggleStar}
-              hitSlop={10}
-              className="w-10 items-end"
-            >
-              <MaterialIcons
-                name={isFavorite ? 'star' : 'star-border'}
-                size={22}
-                color={isFavorite ? '#F59E0B' : '#9CA3AF'}
-              />
-            </Pressable>
-          </View>
-        </View>
+        <CustomHeader
+          title="Contact"
+          onLeftPress={() => navigation.goBack()}
+          titleColor="#050404ff"
+          shadow={true}
+          leftIcon={{
+            type: 'icon',
+            component: MaterialIcons,
+            name: 'arrow-back',
+            size: 28,
+            color: '#111827',
+          }}
+        />
 
         {/* Body */}
         <View className="flex-1 px-6">
@@ -138,19 +167,21 @@ function ContactDetailScreen(): React.ReactElement {
             <View className="mt-6 w-full h-[1px] bg-neutral-200" />
 
             {/* Delete button */}
-            <View className="mt-6">
-              <CustomButton
-                title="Delete Contact"
-                onPress={handleDelete}
-                type="secondary"
-                width={180}
-                height={44}
-                borderRadius={999}
-                style={{ marginVertical: 0 }}
-                danger
-                textStyle={styles.deleteTextOverride}
-              />
-            </View>
+            {contact.accepted && (
+              <View className="mt-6">
+                <CustomButton
+                  title="Delete Contact"
+                  onPress={handleDelete}
+                  type="secondary"
+                  width={180}
+                  height={44}
+                  borderRadius={999}
+                  style={{ marginVertical: 0 }}
+                  danger
+                  textStyle={styles.deleteTextOverride}
+                />
+              </View>
+            )}
           </View>
         </View>
 
@@ -159,8 +190,8 @@ function ContactDetailScreen(): React.ReactElement {
           <View className="flex-row px-6 pb-6">
             <View className="flex-1 mr-3">
               <CustomButton
-                title="Request"
-                onPress={handleRequest}
+                title={contact.accepted ? 'Request' : 'Decline'}
+                onPress={handleRequestOrReject}
                 type="secondary"
                 width="100%"
                 height={50}
@@ -171,8 +202,8 @@ function ContactDetailScreen(): React.ReactElement {
 
             <View className="flex-1 ml-3">
               <CustomButton
-                title="Pay"
-                onPress={handlePay}
+                title={contact.accepted ? 'Pay' : 'Accept'}
+                onPress={handlePayOrAccept}
                 type="primary"
                 width="100%"
                 height={50}
@@ -198,7 +229,7 @@ function ContactDetailScreen(): React.ReactElement {
       {isSucess && (
         <SuccessModal
           visible={isSucess}
-          message="Contact deleted successfully"
+          message={SUCCESS_MESSAGES[successAction]}
           onClose={() => {
             setIsSucess(false);
             navigation.navigate('MainApp', { screen: 'Contact' });

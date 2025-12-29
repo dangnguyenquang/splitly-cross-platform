@@ -252,7 +252,7 @@ const AddExpenseScreen: React.FC = () => {
             />
 
             <TextInput
-              placeholder="Estimated amount for each item"
+              placeholder="How much?"
               keyboardType="numeric"
               value={itemAmount}
               onChangeText={setItemAmount}

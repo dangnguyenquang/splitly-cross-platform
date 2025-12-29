@@ -23,6 +23,10 @@ export interface Expense {
   paidBy: string;
   amount: string;
   dateTime: Date;
+  user:{
+    userId:number,
+    fullName:string,
+  }
 }
 export type Group = GroupBasicInformation & {
   participants?: Contact[];

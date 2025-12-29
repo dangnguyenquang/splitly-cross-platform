@@ -1,13 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, SectionList, ActivityIndicator, Modal, TouchableWithoutFeedback, Image, Alert, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from '@react-native-vector-icons/material-icons';
-import Feather from '@react-native-vector-icons/feather';
-import { useNavigation } from '@react-navigation/native';
-import MoneyRequestCard from '@/src/components/request/RequestCard';
+import { getPayDebt, getReceiveDebt } from '@/src/api/debt.api';
+import CustomHeader from '@/src/components/header/index';
 import SectionDivider from '@/src/components/history/SectionDivider';
-import CustomHeader from '@/src/components/header';
+import MoneyRequestCard from '@/src/components/request/RequestCard';
 import { colors } from '@/src/constant/theme';
+import { RootState } from '@/src/store/store';
+import Feather from '@react-native-vector-icons/feather';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/src/store/store';
 import { confirmDebt, getPayDebt, getReceiveDebt, sendCheckPaymentRemindMessage, sendPaymentRemindMessage } from '@/src/api/debt.api';
@@ -57,6 +67,10 @@ interface SectionData {
   data: ActivityItem[];
 }
 
+import { registerTokenDevice } from '@/src/api/notifee.api';
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
@@ -200,11 +214,12 @@ export default function HomeScreen() {
   }, [currentUser, transformDebtData, groupByDate, refreshKey]);
 
   const toggleBalanceView = () => {
-    setBalanceView(prev => prev === 'receive' ? 'pay' : 'receive');
+    setBalanceView(prev => (prev === 'receive' ? 'pay' : 'receive'));
   };
 
   const displayAmount = balanceView === 'receive' ? totalReceive : totalPay;
-  const displayLabel = balanceView === 'receive' ? 'You will receive' : 'You owe';
+  const displayLabel =
+    balanceView === 'receive' ? 'You will receive' : 'You owe';
 
   const handleTransactionPress = (item: ActivityItem) => {
     setSelectedTransaction(item);
@@ -316,6 +331,37 @@ export default function HomeScreen() {
     }
   };
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const deviceId = await DeviceInfo.getUniqueId();
+
+      await messaging().registerDeviceForRemoteMessages();
+      const tokenDevice = await messaging().getToken();
+      console.log('device token: ', tokenDevice);
+      if (!cancelled) {
+        try {
+          const res = await registerTokenDevice(
+            deviceId,
+            tokenDevice,
+            'ANDROID',
+          );
+          console.log('register token ok', res?.status);
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            console.log('register token failed', err);
+          }
+        }
+      }
+    };
+
+    run().catch(console.log);
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeader
@@ -326,7 +372,7 @@ export default function HomeScreen() {
         titleColor="#050404ff"
         shadow={true}
         leftIcon={{
-          type: "image",
+          type: 'image',
           source: require('@/assets/logo-rmbg.png'),
         }}
         rightIcon={{
@@ -418,7 +464,11 @@ export default function HomeScreen() {
           onPress={() => navigation.navigate('History' as never)}
         >
           <Text style={styles.viewAllText}>View all</Text>
-          <MaterialIcons name="chevron-right" size={22} color={colors.secondary} />
+          <MaterialIcons
+            name="chevron-right"
+            size={22}
+            color={colors.secondary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -428,7 +478,8 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>Loading transactions...</Text>
           </View>
-        ) : activity.length === 0 || activity.every(section => section.data.length === 0) ? (
+        ) : activity.length === 0 ||
+          activity.every(section => section.data.length === 0) ? (
           <View style={styles.centerContainer}>
             <Feather name="inbox" size={60} color="#ccc" />
             <Text style={styles.emptyStateText}>No transactions yet</Text>

@@ -53,3 +53,88 @@ export const uploadPaymentImage = async (imageUri: string, token: string) => {
 
   return res.data;
 };
+export const markConsensusSuccess = async (
+  paymentRequestId: number,
+  token?: string
+) => {
+  console.log('[markConsensusSuccess] full URL:', response.defaults.baseURL + `/payment-request/${paymentRequestId}/consensus/success`);
+
+  try {
+    console.log('[markConsensusSuccess] paymentRequestId:', paymentRequestId);
+    console.log('[markConsensusSuccess] token:', token);
+
+    const res = await response.put(
+      `/payment-request/${paymentRequestId}/consensus/success`,
+      {
+       "successAccepted": true
+      }, // payload
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log('[markConsensusSuccess] response:', res.data);
+    return res.data;
+  } catch (error: any) {
+    console.error('[markConsensusSuccess] error:', error.response?.status, error.response?.data);
+    throw error;
+  }
+};
+
+export const markConsensusDecline = async (
+  paymentRequestId: number,
+  token?: string
+) => {
+  console.log('[markConsensusSuccess] full URL:', response.defaults.baseURL + `/payment-request/${paymentRequestId}/consensus/success`);
+
+  try {
+    console.log('[markConsensusDecline] paymentRequestId:', paymentRequestId);
+    console.log('[markConsensusDecline] token:', token);
+
+    const res = await response.put(
+      `/payment-request/${paymentRequestId}/consensus/fail`,
+      {
+        "successAccepted": false
+      }, // payload
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log('[markConsensusDecline] response:', res.data);
+    return res.data;
+  } catch (error: any) {
+    console.error('[markConsensusDecline] error:', error.response?.status, error.response?.data);
+    throw error;
+  }
+};
+
+export const splitBill = async (
+  paymentRequestId: number,
+  token?: string
+) => {
+  try {
+    console.log('[markConsensusDecline] paymentRequestId:', paymentRequestId);
+    console.log('[markConsensusDecline] token:', token);
+
+    const res = await response.put(
+      `/payment-request/${paymentRequestId}/ready-to-split`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    console.log('[markConsensusDecline] response:', res.data);
+
+    return res.data;
+  } catch (error: any) {
+    console.error('[markConsensusDecline] error:', error.response?.status, error.response?.data);
+    throw error;
+  }
+};

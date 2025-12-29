@@ -41,7 +41,7 @@ const NewGroupScreen: React.FC = () => {
     }
 
     const groupData: Group = {
-      groupId: '',
+      groupId: 0,
       groupName: title,
       description,
       currency,

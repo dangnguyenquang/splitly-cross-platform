@@ -60,6 +60,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
             : styles.logoButton,
         buttonStyle,
         danger && { borderColor: 'red' },
+        disabled && { opacity: 0.5 }, 
         style,
       ]}
     >

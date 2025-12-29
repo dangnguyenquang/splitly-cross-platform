@@ -1,13 +1,14 @@
 import type { Contact } from '@/src/types';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import React, { useMemo } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
-import MaterialIcons from '@react-native-vector-icons/material-icons';
 
 type Props = {
   contact: Contact;
-  onToggleFavorite?: () => void;
   onPress?: () => void;
   variant?: 'default' | 'search';
+  showAcceptAction?: boolean; 
+  onAccept?: () => void;
 };
 
 function ContactRow(props: Readonly<Props>): React.ReactElement {
@@ -50,22 +51,22 @@ function ContactRow(props: Readonly<Props>): React.ReactElement {
 
       {props.variant === 'search' ? (
         <MaterialIcons name="chevron-right" size={22} color="#9CA3AF" />
-      ) : (
+      ) : props.showAcceptAction ? (
         <Pressable
           onPress={(e: any) => {
             e?.stopPropagation?.();
-            props.onToggleFavorite?.();
+            props.onAccept?.();
           }}
           hitSlop={10}
           className="p-1"
         >
           <MaterialIcons
-            name={c.isFavorite ? 'star' : 'star-border'}
+            name='check-circle'
             size={22}
-            color={c.isFavorite ? '#F59E0B' : '#9CA3AF'}
+            color='#10B981'
           />
         </Pressable>
-      )}
+      ): null}
     </Pressable>
   );
 }
