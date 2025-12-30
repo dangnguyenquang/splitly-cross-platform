@@ -462,16 +462,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
             <Text style={styles.functionLabel}>Analytics</Text>
           </View>
-
-          <View style={styles.functionItem}>
-            <TouchableOpacity
-              style={styles.functionCircle}
-              onPress={() => console.log('Create Payment pressed')}
-            >
-              <Feather name="plus-circle" size={26} color="#1a1a1a" />
-            </TouchableOpacity>
-            <Text style={styles.functionLabel}>Create</Text>
-          </View>
         </View>
       </View>
 
