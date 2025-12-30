@@ -16,3 +16,19 @@ export const registerTokenDevice = async (
     throw err instanceof Error ? err : new Error(String(err));
   }
 };
+
+
+export const getAllNotifications = async (
+) => {
+  try {
+    const res = await response.get('/notifications');
+    console.log(res);
+    return res
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      throw err;
+    }
+    throw err instanceof Error ? err : new Error(String(err));
+  }
+};
+
